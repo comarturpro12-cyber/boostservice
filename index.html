@@ -181,23 +181,24 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- BALANCED PRICES (School + Profit) ---
+    // --- FINAL BALANCED PRICES ---
+    // Подняли низы, опустили верха. Идеальная кривая.
     const RANKS = [
-        { name: "Бронза I", p: 15, i: "bronze1.png" }, { name: "Бронза II", p: 15, i: "bronze2.png" },
-        { name: "Бронза III", p: 15, i: "bronze3.png" }, { name: "Бронза IV", p: 20, i: "bronze4.png" },
+        { name: "Бронза I", p: 35, i: "bronze1.png" }, { name: "Бронза II", p: 35, i: "bronze2.png" },
+        { name: "Бронза III", p: 35, i: "bronze3.png" }, { name: "Бронза IV", p: 40, i: "bronze4.png" },
         
-        { name: "Сильвер I", p: 25, i: "silver1.png" }, { name: "Сильвер II", p: 25, i: "silver2.png" },
-        { name: "Сильвер III", p: 30, i: "silver3.png" }, { name: "Сильвер IV", p: 35, i: "silver4.png" },
+        { name: "Сильвер I", p: 50, i: "silver1.png" }, { name: "Сильвер II", p: 50, i: "silver2.png" },
+        { name: "Сильвер III", p: 50, i: "silver3.png" }, { name: "Сильвер IV", p: 55, i: "silver4.png" },
         
-        { name: "Голд I", p: 45, i: "gold1.png" }, { name: "Голд II", p: 50, i: "gold2.png" },
-        { name: "Голд III", p: 55, i: "gold3.png" }, { name: "Голд IV", p: 60, i: "gold4.png" },
+        { name: "Голд I", p: 70, i: "gold1.png" }, { name: "Голд II", p: 70, i: "gold2.png" },
+        { name: "Голд III", p: 75, i: "gold3.png" }, { name: "Голд IV", p: 75, i: "gold4.png" },
         
-        { name: "Феникс", p: 90, i: "phoenix.png" }, 
+        { name: "Феникс", p: 100, i: "phoenix.png" }, 
         { name: "Рейнджер", p: 130, i: "ranger.png" },
-        { name: "Чемпион", p: 190, i: "champion.png" },
-        { name: "Мастер", p: 240, i: "master.png" },
-        { name: "Элита", p: 280, i: "elite.png" }, 
-        { name: "Легенда", p: 350, i: "legend.png" }
+        { name: "Чемпион", p: 150, i: "champion.png" },
+        { name: "Мастер", p: 170, i: "master.png" },
+        { name: "Элита", p: 190, i: "elite.png" }, 
+        { name: "Легенда", p: 200, i: "legend.png" }
     ];
 
     const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.7} };
