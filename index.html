@@ -2,35 +2,339 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Standoff Boost</title>
-    <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+        :root {
+            --bg-color: #0f0f11;
+            --card-bg: #18181b;
+            --text-color: #ffffff;
+            --accent-color: #3b82f6; /* Синий как в стандофф */
+            --secondary-text: #a1a1aa;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Легкий градиент на фоне */
+            background-image: radial-gradient(circle at 50% 0%, #1e3a8a 0%, #0f0f11 60%);
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3 { margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* ЗАГОЛОВОК */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p { color: var(--secondary-text); font-size: 14px; margin-top: 5px; }
+
+        /* КАРТОЧКИ РЕЖИМОВ */
+        .mode-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .mode-card {
+            background: var(--card-bg);
+            border: 1px solid #27272a;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mode-card:active { transform: scale(0.98); border-color: var(--accent-color); }
+        .mode-card h3 { font-size: 18px; margin-bottom: 5px; }
+        .mode-card p { font-size: 12px; color: var(--secondary-text); }
+        
+        /* СЕТКА ЗВАНИЙ */
+        .ranks-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            animation: slideUp 0.3s ease;
+        }
+
+        .rank-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .rank-card.selected {
+            border-color: var(--accent-color);
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .rank-card img {
+            width: 100%;
+            height: auto;
+            max-height: 60px;
+            object-fit: contain;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+        }
+
+        .rank-card span {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--secondary-text);
+        }
+
+        /* ИНФО БЛОК */
+        .info-box {
+            background: #1e1e24;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .info-box span { font-size: 12px; color: #ccc; }
+        .info-box b { color: #fff; font-size: 14px; }
+
+        .hidden { display: none; }
+        
+        /* КНОПКА НАЗАД */
+        .back-btn {
+            background: transparent;
+            border: 1px solid #333;
+            color: #777;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Настройка буста</h1>
 
+    <div class="container">
+        
         <div id="step-mode">
-            <h3>Выберите режим:</h3>
-            <div class="mode-selector">
-                <button class="mode-btn" onclick="selectMode('Дуэли')">⚔️ Дуэли</button>
-                <button class="mode-btn" onclick="selectMode('Союзники')">🤝 Союзники</button>
-                <button class="mode-btn" onclick="selectMode('ММ')">🏆 ММ</button>
+            <div class="header">
+                <h1>BOOST SERVICE</h1>
+                <p>Выберите режим игры для буста</p>
+            </div>
+            
+            <div class="mode-grid">
+                <div class="mode-card" onclick="selectMode('Дуэли')">
+                    <h3>⚔️ Дуэли</h3>
+                    <p>Буст ранга 1 на 1</p>
+                </div>
+                <div class="mode-card" onclick="selectMode('Союзники')">
+                    <h3>🤝 Союзники</h3>
+                    <p>Буст ранга 2 на 2</p>
+                </div>
+                <div class="mode-card" onclick="selectMode('Соревновательный')">
+                    <h3>🏆 Соревновательный</h3>
+                    <p>Буст ранга 5 на 5 (ММ)</p>
+                </div>
             </div>
         </div>
 
         <div id="step-current" class="hidden">
-            <h3>Ваше звание сейчас:</h3>
-            <div class="ranks-grid" id="current-ranks-grid"></div>
+            <div onclick="goBack()" class="back-btn">← Назад</div>
+            <div class="header">
+                <h3>ВАШЕ ЗВАНИЕ?</h3>
+                <p>Выберите, какое у вас сейчас звание</p>
+            </div>
+            <div class="ranks-grid" id="current-ranks-list"></div>
         </div>
 
         <div id="step-target" class="hidden">
-            <h3>Желаемое звание:</h3>
-            <div class="ranks-grid" id="target-ranks-grid"></div>
+            <div onclick="resetToCurrent()" class="back-btn">← Назад</div>
+            
+            <div class="info-box">
+                <div>
+                    <span>Сейчас:</span> <b id="display-current-rank">...</b>
+                </div>
+                <div>
+                    <span>Режим:</span> <b id="display-mode">...</b>
+                </div>
+            </div>
+
+            <div class="header">
+                <h3>ЖЕЛАЕМОЕ ЗВАНИЕ?</h3>
+                <p>До какого ранга бустим?</p>
+            </div>
+            <div class="ranks-grid" id="target-ranks-list"></div>
         </div>
+
     </div>
 
-    <script src="script.js"></script>
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    // КОНФИГ ЗВАНИЙ (Картинки должны лежать в папке img/)
+    const RANKS = [
+        {id: 1, name: "Bronze I", file: "bronze1.png"},
+        {id: 2, name: "Bronze II", file: "bronze2.png"},
+        {id: 3, name: "Bronze III", file: "bronze3.png"},
+        {id: 4, name: "Bronze IV", file: "bronze4.png"},
+        {id: 5, name: "Silver I", file: "silver1.png"},
+        {id: 6, name: "Silver II", file: "silver2.png"},
+        {id: 7, name: "Silver III", file: "silver3.png"},
+        {id: 8, name: "Silver IV", file: "silver4.png"},
+        {id: 9, name: "Gold I", file: "gold1.png"},
+        {id: 10, name: "Gold II", file: "gold2.png"},
+        {id: 11, name: "Gold III", file: "gold3.png"},
+        {id: 12, name: "Gold IV", file: "gold4.png"},
+        {id: 13, name: "Phoenix", file: "phoenix.png"},
+        {id: 14, name: "Ranger", file: "ranger.png"},
+        {id: 15, name: "Champion", file: "champion.png"},
+        {id: 16, name: "Master", file: "master.png"},
+        {id: 17, name: "Elite", file: "elite.png"},
+        {id: 18, name: "The Legend", file: "legend.png"}
+    ];
+
+    // ЦЕНА ЗА 1 ШАГ (Например, с Сильвер 1 до Сильвер 2 = 50р)
+    const PRICE_PER_STEP = 50; 
+
+    let order = {
+        mode: null,
+        currentRankId: null,
+        currentRankName: null,
+        targetRankId: null,
+        targetRankName: null,
+        price: 0
+    };
+
+    // 1. ВЫБОР РЕЖИМА
+    function selectMode(modeName) {
+        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        order.mode = modeName;
+        
+        document.getElementById('step-mode').classList.add('hidden');
+        document.getElementById('step-current').classList.remove('hidden');
+        
+        renderRanks('current');
+    }
+
+    // 2. РЕНДЕР КАРТОЧЕК ЗВАНИЙ
+    function renderRanks(type) {
+        const containerId = type === 'current' ? 'current-ranks-list' : 'target-ranks-list';
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+
+        RANKS.forEach(rank => {
+            // Если выбираем ЦЕЛЬ, пропускаем звания ниже или равные текущему
+            if (type === 'target' && rank.id <= order.currentRankId) return;
+
+            const div = document.createElement('div');
+            div.className = 'rank-card';
+            div.onclick = () => handleRankClick(type, rank, div);
+            
+            div.innerHTML = `
+                <img src="img/${rank.file}" alt="${rank.name}">
+                <span>${rank.name}</span>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // 3. ОБРАБОТКА КЛИКА ПО ЗВАНИЮ
+    function handleRankClick(type, rank, element) {
+        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+
+        // Подсветка выбранного
+        document.querySelectorAll(`#${type}-ranks-list .rank-card`).forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+
+        if (type === 'current') {
+            order.currentRankId = rank.id;
+            order.currentRankName = rank.name;
+
+            // Переход к следующему шагу с небольшой задержкой
+            setTimeout(() => {
+                document.getElementById('step-current').classList.add('hidden');
+                document.getElementById('step-target').classList.remove('hidden');
+                
+                // Обновляем инфо-плашку
+                document.getElementById('display-current-rank').innerText = rank.name;
+                document.getElementById('display-mode').innerText = order.mode;
+
+                renderRanks('target');
+            }, 200);
+
+        } else {
+            order.targetRankId = rank.id;
+            order.targetRankName = rank.name;
+            calculatePrice();
+        }
+    }
+
+    // 4. РАСЧЕТ ЦЕНЫ
+    function calculatePrice() {
+        const steps = order.targetRankId - order.currentRankId;
+        order.price = steps * PRICE_PER_STEP;
+
+        if (order.price > 0) {
+            tg.MainButton.text = `ЗАКАЗАТЬ ЗА ${order.price}₽`;
+            tg.MainButton.color = "#3b82f6"; // Синий цвет кнопки
+            tg.MainButton.textColor = "#ffffff";
+            tg.MainButton.show();
+        }
+    }
+
+    // 5. ОТПРАВКА ДАННЫХ БОТУ
+    tg.MainButton.onClick(() => {
+        const data = JSON.stringify(order);
+        tg.sendData(data);
+    });
+
+    // НАВИГАЦИЯ (Кнопки "Назад")
+    window.goBack = function() {
+        document.getElementById('step-current').classList.add('hidden');
+        document.getElementById('step-mode').classList.remove('hidden');
+        tg.MainButton.hide();
+    }
+
+    window.resetToCurrent = function() {
+        document.getElementById('step-target').classList.add('hidden');
+        document.getElementById('step-current').classList.remove('hidden');
+        tg.MainButton.hide();
+        // Сброс выбора цели
+        order.targetRankId = null; 
+    }
+
+</script>
 </body>
 </html>
