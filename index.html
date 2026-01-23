@@ -3,186 +3,346 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Veneku Boost</title>
+    <title>Xenon ELO Boost</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Rajdhani:wght@600;700&display=swap');
-        :root { --primary: #6366f1; --accent: #a855f7; --bg: #0f172a; --text: #fff; }
-        body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; margin: 0; padding: 20px 20px 90px 20px; overflow-x: hidden; min-height: 100vh; background-image: radial-gradient(at 0% 0%, rgba(99,102,241,0.2) 0, transparent 50%), radial-gradient(at 100% 100%, rgba(168,85,247,0.2) 0, transparent 50%); background-attachment: fixed; }
-        .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 15px; backdrop-filter: blur(10px); margin-bottom: 15px; }
-        h1 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 5px; }
-        p.sub { text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
-        .avatar { width: 90px; height: 90px; border-radius: 50%; background: #222; margin: 0 auto 15px; overflow: hidden; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 30px; }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .rank { background: rgba(255,255,255,0.03); border-radius: 15px; padding: 10px 5px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
-        .rank img { width: 100%; height: 50px; object-fit: contain; margin-bottom: 5px; filter: grayscale(1); }
-        .rank span { font-size: 11px; color: #94a3b8; font-family: 'Rajdhani', sans-serif; font-weight: 700; text-transform: uppercase; }
-        .rank.active { background: rgba(99,102,241,0.15); border-color: var(--primary); }
-        .rank.active img { filter: grayscale(0); transform: scale(1.1); }
-        .rank.active span { color: #fff; }
-        .nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; height: 65px; background: rgba(15,23,42,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; display: flex; justify-content: space-around; align-items: center; z-index: 99; backdrop-filter: blur(15px); }
-        .nav-item { color: #64748b; font-size: 24px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; width: 50px;}
-        .nav-item span { font-size: 10px; font-weight: 600; opacity: 0; transform: translateY(10px); transition: 0.3s; }
-        .nav-item.active { color: #fff; }
-        .nav-item.active i { color: var(--accent); transform: translateY(-3px); }
-        .nav-item.active span { opacity: 1; transform: translateY(0); }
-        .hidden { display: none !important; }
-        .page { display: none; animation: fade 0.3s ease; }
-        .page.active { display: block; }
-        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); }}
-        .btn { width: 100%; padding: 15px; background: linear-gradient(90deg, var(--primary), var(--accent)); border: none; border-radius: 15px; color: #fff; font-weight: 700; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        /* ИМПОРТ ШРИФТОВ И ПЕРЕМЕННЫЕ (ОСТАВИЛ КАК БЫЛО) */
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Inter:wght@400;600&display=swap');
+        :root { --bg: #050505; --card: #0f0f11; --border: #27272a; --accent: #3b82f6; --text: #ffffff; --gray: #9ca3af; --danger: #ef4444; }
+        
+        /* АНИМАЦИИ */
+        @keyframes rgb-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        body { 
+            background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 0; overflow-x: hidden; min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #000000 70%);
+            background-attachment: fixed;
+        }
+        .container { padding: 16px; padding-bottom: 90px; }
+        
+        /* HEADER */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; backdrop-filter: blur(10px); }
+        .user-box { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3); background-size: 400% 400%; animation: rgb-flow 8s ease infinite; display: flex; align-items: center; justify-content: center; font-weight: bold; font-family: 'Rajdhani', sans-serif; font-size: 18px; color: #fff; text-transform: uppercase; }
+        .user-meta div:first-child { font-weight: 600; font-size: 14px; } 
+        .user-meta div:last-child { font-size: 11px; color: var(--gray); }
+        
+        #back-btn { display: none; font-size: 24px; cursor: pointer; color: var(--accent); margin-right: 10px; transition: 0.2s; }
+        
+        .hero { text-align: center; margin: 25px 0; transition: 0.3s; }
+        .hero h1 { font-family: 'Rajdhani', sans-serif; font-size: 44px; margin: 0; text-transform: uppercase; letter-spacing: 3px; background: linear-gradient(90deg, #3b82f6, #8b5cf6, #00ffff, #3b82f6); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rgb-flow 5s linear infinite; }
+        .hero p { color: var(--gray); font-size: 13px; margin-top: 5px; }
+
+        /* СЕТКА ТОВАРОВ */
+        .view { display: none; animation: fadeIn 0.3s ease; }
+        .view.active { display: block; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; } /* Сделал 2 колонки, так красивее для рангов */
+        
+        /* КАРТОЧКА БУСТА */
+        .card { background: rgba(15, 15, 17, 0.8); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; position: relative; transition: 0.2s; backdrop-filter: blur(5px); display: flex; flex-direction: column; }
+        .card:active { transform: scale(0.98); border-color: var(--accent); }
+        
+        .card-img-container { width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, rgba(59,130,246,0.1) 0%, rgba(0,0,0,0) 70%); padding-top: 10px;}
+        .card-img { width: 80px; height: auto; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
+        
+        .card-body { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; text-align: center; }
+        .card-title { font-weight: 700; font-size: 16px; color: #fff; margin-bottom: 5px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px;}
+        .card-price { font-size: 12px; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+        
+        /* КНОПКА ВНУТРИ КАРТОЧКИ */
+        .mini-btn { width: 100%; padding: 8px 0; background: #1f1f22; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .mini-btn:active { background: var(--accent); border-color: var(--accent); }
+
+        /* ДЕТАЛЬНАЯ СТРАНИЦА */
+        .detail-img-container { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, rgba(59,130,246,0.2) 0%, rgba(0,0,0,0) 70%); margin-bottom: 20px; border-radius: 16px; border: 1px solid var(--border); }
+        .detail-img { width: 120px; height: auto; filter: drop-shadow(0 0 20px rgba(59,130,246,0.3)); }
+        
+        .detail-title { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 10px; text-transform: uppercase; font-family: 'Rajdhani', sans-serif; text-align: center; letter-spacing: 2px; }
+        .detail-desc { font-size: 13px; color: #d1d5db; line-height: 1.6; margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+        
+        .section-title { font-size: 12px; color: var(--gray); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; margin-top: 20px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        
+        .features-list { margin-bottom: 10px; }
+        .feature-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; color: #9ca3af; }
+        .feature-icon { color: var(--accent); font-weight: bold; font-size: 16px; }
+
+        .plans-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .plan-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s; }
+        .plan-card.active { border-color: var(--accent); background: rgba(59, 130, 246, 0.15); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+        
+        .plan-info { text-align: left; }
+        .plan-name { font-size: 14px; font-weight: 700; color: #fff; }
+        .plan-sub { font-size: 11px; color: #666; margin-top: 2px; }
+        .plan-price { font-size: 16px; font-family: 'Rajdhani', sans-serif; color: var(--accent); font-weight: 800; }
+
+        .bottom-back-container { text-align: center; margin-top: 25px; }
+        .bottom-back-btn { display: inline-block; padding: 10px 25px; background: #222; border: 1px solid #333; border-radius: 20px; font-weight: 600; font-size: 12px; color: #aaa; cursor: pointer; transition: 0.3s; }
+        .bottom-back-btn:active { background: #333; color: #fff; transform: scale(0.95); }
+
     </style>
 </head>
 <body>
 
-    <div id="p-boost" class="page active">
-        <h1>VENEKU</h1>
-        <p class="sub">Premium Boost</p>
-
-        <div id="step-1">
-            <div class="glass" onclick="setMode('Дуэли')" style="display:flex; align-items:center; cursor:pointer;">
-                <i class="ri-sword-fill" style="font-size:24px; color:var(--primary); margin-right:15px;"></i>
-                <div style="flex:1"><b>Дуэли</b><div style="font-size:12px; color:#aaa">1 vs 1</div></div>
-                <i class="ri-arrow-right-s-line"></i>
+    <div class="container">
+        
+        <div class="header">
+            <div class="user-box">
+                <div id="back-btn" onclick="goBack()">‹</div>
+                <div class="avatar" id="avatar">X</div>
+                <div class="user-meta">
+                    <div id="username">Guest</div>
+                    <div id="userid">Loading...</div>
+                </div>
             </div>
-            <div class="glass" onclick="setMode('Союзники')" style="display:flex; align-items:center; cursor:pointer;">
-                <i class="ri-team-fill" style="font-size:24px; color:var(--accent); margin-right:15px;"></i>
-                <div style="flex:1"><b>Союзники</b><div style="font-size:12px; color:#aaa">2 vs 2</div></div>
-                <i class="ri-arrow-right-s-line"></i>
-            </div>
-            <div class="glass" onclick="setMode('Соревновательный')" style="display:flex; align-items:center; cursor:pointer;">
-                <i class="ri-trophy-fill" style="font-size:24px; color:#fff; margin-right:15px;"></i>
-                <div style="flex:1"><b>ММ</b><div style="font-size:12px; color:#aaa">5 vs 5</div></div>
-                <i class="ri-arrow-right-s-line"></i>
+            <div style="text-align: right;">
+                <div style="color:#10b981; font-size:12px; font-weight:bold;">● Work</div>
+                <div style="font-size:10px; color:#666;">Xenon Elo</div>
             </div>
         </div>
 
-        <div id="step-2" class="hidden">
-            <div style="text-align:center; margin-bottom:15px;"><h2>Текущий ранг</h2></div>
-            <div class="grid" id="grid-curr"></div>
-            <button class="btn hidden" id="btn-next" onclick="render('targ'); go(3)">ДАЛЕЕ</button>
-            <div style="text-align:center; margin-top:15px; color:#666; font-size:12px;" onclick="go(1)">Назад</div>
+        <div id="main-hero" class="hero">
+            <h1>XENON ELO</h1>
+            <p>Professional Standoff 2 Boosting</p>
         </div>
 
-        <div id="step-3" class="hidden">
-            <div class="glass" style="display:flex; justify-content:space-between; align-items:center;">
-                <div><div style="font-size:10px; color:#888">СЕЙЧАС</div><b id="txt-curr">...</b></div>
-                <i class="ri-arrow-right-double-line" style="color:var(--accent)"></i>
-                <div style="text-align:right"><div style="font-size:10px; color:#888">ЦЕЛЬ</div><b id="txt-targ" style="color:var(--accent)">?</b></div>
+        <div id="shop-view" class="view active">
+            <div class="grid" id="products-grid"></div>
+        </div>
+
+        <div id="detail-view" class="view">
+            <div class="detail-img-container">
+                <img id="d-img" src="" class="detail-img">
             </div>
-            <div style="text-align:center;"><h2>Желаемый ранг</h2></div>
-            <div class="grid" id="grid-targ"></div>
-            <div style="text-align:center; margin-top:15px; color:#666; font-size:12px;" onclick="go(2)">Назад</div>
-        </div>
-    </div>
+            <div id="d-title" class="detail-title"></div>
+            <div id="d-desc" class="detail-desc"></div>
+            
+            <div class="section-title">ГАРАНТИИ БУСТА</div>
+            <div id="d-features" class="features-list"></div>
 
-    <div id="p-hist" class="page">
-        <h1>История</h1>
-        <div style="text-align:center; padding:50px 0; color:#666;">
-            <i class="ri-file-list-3-line" style="font-size:40px; margin-bottom:10px; display:block;"></i>
-            Пока пусто
-        </div>
-    </div>
+            <div class="section-title">ВЫБЕРИТЕ МЕТОД БУСТА</div>
+            <div class="plans-grid" id="plans-grid"></div>
 
-    <div id="p-prof" class="page">
-        <h1>Профиль</h1>
-        <div class="glass" style="text-align:center;">
-            <div class="avatar" id="u-ava">?</div>
-            <h2 id="u-name">Guest</h2>
-            <div style="background:rgba(0,0,0,0.3); display:inline-block; padding:5px 10px; border-radius:10px; font-family:monospace; font-size:12px; color:#aaa;" id="u-id">ID: 0000</div>
+            <div class="bottom-back-container">
+                <div class="bottom-back-btn" onclick="goBack()">ВЕРНУТЬСЯ В КАТАЛОГ</div>
+            </div>
         </div>
-        <div style="display:flex; gap:10px;">
-            <div class="glass" style="flex:1; text-align:center; margin:0;"><b style="font-size:20px; color:var(--accent)">0 ₽</b><br><span style="font-size:11px; color:#888">БАЛАНС</span></div>
-            <div class="glass" style="flex:1; text-align:center; margin:0;"><b style="font-size:20px;">0</b><br><span style="font-size:11px; color:#888">ЗАКАЗОВ</span></div>
-        </div>
-    </div>
 
-    <div class="nav">
-        <div class="nav-item active" onclick="tab('boost', this)"><i class="ri-rocket-2-line"></i><span>Буст</span></div>
-        <div class="nav-item" onclick="tab('hist', this)"><i class="ri-history-line"></i><span>История</span></div>
-        <div class="nav-item" onclick="tab('prof', this)"><i class="ri-user-smile-line"></i><span>Профиль</span></div>
     </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-    tg.MainButton.color = "#a855f7"; tg.MainButton.textColor = "#fff";
 
-    // INIT USER
-    const u = tg.initDataUnsafe.user;
-    if(u) {
-        document.getElementById('u-name').innerText = u.first_name;
-        document.getElementById('u-id').innerText = "ID: " + u.id;
-        if(u.photo_url) document.getElementById('u-ava').innerHTML = `<img src="${u.photo_url}">`;
-        else document.getElementById('u-ava').innerText = u.first_name[0];
+    // --- ДАННЫЕ ПОЛЬЗОВАТЕЛЯ ---
+    function initData() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const nameFromUrl = urlParams.get('name');
+        const uidFromUrl = urlParams.get('uid');
+        
+        if (nameFromUrl) {
+            document.getElementById('username').innerText = nameFromUrl;
+            document.getElementById('userid').innerText = `ID: ${uidFromUrl}`;
+            document.getElementById('avatar').innerText = nameFromUrl[0].toUpperCase();
+        } else {
+            const user = tg.initDataUnsafe.user;
+            if (user) {
+                document.getElementById('username').innerText = user.first_name;
+                document.getElementById('userid').innerText = `ID: ${user.id}`;
+                document.getElementById('avatar').innerText = user.first_name[0].toUpperCase();
+            }
+        }
     }
+    initData();
 
-    // TABS
-    function tab(id, el) {
-        document.querySelectorAll('.page').forEach(e => e.classList.remove('active'));
-        document.getElementById('p-'+id).classList.add('active');
-        document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
-        el.classList.add('active');
-        if(id !== 'boost') tg.MainButton.hide();
-        else if(order.price > 0 && curStep === 3) tg.MainButton.show();
-    }
+    // --- БАЗА УСЛУГ (БУСТ) ---
+    // Использую названия картинок из твоего скрина: ranger.png, elite.png, master.png и т.д.
+    const products = [
+        { 
+            id: 'boost_gold', 
+            name: 'Gold (Голд)', 
+            img: 'gold4.png',
+            short_desc: 'Выход на золото. Быстрый старт.',
+            full_desc: `Буст до ранга <b>Gold (Золото)</b>.<br>Идеально для новичков, чтобы выбраться с сильверов.<br><br>Мы играем с легитным софтом, риск бана аккаунта клиента - 0%.`,
+            features: ["Legit игра", "Быстрое выполнение (1-2 часа)", "Конфиденциальность"],
+            plans: [
+                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 150 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 100 }
+            ]
+        },
+        { 
+            id: 'boost_phoenix', 
+            name: 'Phoenix (Феникс)', 
+            img: 'phoenix.png',
+            short_desc: 'Престижный ранг для уверенных.',
+            full_desc: `Буст до ранга <b>Phoenix (Феникс)</b>.<br>Один из самых красивых рангов в игре.<br><br>Гарантируем отсутствие сливов ммр.`,
+            features: ["Legit игра", "Играем до результата", "Скриншот по окончанию"],
+            plans: [
+                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 300 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 220 }
+            ]
+        },
+        { 
+            id: 'boost_ranger', 
+            name: 'Ranger (Рейнджер)', 
+            img: 'ranger.png',
+            short_desc: 'Высокий скилл. Элита игры.',
+            full_desc: `Буст до ранга <b>Ranger (Рейнджер)</b>.<br>Серьезный уровень. Буст выполняется опытными игроками с приватным софтом Xenon.`,
+            features: ["Legit игра / Rage (по желанию)", "Высокий винрейт", "Гарантия от бана"],
+            plans: [
+                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 500 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 350 }
+            ]
+        },
+        { 
+            id: 'boost_champion', 
+            name: 'Champion (Чемпион)', 
+            img: 'champion.png',
+            short_desc: 'Для настоящих профи.',
+            full_desc: `Буст до ранга <b>Champion</b>.<br>Очень сложный ранг, требующий времени.<br><br>⚠️ Рекомендуем метод 'Лобби' для безопасности основного аккаунта.`,
+            features: ["Приватный буст", "Игра с топ софтом", "Стриминг в Discord (по запросу)"],
+            plans: [
+                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 800 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 600 }
+            ]
+        },
+        { 
+            id: 'boost_master', 
+            name: 'Master (Мастер)', 
+            img: 'master.png',
+            short_desc: 'Предмаксимальный ранг.',
+            full_desc: `Буст до ранга <b>Master</b>.<br>Это уже киберспорт. Буст выполняется в Rage режиме для скорости, либо Legit для безопасности.`,
+            features: ["Rage/Legit буст", "VIP Подход", "Связь с бустером"],
+            plans: [
+                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 1200 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 900 }
+            ]
+        },
+        { 
+            id: 'boost_legend', 
+            name: 'Elite (Легенда)', 
+            img: 'legend.png', // В твоем скрине файл legend.png, хотя ранг Elite, но оставим как файл
+            short_desc: 'МАКСИМАЛЬНЫЙ РАНГ.',
+            full_desc: `Буст до <b>ELITE / THE LEGEND</b>.<br>Вершина пищевой цепочки Standoff 2.<br>Самая дорогая и престижная услуга.`,
+            features: ["Полная анонимность", "Максимальный приоритет", "Любые капризы"],
+            plans: [
+                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 2500 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 1800 }
+            ]
+        }
+    ];
 
-    // LOGIC
-    const FILES = ["bronze1.png","bronze2.png","bronze3.png","bronze4.png","silver1.png","silver2.png","silver3.png","silver4.png","gold1.png","gold2.png","gold3.png","gold4.png","phoenix.png","ranger.png","champion.png","master.png","elite.png","legend.png"];
-    const NAMES = ["Bronze I","Bronze II","Bronze III","Bronze IV","Silver I","Silver II","Silver III","Silver IV","Gold I","Gold II","Gold III","Gold IV","Phoenix","Ranger","Champion","Master","Elite","Legend"];
-    
-    let order = { mode:null, curId:0, tarId:0, price:0, currentRankName:"", targetRankName:"" };
-    let curStep = 1;
+    let currentProduct = null;
+    let selectedPlan = null;
 
-    function go(s) {
-        document.getElementById('step-1').classList.add('hidden');
-        document.getElementById('step-2').classList.add('hidden');
-        document.getElementById('step-3').classList.add('hidden');
-        document.getElementById('step-'+s).classList.remove('hidden');
-        curStep = s;
-        if(s===3 && order.price > 0) tg.MainButton.show(); else tg.MainButton.hide();
-    }
-
-    function setMode(m) { order.mode = m; render('curr'); go(2); }
-
-    function render(type) {
-        const c = document.getElementById(type==='curr' ? 'grid-curr' : 'grid-targ');
-        c.innerHTML = '';
-        NAMES.forEach((name, i) => {
-            let id = i + 1;
-            if(type==='targ' && id <= order.curId) return;
-            let d = document.createElement('div');
-            d.className = 'rank';
-            d.onclick = () => sel(type, id, name, d);
-            d.innerHTML = `<img src="${FILES[i]}" onerror="this.style.opacity=0"><span>${name}</span>`;
-            c.appendChild(d);
+    // --- ОТРИСОВКА КАТАЛОГА ---
+    function renderShop() {
+        const grid = document.getElementById('products-grid');
+        grid.innerHTML = '';
+        products.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `
+                <div class="card-img-container">
+                    <img src="${p.img}" class="card-img">
+                </div>
+                <div class="card-body">
+                    <div class="card-title">${p.name}</div>
+                    <div class="card-price">от ${p.plans[1].price}₽</div>
+                    <div class="mini-btn" onclick="openDetail('${p.id}')">ЗАКАЗАТЬ</div>
+                </div>
+            `;
+            grid.appendChild(div);
         });
     }
 
-    function sel(type, id, name, el) {
-        const c = document.getElementById(type==='curr' ? 'grid-curr' : 'grid-targ');
-        c.querySelectorAll('.rank').forEach(e => e.classList.remove('active'));
-        el.classList.add('active');
+    // --- ОТКРЫТИЕ ДЕТАЛЬНОЙ ---
+    function openDetail(id) {
+        currentProduct = products.find(x => x.id === id);
+        selectedPlan = null;
+        tg.MainButton.hide();
+
+        document.getElementById('d-img').src = currentProduct.img;
+        document.getElementById('d-title').innerText = currentProduct.name;
+        document.getElementById('d-desc').innerHTML = currentProduct.full_desc;
+
+        const featureContainer = document.getElementById('d-features');
+        featureContainer.innerHTML = '';
+        currentProduct.features.forEach(feat => {
+            const el = document.createElement('div');
+            el.className = 'feature-item';
+            el.innerHTML = `<span class="feature-icon">✓</span> ${feat}`;
+            featureContainer.appendChild(el);
+        });
+
+        const plansContainer = document.getElementById('plans-grid');
+        plansContainer.innerHTML = '';
+        currentProduct.plans.forEach((plan, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'plan-card';
+            btn.onclick = () => selectPlan(index);
+            btn.id = `plan-${index}`;
+            btn.innerHTML = `
+                <div class="plan-info">
+                    <div class="plan-name">${plan.label}</div>
+                    <div class="plan-sub">${plan.sub}</div>
+                </div>
+                <div class="plan-price">${plan.price}₽</div>
+            `;
+            plansContainer.appendChild(btn);
+        });
+
+        document.getElementById('shop-view').classList.remove('active');
+        document.getElementById('detail-view').classList.add('active');
+        document.getElementById('back-btn').style.display = 'block';
+        document.getElementById('main-hero').style.display = 'none';
         
-        if(type==='curr') {
-            order.curId = id; order.currentRankName = name;
-            document.getElementById('txt-curr').innerText = name;
-            document.getElementById('btn-next').classList.remove('hidden');
-        } else {
-            order.tarId = id; order.targetRankName = name;
-            document.getElementById('txt-targ').innerText = name;
-            let steps = order.tarId - order.curId;
-            order.price = steps * 150;
-            tg.MainButton.text = `ЗАКАЗАТЬ • ${order.price} RUB`;
-            tg.MainButton.show();
-        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // --- ВЫБОР ТАРИФА ---
+    function selectPlan(index) {
+        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        document.querySelectorAll('.plan-card').forEach(el => el.classList.remove('active'));
+        document.getElementById(`plan-${index}`).classList.add('active');
+        
+        selectedPlan = currentProduct.plans[index];
+        tg.MainButton.text = `ЗАКАЗАТЬ ЗА ${selectedPlan.price}₽`;
+        tg.MainButton.color = "#3b82f6";
+        tg.MainButton.textColor = "#fff";
+        tg.MainButton.show();
+    }
+
+    // --- НАЗАД ---
+    window.goBack = function() {
+        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        document.getElementById('detail-view').classList.remove('active');
+        document.getElementById('shop-view').classList.add('active');
+        
+        document.getElementById('back-btn').style.display = 'none';
+        document.getElementById('main-hero').style.display = 'block';
+        tg.MainButton.hide();
+        currentProduct = null;
+        selectedPlan = null;
+    }
+
+    // --- ОТПРАВКА В БОТА ---
     tg.MainButton.onClick(() => {
-        tg.sendData(JSON.stringify({ type:'order', payload:order }));
+        if (currentProduct && selectedPlan) {
+            const finalData = {
+                // Формат: "Boost: Ranger (Лобби)"
+                name: `Boost: ${currentProduct.name} (${selectedPlan.label})`,
+                price: selectedPlan.price
+            };
+            tg.sendData(JSON.stringify(finalData));
+            setTimeout(() => { tg.close(); }, 100);
+        }
     });
+
+    tg.BackButton.onClick(goBack); // Обработка нативной кнопки назад
+    renderShop();
+
 </script>
 </body>
 </html>
