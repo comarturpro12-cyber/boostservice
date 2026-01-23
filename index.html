@@ -181,23 +181,23 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- SUPER LOW PRICES ---
+    // --- BALANCED PRICES (School + Profit) ---
     const RANKS = [
-        { name: "Бронза I", p: 5, i: "bronze1.png" }, { name: "Бронза II", p: 5, i: "bronze2.png" },
-        { name: "Бронза III", p: 5, i: "bronze3.png" }, { name: "Бронза IV", p: 5, i: "bronze4.png" },
+        { name: "Бронза I", p: 15, i: "bronze1.png" }, { name: "Бронза II", p: 15, i: "bronze2.png" },
+        { name: "Бронза III", p: 15, i: "bronze3.png" }, { name: "Бронза IV", p: 20, i: "bronze4.png" },
         
-        { name: "Сильвер I", p: 10, i: "silver1.png" }, { name: "Сильвер II", p: 10, i: "silver2.png" },
-        { name: "Сильвер III", p: 10, i: "silver3.png" }, { name: "Сильвер IV", p: 15, i: "silver4.png" },
+        { name: "Сильвер I", p: 25, i: "silver1.png" }, { name: "Сильвер II", p: 25, i: "silver2.png" },
+        { name: "Сильвер III", p: 30, i: "silver3.png" }, { name: "Сильвер IV", p: 35, i: "silver4.png" },
         
-        { name: "Голд I", p: 15, i: "gold1.png" }, { name: "Голд II", p: 20, i: "gold2.png" },
-        { name: "Голд III", p: 20, i: "gold3.png" }, { name: "Голд IV", p: 30, i: "gold4.png" },
+        { name: "Голд I", p: 45, i: "gold1.png" }, { name: "Голд II", p: 50, i: "gold2.png" },
+        { name: "Голд III", p: 55, i: "gold3.png" }, { name: "Голд IV", p: 60, i: "gold4.png" },
         
-        { name: "Феникс", p: 40, i: "phoenix.png" }, 
-        { name: "Рейнджер", p: 60, i: "ranger.png" },
-        { name: "Чемпион", p: 80, i: "champion.png" },
-        { name: "Мастер", p: 100, i: "master.png" },
-        { name: "Элита", p: 120, i: "elite.png" }, 
-        { name: "Легенда", p: 150, i: "legend.png" }
+        { name: "Феникс", p: 90, i: "phoenix.png" }, 
+        { name: "Рейнджер", p: 130, i: "ranger.png" },
+        { name: "Чемпион", p: 190, i: "champion.png" },
+        { name: "Мастер", p: 240, i: "master.png" },
+        { name: "Элита", p: 280, i: "elite.png" }, 
+        { name: "Легенда", p: 350, i: "legend.png" }
     ];
 
     const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.7} };
@@ -206,7 +206,6 @@
     let s = { m:null, f:null, t:null, ty:null, p:0 };
     let orders = [];
 
-    // INIT
     const url = new URLSearchParams(window.location.search);
     const uName = url.get('name') || 'Guest';
     try { const raw = url.get('orders'); if(raw) orders = JSON.parse(decodeURIComponent(raw)); } catch(e){}
@@ -214,7 +213,6 @@
     document.getElementById('u-avatar').innerText = uName[0].toUpperCase();
     renderRanks(); renderOrders();
 
-    // LOGIC
     function switchTab(t) {
         document.querySelectorAll('.seg-btn').forEach(e => e.classList.remove('active'));
         document.querySelectorAll('.view-tab').forEach(e => e.classList.remove('active'));
@@ -252,7 +250,6 @@
         const t = document.getElementById('grid-to');
         RANKS.forEach((r, i) => {
             f.innerHTML += `<div class="rank-card" id="f-${i}" onclick="setF(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
-            // НЕ РЕНДЕРИМ TO СРАЗУ (Only after selection)
         });
     }
 
@@ -260,20 +257,18 @@
         s.f = i; s.t = null;
         document.querySelectorAll('#grid-from .rank-card').forEach(e=>e.classList.remove('selected'));
         document.getElementById(`f-${i}`).classList.add('selected');
-        document.getElementById('btn-next-2').style.display='block';
         
-        // RENDER TARGETS (Hide anything < Gold 4 OR < Current)
+        // RENDER TARGETS: Hide < Gold 4 (Index 11) AND Hide < Current
         const tGrid = document.getElementById('grid-to');
-        tGrid.innerHTML = ''; // clear previous
-        
+        tGrid.innerHTML = '';
         RANKS.forEach((r, idx) => {
-            // Show only if: Target > Current AND (Target >= Gold 4 OR Current >= Gold 4)
-            // Gold 4 index is 11
+            // Gold 4 = index 11
             if (idx > i && (idx >= 11 || i >= 11)) {
                 tGrid.innerHTML += `<div class="rank-card" id="t-${idx}" onclick="setT(${idx})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
             }
         });
 
+        document.getElementById('btn-next-2').style.display='block';
         document.getElementById('btn-next-3').style.display='none';
         tg.HapticFeedback.selectionChanged();
     }
