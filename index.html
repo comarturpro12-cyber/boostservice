@@ -6,390 +6,472 @@
     <title>Xenon Boost</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;800&family=Inter:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;600;700&display=swap');
         
-        :root { 
-            --bg: #09090b; 
-            --card-bg: #121214;
-            --bronze: #cd7f32;
-            --silver: #e2e8f0;
-            --gold: #fbbf24;
-            --phoenix: #a855f7;
-            --ranger: #ef4444;
-            --champion: #3b82f6;
-            --master: #10b981;
-            --legend: #ec4899;
+        :root {
+            --bg: #030304;
+            --surface: #0e0e10;
+            --surface-2: #18181b;
+            --primary: #5b21b6;
+            --accent: #8b5cf6;
+            --text: #ffffff;
+            --gray: #71717a;
+            --success: #10b981;
+            --wait: #f59e0b;
+            --danger: #ef4444;
         }
 
-        body { 
-            background-color: var(--bg); 
-            color: #fff; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; padding: 0; 
-            -webkit-font-smoothing: antialiased;
-            background-image: radial-gradient(circle at top center, #1e1b4b 0%, #000 60%);
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0; padding: 0;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(91, 33, 182, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
             background-attachment: fixed;
             min-height: 100vh;
+            padding-bottom: 100px;
         }
 
-        .container { padding: 15px; padding-bottom: 100px; }
-
-        /* HEADER */
+        /* --- HEADER & TABS --- */
+        .container { padding: 16px; max-width: 600px; margin: 0 auto; }
+        
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);
-            padding: 10px 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 25px;
+            margin-bottom: 24px;
         }
-        .user-info { display: flex; align-items: center; gap: 10px; }
-        .avatar { 
-            width: 38px; height: 38px; border-radius: 10px; 
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 800; font-family: 'Rajdhani', sans-serif;
-        }
-        .user-text div:first-child { font-size: 14px; font-weight: 700; }
-        .user-text div:last-child { font-size: 11px; color: #9ca3af; }
-
-        /* TABS */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; }
-        .tab { flex: 1; text-align: center; padding: 10px; font-size: 12px; font-weight: 800; color: #666; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .tab.active { background: #222; color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-
-        /* GRID */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 12px; 
+        .logo { font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: 1px; color: #fff; text-shadow: 0 0 15px rgba(139,92,246,0.5); }
+        .user-pill {
+            background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 20px;
+            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* CARD DESIGN */
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex; flex-direction: column;
+        .nav {
+            display: flex; background: var(--surface); padding: 4px; border-radius: 12px;
+            margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.05);
         }
-        .card:active { transform: scale(0.97); }
-        
-        /* Свечение карточек в зависимости от ранга */
-        .tier-bronze { box-shadow: 0 0 0 1px rgba(205, 127, 50, 0.1); }
-        .tier-silver { box-shadow: 0 0 0 1px rgba(226, 232, 240, 0.1); }
-        .tier-gold { box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.1); }
-        .tier-phoenix { box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.2); border-color: rgba(168, 85, 247, 0.3); }
-        .tier-ranger { box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.3); }
-        .tier-high { box-shadow: 0 0 15px rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4); }
+        .nav-item {
+            flex: 1; text-align: center; padding: 10px; font-size: 12px; font-weight: 700;
+            color: var(--gray); border-radius: 8px; cursor: pointer; transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .nav-item.active { background: var(--surface-2); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 
-        .card-img-box {
-            height: 100px; display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 70%);
-            padding-top: 10px;
-        }
-        .card-img { width: 70px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
-        
-        .card-content { padding: 12px; text-align: center; }
-        .card-title { 
-            font-family: 'Rajdhani', sans-serif; font-weight: 800; font-size: 18px; 
-            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
-        }
-        .price-tag {
-            font-size: 13px; font-weight: 600; color: #9ca3af;
-            background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;
-            display: inline-block;
-        }
-        .accent-text { color: #fff; }
-
-        /* VIEW STATES */
-        .view { display: none; animation: fadeIn 0.3s ease; }
+        /* --- VIEWS --- */
+        .view { display: none; animation: fadeUp 0.3s ease forwards; }
         .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* DETAIL PAGE */
-        .detail-hero { text-align: center; margin-bottom: 20px; }
-        .detail-img { width: 140px; filter: drop-shadow(0 0 30px rgba(59,130,246,0.2)); }
-        .detail-name { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 800; margin: 10px 0; text-transform: uppercase; }
+        /* --- STEP 1: MODE SELECTOR --- */
+        .mode-card {
+            background: var(--surface); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px; padding: 20px; margin-bottom: 12px;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
+        }
+        .mode-card:active { transform: scale(0.98); border-color: var(--accent); }
+        .mode-info h3 { margin: 0 0 4px 0; font-family: 'Rajdhani', sans-serif; font-size: 20px; text-transform: uppercase; }
+        .mode-info p { margin: 0; font-size: 12px; color: var(--gray); }
+        .mode-icon { font-size: 24px; }
+        .mode-card.selected { border-color: var(--accent); background: rgba(139,92,246,0.1); }
+
+        /* --- STEP 2 & 3: RANK GRID --- */
+        .step-title { font-size: 14px; color: var(--gray); text-transform: uppercase; font-weight: 700; margin-bottom: 12px; text-align: center; }
         
-        .option-card {
-            background: #18181b; padding: 15px; border-radius: 12px;
-            border: 1px solid #27272a; margin-bottom: 10px;
-            display: flex; justify-content: space-between; align-items: center;
-            transition: 0.2s;
+        .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .rank-card {
+            background: var(--surface); border-radius: 12px; padding: 10px 5px;
+            text-align: center; border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer; transition: 0.2s;
         }
-        .option-card.active {
-            border-color: #3b82f6; background: rgba(59, 130, 246, 0.1);
-        }
-        .opt-left div:first-child { font-size: 14px; font-weight: 700; }
-        .opt-left div:last-child { font-size: 11px; color: #888; }
-        .opt-price { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 800; color: #3b82f6; }
+        .rank-card img { width: 40px; height: 40px; object-fit: contain; margin-bottom: 5px; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
+        .rank-name { font-size: 10px; font-weight: 700; color: #ccc; text-transform: uppercase; }
+        
+        .rank-card.active { border-color: var(--accent); background: rgba(139,92,246,0.15); box-shadow: 0 0 10px rgba(139,92,246,0.2); }
+        .rank-card.disabled { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
 
-        /* BUTTONS */
+        /* --- SUMMARY & PRICE --- */
+        .summary-box {
+            background: var(--surface-2); border-radius: 16px; padding: 20px;
+            margin-top: 20px; border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
+        .price-display { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 800; color: var(--accent); margin-top: 10px; }
+
+        /* --- PROFILE --- */
+        .profile-header { text-align: center; margin-bottom: 30px; }
+        .p-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; box-shadow: 0 0 20px rgba(139,92,246,0.4); }
+        .p-name { font-size: 20px; font-weight: 700; }
+        .p-id { font-size: 12px; color: var(--gray); }
+
+        .history-title { font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+        .order-item {
+            background: var(--surface); padding: 15px; border-radius: 12px; margin-bottom: 10px;
+            border-left: 3px solid var(--gray); display: flex; justify-content: space-between; align-items: center;
+        }
+        /* Status Colors */
+        .status-wait { border-color: var(--wait); } 
+        .status-work { border-color: #3b82f6; background: rgba(59, 130, 246, 0.05); }
+        .status-done { border-color: var(--success); }
+        .status-reject { border-color: var(--danger); opacity: 0.7; }
+
+        .order-info div:first-child { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+        .order-info div:last-child { font-size: 11px; color: var(--gray); }
+        .order-badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: #000; }
+        
+        .badge-wait { background: var(--wait); }
+        .badge-work { background: #3b82f6; color: #fff; }
+        .badge-done { background: var(--success); }
+        .badge-reject { background: var(--danger); color: #fff; }
+
+        /* --- MAIN BUTTON --- */
         .main-btn {
-            position: fixed; bottom: 20px; left: 15px; right: 15px;
-            background: #3b82f6; color: #fff;
-            padding: 15px; border-radius: 12px; text-align: center;
-            font-weight: 800; font-size: 16px; text-transform: uppercase;
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
-            display: none; cursor: pointer; z-index: 100;
+            position: fixed; bottom: 20px; left: 16px; right: 16px;
+            background: var(--text); color: #000;
+            padding: 16px; border-radius: 14px;
+            font-size: 16px; font-weight: 800; text-transform: uppercase;
+            text-align: center; cursor: pointer; box-shadow: 0 5px 20px rgba(255,255,255,0.1);
+            transition: 0.2s; display: none; z-index: 100;
         }
-        .back-nav {
-            margin-bottom: 20px; font-size: 14px; color: #888; cursor: pointer;
-        }
-        
-        /* PROFILE */
-        .profile-stat {
-            background: #18181b; padding: 20px; border-radius: 16px; 
-            text-align: center; border: 1px solid #27272a; margin-bottom: 20px;
-        }
-        .big-num { font-family: 'Rajdhani', sans-serif; font-size: 36px; font-weight: 800; color: #fff; }
-        .label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        .main-btn:active { transform: scale(0.98); }
+
+        /* Navigation Arrows */
+        .back-btn { color: var(--gray); font-size: 14px; margin-bottom: 15px; cursor: pointer; display: inline-block; }
 
     </style>
 </head>
 <body>
 
     <div class="container">
-        
-        <div class="header" id="header-box">
-            <div class="user-info">
-                <div class="avatar" id="u-avatar">?</div>
-                <div class="user-text">
-                    <div id="u-name">Loading...</div>
-                    <div id="u-id">ID: ...</div>
+        <div class="header">
+            <div class="logo">XENON</div>
+            <div class="user-pill">
+                <span id="user-name">Guest</span>
+            </div>
+        </div>
+
+        <div class="nav">
+            <div class="nav-item active" onclick="switchTab('boost')">Заказать Буст</div>
+            <div class="nav-item" onclick="switchTab('profile')">Профиль</div>
+        </div>
+
+        <div id="view-boost" class="view active">
+            
+            <div id="step-1">
+                <div class="step-title">1. Выберите режим</div>
+                <div class="mode-card" onclick="selectMode('mm')">
+                    <div class="mode-info"><h3>Соревновательный</h3><p>Классический режим 5x5</p></div>
+                    <div class="mode-icon">🏆</div>
+                </div>
+                <div class="mode-card" onclick="selectMode('wingman')">
+                    <div class="mode-info"><h3>Союзники</h3><p>Режим 2x2</p></div>
+                    <div class="mode-icon">🤝</div>
+                </div>
+                <div class="mode-card" onclick="selectMode('duels')">
+                    <div class="mode-info"><h3>Дуэли</h3><p>1x1 Снайперы</p></div>
+                    <div class="mode-icon">🎯</div>
                 </div>
             </div>
-            <div style="font-size: 20px;">🔥</div>
-        </div>
 
-        <div class="tabs" id="nav-tabs">
-            <div class="tab active" onclick="setTab('shop')">КАТАЛОГ</div>
-            <div class="tab" onclick="setTab('profile')">ПРОФИЛЬ</div>
-        </div>
+            <div id="step-2" style="display:none">
+                <div class="back-btn" onclick="gotoStep(1)">← Назад</div>
+                <div class="step-title">2. Ваш текущий ранг</div>
+                <div class="ranks-grid" id="grid-current"></div>
+            </div>
 
-        <div id="view-shop" class="view active">
-            <div class="grid" id="grid"></div>
+            <div id="step-3" style="display:none">
+                <div class="back-btn" onclick="gotoStep(2)">← Назад</div>
+                <div class="step-title">3. Желаемый ранг</div>
+                <div class="ranks-grid" id="grid-target"></div>
+            </div>
+
+            <div id="step-4" style="display:none">
+                <div class="back-btn" onclick="gotoStep(3)">← Изменить ранги</div>
+                <div class="summary-box">
+                    <div class="summary-row">
+                        <span style="color:#888">Режим:</span>
+                        <span id="sum-mode" style="font-weight:bold">...</span>
+                    </div>
+                    <div class="summary-row">
+                        <span style="color:#888">Буст:</span>
+                        <span><span id="sum-from"></span> ➔ <span id="sum-to" style="color:var(--accent)"></span></span>
+                    </div>
+                    <div class="price-display" id="final-price">0₽</div>
+                    <div style="font-size:11px; color:#555; margin-top:5px">Цена рассчитана автоматически</div>
+                </div>
+            </div>
+
         </div>
 
         <div id="view-profile" class="view">
-            <div class="profile-stat">
-                <div class="big-num" id="stat-buys">0</div>
-                <div class="label">Успешных заказов</div>
+            <div class="profile-header">
+                <div class="p-avatar" id="p-avatar">?</div>
+                <div class="p-name" id="p-name">Loading...</div>
+                <div class="p-id" id="p-id">ID: ...</div>
             </div>
-            <div class="profile-stat">
-                <div class="big-num" style="color:#3b82f6" id="stat-spent">0₽</div>
-                <div class="label">Потрачено средств</div>
-            </div>
-            <div class="profile-stat" onclick="window.open('https://t.me/audemaRRa')" style="cursor:pointer">
-                <div style="font-size:24px; margin-bottom:5px">👨‍💻</div>
-                <div class="label">Написать Поддержке</div>
-            </div>
-        </div>
 
-        <div id="view-detail" class="view">
-            <div class="back-nav" onclick="setTab('shop')">← Вернуться назад</div>
-            
-            <div class="detail-hero">
-                <img id="d-img" src="" class="detail-img">
-                <div id="d-title" class="detail-name">RANK NAME</div>
-                <div style="color:#888; font-size:13px; max-width:80%; margin:0 auto">
-                    Профессиональный буст до выбранного ранга. Быстро, безопасно, без читов на аккаунте клиента.
+            <div class="history-title">История заказов</div>
+            <div id="orders-list">
                 </div>
+            <div id="no-orders" style="text-align:center; color:#444; font-size:12px; margin-top:20px; display:none">
+                История заказов пуста
             </div>
-
-            <div style="font-size:12px; font-weight:700; color:#666; margin-bottom:10px; margin-top:30px">ВЫБЕРИТЕ ТИП БУСТА:</div>
-            <div id="d-options"></div>
         </div>
 
     </div>
 
-    <div id="main-btn" class="main-btn">ОПЛАТИТЬ ЗАКАЗ</div>
+    <div id="main-btn" class="main-btn">ОФОРМИТЬ ЗАКАЗ</div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- CONFIG & DATA ---
-    // Генерируем полный список рангов
-    const ranks = [];
+    // --- CONFIG ---
+    // Цены за ШАГ (например от Gold 1 до Gold 2)
+    // Чем выше ранг, тем дороже шаг
+    const RANKS = [
+        { id: 0, name: "Bronze I", img: "bronze1.png", price: 50 },
+        { id: 1, name: "Bronze II", img: "bronze2.png", price: 50 },
+        { id: 2, name: "Bronze III", img: "bronze3.png", price: 50 },
+        { id: 3, name: "Bronze IV", img: "bronze4.png", price: 60 },
+        
+        { id: 4, name: "Silver I", img: "silver1.png", price: 80 },
+        { id: 5, name: "Silver II", img: "silver2.png", price: 80 },
+        { id: 6, name: "Silver III", img: "silver3.png", price: 90 },
+        { id: 7, name: "Silver IV", img: "silver4.png", price: 100 },
+
+        { id: 8, name: "Gold I", img: "gold1.png", price: 150 },
+        { id: 9, name: "Gold II", img: "gold2.png", price: 160 },
+        { id: 10, name: "Gold III", img: "gold3.png", price: 170 },
+        { id: 11, name: "Gold IV", img: "gold4.png", price: 180 },
+
+        { id: 12, name: "Phoenix", img: "phoenix.png", price: 300 },
+        { id: 13, name: "Ranger", img: "ranger.png", price: 450 },
+        { id: 14, name: "Champion", img: "champion.png", price: 600 },
+        { id: 15, name: "Master", img: "master.png", price: 900 },
+        { id: 16, name: "Elite", img: "elite.png", price: 1500 },
+        { id: 17, name: "Legend", img: "legend.png", price: 2500 }
+    ];
+
+    // Коэффициенты режимов
+    const MODE_MULTIPLIERS = {
+        'mm': 1.0,     // Соревновательный - стандарт
+        'wingman': 0.8, // Напарники - дешевле
+        'duels': 1.2    // Дуэли - дороже (сложнее)
+    };
     
-    // Helper to create ranks
-    function addRank(id, name, img, tier, priceLobby, priceLogin) {
-        ranks.push({
-            id: id,
-            name: name,
-            img: img,
-            tier: tier, // for css color
-            plans: [
-                { name: 'В лобби (Пати)', desc: 'Вы играете с нами', price: priceLobby },
-                { name: 'Вход (Передача)', desc: 'Мы играем за вас', price: priceLogin }
-            ]
+    const MODE_NAMES = { 'mm': 'Соревновательный', 'wingman': 'Напарники', 'duels': 'Дуэли' };
+
+    // --- STATE ---
+    let state = {
+        mode: null,
+        currentRankIdx: null,
+        targetRankIdx: null
+    };
+
+    // --- INIT ---
+    function init() {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Получаем данные
+        const name = urlParams.get('name') || "Guest";
+        const uid = urlParams.get('uid') || "0000";
+        
+        // Безопасно парсим историю заказов
+        let orders = [];
+        try {
+            const ordersRaw = urlParams.get('orders');
+            if (ordersRaw) orders = JSON.parse(decodeURIComponent(ordersRaw));
+        } catch (e) { console.error("Error parsing orders", e); }
+
+        // Заполняем UI
+        document.getElementById('user-name').innerText = name;
+        document.getElementById('p-name').innerText = name;
+        document.getElementById('p-id').innerText = `ID: ${uid}`;
+        document.getElementById('p-avatar').innerText = name[0].toUpperCase();
+
+        renderOrders(orders);
+        renderRanks(); // Генерируем сетку рангов
+    }
+
+    // --- RENDER RANKS ---
+    function renderRanks() {
+        // Генерируем сетку для шага 2 (Текущий)
+        const gridCurr = document.getElementById('grid-current');
+        const gridTarg = document.getElementById('grid-target');
+        
+        RANKS.forEach((rank, idx) => {
+            // Карточка для текущего ранга
+            const card1 = createRankCard(rank, idx, 'current');
+            gridCurr.appendChild(card1);
+
+            // Карточка для желаемого ранга
+            const card2 = createRankCard(rank, idx, 'target');
+            gridTarg.appendChild(card2);
         });
     }
 
-    // 1. Bronze 1-4
-    for(let i=1; i<=4; i++) addRank(`bronze_${i}`, `BRONZE ${i}`, `bronze${i}.png`, 'tier-bronze', 60 + (i*10), 40 + (i*10));
-    
-    // 2. Silver 1-4
-    for(let i=1; i<=4; i++) addRank(`silver_${i}`, `SILVER ${i}`, `silver${i}.png`, 'tier-silver', 120 + (i*20), 90 + (i*15));
-    
-    // 3. Gold 1-4
-    for(let i=1; i<=4; i++) addRank(`gold_${i}`, `GOLD ${i}`, `gold${i}.png`, 'tier-gold', 250 + (i*30), 180 + (i*20));
-
-    // 4. High Ranks
-    addRank('phoenix', 'PHOENIX', 'phoenix.png', 'tier-phoenix', 500, 350);
-    addRank('ranger', 'RANGER', 'ranger.png', 'tier-ranger', 700, 500);
-    addRank('champion', 'CHAMPION', 'champion.png', 'tier-high', 1000, 750);
-    addRank('master', 'MASTER', 'master.png', 'tier-high', 1500, 1100);
-    addRank('elite', 'ELITE', 'elite.png', 'tier-high', 2200, 1600);
-    addRank('legend', 'THE LEGEND', 'legend.png', 'tier-high', 3500, 2500);
-
-    let currentItem = null;
-    let selectedPlanIdx = -1;
-
-    // --- RENDER ---
-    function renderGrid() {
-        const grid = document.getElementById('grid');
-        grid.innerHTML = '';
-        
-        ranks.forEach(rank => {
-            const el = document.createElement('div');
-            el.className = `card ${rank.tier}`;
-            el.onclick = () => openDetail(rank.id);
-            
-            // Минимальная цена для отображения "от..."
-            const minPrice = Math.min(...rank.plans.map(p => p.price));
-            
-            el.innerHTML = `
-                <div class="card-img-box">
-                    <img src="${rank.img}" class="card-img" onerror="this.src='bronze1.png'">
-                </div>
-                <div class="card-content">
-                    <div class="card-title" style="color: ${getColor(rank.tier)}">${rank.name}</div>
-                    <div class="price-tag">от <span class="accent-text">${minPrice}₽</span></div>
-                </div>
-            `;
-            grid.appendChild(el);
-        });
+    function createRankCard(rank, idx, type) {
+        const el = document.createElement('div');
+        el.className = 'rank-card';
+        el.id = `${type}-rank-${idx}`;
+        el.innerHTML = `
+            <img src="${rank.img}" onerror="this.src='bronze1.png'">
+            <div class="rank-name">${rank.name}</div>
+        `;
+        el.onclick = () => selectRank(idx, type);
+        return el;
     }
 
-    function getColor(tier) {
-        if(tier.includes('bronze')) return '#cd7f32';
-        if(tier.includes('silver')) return '#fff';
-        if(tier.includes('gold')) return '#fbbf24';
-        if(tier.includes('phoenix')) return '#a855f7';
-        if(tier.includes('ranger')) return '#ef4444';
-        return '#3b82f6';
-    }
-
-    function openDetail(id) {
-        currentItem = ranks.find(r => r.id === id);
-        selectedPlanIdx = -1;
-        updateMainButton();
-
-        document.getElementById('d-img').src = currentItem.img;
-        document.getElementById('d-title').innerText = currentItem.name;
-        document.getElementById('d-title').style.color = getColor(currentItem.tier);
+    // --- LOGIC ---
+    function switchTab(tab) {
+        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
         
-        const optContainer = document.getElementById('d-options');
-        optContainer.innerHTML = '';
-        
-        currentItem.plans.forEach((plan, idx) => {
-            const div = document.createElement('div');
-            div.className = 'option-card';
-            div.onclick = () => selectPlan(idx);
-            div.id = `plan-${idx}`;
-            div.innerHTML = `
-                <div class="opt-left">
-                    <div>${plan.name}</div>
-                    <div>${plan.desc}</div>
-                </div>
-                <div class="opt-price">${plan.price}₽</div>
-            `;
-            optContainer.appendChild(div);
-        });
-
-        switchView('detail');
-    }
-
-    function selectPlan(idx) {
+        if (tab === 'boost') {
+            document.getElementById('view-boost').classList.add('active');
+            document.querySelectorAll('.nav-item')[0].classList.add('active');
+            updateMainButtonVisibility();
+        } else {
+            document.getElementById('view-profile').classList.add('active');
+            document.querySelectorAll('.nav-item')[1].classList.add('active');
+            document.getElementById('main-btn').style.display = 'none';
+        }
         if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        
-        // UI update
-        document.querySelectorAll('.option-card').forEach(el => el.classList.remove('active'));
-        document.getElementById(`plan-${idx}`).classList.add('active');
-        
-        selectedPlanIdx = idx;
-        updateMainButton();
     }
 
-    function updateMainButton() {
+    function gotoStep(step) {
+        // Скрываем все шаги
+        for(let i=1; i<=4; i++) document.getElementById(`step-${i}`).style.display = 'none';
+        // Показываем нужный
+        document.getElementById(`step-${step}`).style.display = 'block';
+        updateMainButtonVisibility();
+    }
+
+    function selectMode(mode) {
+        state.mode = mode;
+        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        gotoStep(2);
+    }
+
+    function selectRank(idx, type) {
+        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+
+        if (type === 'current') {
+            state.currentRankIdx = idx;
+            // Сброс таргета если он меньше текущего
+            if (state.targetRankIdx !== null && state.targetRankIdx <= idx) state.targetRankIdx = null;
+            
+            highlightRank('current', idx);
+            gotoStep(3);
+            updateTargetGridAvailability(idx); // Блокируем ранги ниже текущего
+        } 
+        else if (type === 'target') {
+            state.targetRankIdx = idx;
+            highlightRank('target', idx);
+            calculatePrice();
+            gotoStep(4);
+        }
+    }
+
+    function highlightRank(type, idx) {
+        // Сброс активных
+        document.querySelectorAll(`#grid-${type} .rank-card`).forEach(el => el.classList.remove('active'));
+        // Сет активного
+        document.getElementById(`${type}-rank-${idx}`).classList.add('active');
+    }
+
+    function updateTargetGridAvailability(currentIdx) {
+        RANKS.forEach((r, i) => {
+            const card = document.getElementById(`target-rank-${i}`);
+            if (i <= currentIdx) card.classList.add('disabled');
+            else card.classList.remove('disabled');
+        });
+    }
+
+    function calculatePrice() {
+        if (state.currentRankIdx === null || state.targetRankIdx === null) return;
+        
+        let rawPrice = 0;
+        // Суммируем цену КАЖДОГО шага от (Current + 1) до Target
+        // Пример: Bronze 1 -> Bronze 3. Считаем цену Bronze 2 + Bronze 3.
+        for (let i = state.currentRankIdx + 1; i <= state.targetRankIdx; i++) {
+            rawPrice += RANKS[i].price;
+        }
+
+        const multiplier = MODE_MULTIPLIERS[state.mode];
+        const finalPrice = Math.round(rawPrice * multiplier);
+
+        // Обновляем UI
+        document.getElementById('sum-mode').innerText = MODE_NAMES[state.mode];
+        document.getElementById('sum-from').innerText = RANKS[state.currentRankIdx].name;
+        document.getElementById('sum-to').innerText = RANKS[state.targetRankIdx].name;
+        document.getElementById('final-price').innerText = finalPrice + "₽";
+        
+        state.finalPrice = finalPrice;
+    }
+
+    function updateMainButtonVisibility() {
         const btn = document.getElementById('main-btn');
-        if (selectedPlanIdx !== -1 && currentItem) {
-            const price = currentItem.plans[selectedPlanIdx].price;
-            btn.innerText = `КУПИТЬ ЗА ${price}₽`;
+        const step4 = document.getElementById('step-4');
+        
+        if (step4.style.display === 'block') {
+            btn.innerText = `ОПЛАТИТЬ ${state.finalPrice}₽`;
             btn.style.display = 'block';
-            btn.onclick = () => {
-                const payload = {
-                    name: `Boost: ${currentItem.name} (${currentItem.plans[selectedPlanIdx].name})`,
-                    price: price
-                };
-                tg.sendData(JSON.stringify(payload));
-            };
+            btn.onclick = sendOrder;
         } else {
             btn.style.display = 'none';
         }
     }
 
-    // --- NAVIGATION ---
-    function setTab(tab) {
-        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    function sendOrder() {
+        if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
         
-        document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-        // Find tab element manually based on text or index logic if needed, 
-        // strictly simple here:
-        if(tab === 'shop') document.querySelectorAll('.tab')[0].classList.add('active');
-        if(tab === 'profile') document.querySelectorAll('.tab')[1].classList.add('active');
-
-        if(tab === 'shop') switchView('shop');
-        if(tab === 'profile') switchView('profile');
+        const data = {
+            name: `${MODE_NAMES[state.mode]}: ${RANKS[state.currentRankIdx].name} -> ${RANKS[state.targetRankIdx].name}`,
+            price: state.finalPrice
+        };
+        
+        tg.sendData(JSON.stringify(data));
+        tg.close();
     }
 
-    function switchView(viewName) {
-        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-        document.getElementById(`view-${viewName}`).classList.add('active');
+    // --- ORDER HISTORY RENDER ---
+    function renderOrders(orders) {
+        const list = document.getElementById('orders-list');
+        const empty = document.getElementById('no-orders');
         
-        const header = document.getElementById('header-box');
-        const nav = document.getElementById('nav-tabs');
-        
-        if (viewName === 'detail') {
-            header.style.display = 'none';
-            nav.style.display = 'none';
-        } else {
-            header.style.display = 'flex';
-            nav.style.display = 'flex';
-            document.getElementById('main-btn').style.display = 'none';
+        if (!orders || orders.length === 0) {
+            empty.style.display = 'block';
+            return;
         }
-        window.scrollTo({top:0, behavior:'smooth'});
-    }
 
-    // --- INIT ---
-    function init() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const name = urlParams.get('name') || (tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : 'Guest');
-        const uid = urlParams.get('uid') || (tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : '000000');
-        const buys = urlParams.get('buys') || '0';
-        const spent = urlParams.get('spent') || '0';
+        // Сортировка (новые сверху)
+        orders.reverse().forEach(o => {
+            let statusText = 'Ожидание';
+            let badgeClass = 'badge-wait';
+            let borderClass = 'status-wait';
 
-        document.getElementById('u-name').innerText = name;
-        document.getElementById('u-id').innerText = `ID: ${uid}`;
-        document.getElementById('u-avatar').innerText = name[0].toUpperCase();
+            if (o.status === 'work') { statusText = 'В работе'; badgeClass = 'badge-work'; borderClass = 'status-work'; }
+            if (o.status === 'done') { statusText = 'Выполнен'; badgeClass = 'badge-done'; borderClass = 'status-done'; }
+            if (o.status === 'reject') { statusText = 'Отклонен'; badgeClass = 'badge-reject'; borderClass = 'status-reject'; }
 
-        document.getElementById('stat-buys').innerText = buys;
-        document.getElementById('stat-spent').innerText = `${spent}₽`;
-
-        renderGrid();
+            const el = document.createElement('div');
+            el.className = `order-item ${borderClass}`;
+            el.innerHTML = `
+                <div class="order-info">
+                    <div>${o.desc}</div>
+                    <div>Заказ #${o.id} • ${o.date} • ${o.price}₽</div>
+                </div>
+                <div class="order-badge ${badgeClass}">${statusText}</div>
+            `;
+            list.appendChild(el);
+        });
     }
 
     init();
