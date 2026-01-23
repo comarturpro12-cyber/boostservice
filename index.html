@@ -3,420 +3,397 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xenon ELO Boost</title>
+    <title>Xenon Boost</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Inter:wght@400;600&display=swap');
-        :root { --bg: #050505; --card: #0f0f11; --border: #27272a; --accent: #3b82f6; --text: #ffffff; --gray: #9ca3af; --danger: #ef4444; }
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;800&family=Inter:wght@500;700&display=swap');
         
-        @keyframes rgb-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        :root { 
+            --bg: #09090b; 
+            --card-bg: #121214;
+            --bronze: #cd7f32;
+            --silver: #e2e8f0;
+            --gold: #fbbf24;
+            --phoenix: #a855f7;
+            --ranger: #ef4444;
+            --champion: #3b82f6;
+            --master: #10b981;
+            --legend: #ec4899;
+        }
 
         body { 
-            background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; 
-            margin: 0; padding: 0; overflow-x: hidden; min-height: 100vh;
-            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #000000 70%);
+            background-color: var(--bg); 
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 0; 
+            -webkit-font-smoothing: antialiased;
+            background-image: radial-gradient(circle at top center, #1e1b4b 0%, #000 60%);
             background-attachment: fixed;
+            min-height: 100vh;
         }
-        .container { padding: 16px; padding-bottom: 90px; }
-        
+
+        .container { padding: 15px; padding-bottom: 100px; }
+
         /* HEADER */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; backdrop-filter: blur(10px); }
-        .user-box { display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3); background-size: 400% 400%; animation: rgb-flow 8s ease infinite; display: flex; align-items: center; justify-content: center; font-weight: bold; font-family: 'Rajdhani', sans-serif; font-size: 18px; color: #fff; text-transform: uppercase; }
-        .user-meta div:first-child { font-weight: 600; font-size: 14px; } 
-        .user-meta div:last-child { font-size: 11px; color: var(--gray); }
-        
-        #back-btn { display: none; font-size: 24px; cursor: pointer; color: var(--accent); margin-right: 10px; transition: 0.2s; }
-        
-        .hero { text-align: center; margin: 25px 0; transition: 0.3s; }
-        .hero h1 { font-family: 'Rajdhani', sans-serif; font-size: 44px; margin: 0; text-transform: uppercase; letter-spacing: 3px; background: linear-gradient(90deg, #3b82f6, #8b5cf6, #00ffff, #3b82f6); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rgb-flow 5s linear infinite; }
-        .hero p { color: var(--gray); font-size: 13px; margin-top: 5px; }
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);
+            padding: 10px 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 25px;
+        }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .avatar { 
+            width: 38px; height: 38px; border-radius: 10px; 
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-family: 'Rajdhani', sans-serif;
+        }
+        .user-text div:first-child { font-size: 14px; font-weight: 700; }
+        .user-text div:last-child { font-size: 11px; color: #9ca3af; }
 
         /* TABS */
-        .nav-tabs { display: flex; background: var(--card); border-radius: 12px; padding: 4px; margin-bottom: 25px; border: 1px solid var(--border); }
-        .nav-tab { flex: 1; text-align: center; padding: 10px 5px; font-size: 12px; font-weight: 700; border-radius: 8px; color: var(--gray); cursor: pointer; transition: 0.2s; text-transform: uppercase; }
-        .nav-tab.active { background: linear-gradient(90deg, #3b82f6, #8b5cf6); color: white; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 12px; }
+        .tab { flex: 1; text-align: center; padding: 10px; font-size: 12px; font-weight: 800; color: #666; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .tab.active { background: #222; color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
 
+        /* GRID */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px; 
+        }
+
+        /* CARD DESIGN */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex; flex-direction: column;
+        }
+        .card:active { transform: scale(0.97); }
+        
+        /* Свечение карточек в зависимости от ранга */
+        .tier-bronze { box-shadow: 0 0 0 1px rgba(205, 127, 50, 0.1); }
+        .tier-silver { box-shadow: 0 0 0 1px rgba(226, 232, 240, 0.1); }
+        .tier-gold { box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.1); }
+        .tier-phoenix { box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.2); border-color: rgba(168, 85, 247, 0.3); }
+        .tier-ranger { box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.3); }
+        .tier-high { box-shadow: 0 0 15px rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4); }
+
+        .card-img-box {
+            height: 100px; display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 70%);
+            padding-top: 10px;
+        }
+        .card-img { width: 70px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+        
+        .card-content { padding: 12px; text-align: center; }
+        .card-title { 
+            font-family: 'Rajdhani', sans-serif; font-weight: 800; font-size: 18px; 
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+        }
+        .price-tag {
+            font-size: 13px; font-weight: 600; color: #9ca3af;
+            background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px;
+            display: inline-block;
+        }
+        .accent-text { color: #fff; }
+
+        /* VIEW STATES */
         .view { display: none; animation: fadeIn 0.3s ease; }
         .view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* SHOP GRID */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: rgba(15, 15, 17, 0.8); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; position: relative; transition: 0.2s; backdrop-filter: blur(5px); display: flex; flex-direction: column; }
-        .card:active { transform: scale(0.98); border-color: var(--accent); }
-        .card-img-container { width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, rgba(59,130,246,0.1) 0%, rgba(0,0,0,0) 70%); padding-top: 10px;}
-        .card-img { width: 80px; height: auto; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
-        .card-body { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; text-align: center; }
-        .card-title { font-weight: 700; font-size: 16px; color: #fff; margin-bottom: 5px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px;}
-        .card-price { font-size: 12px; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
-        .mini-btn { width: 100%; padding: 8px 0; background: #1f1f22; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        /* DETAIL PAGE */
+        .detail-hero { text-align: center; margin-bottom: 20px; }
+        .detail-img { width: 140px; filter: drop-shadow(0 0 30px rgba(59,130,246,0.2)); }
+        .detail-name { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 800; margin: 10px 0; text-transform: uppercase; }
+        
+        .option-card {
+            background: #18181b; padding: 15px; border-radius: 12px;
+            border: 1px solid #27272a; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: 0.2s;
+        }
+        .option-card.active {
+            border-color: #3b82f6; background: rgba(59, 130, 246, 0.1);
+        }
+        .opt-left div:first-child { font-size: 14px; font-weight: 700; }
+        .opt-left div:last-child { font-size: 11px; color: #888; }
+        .opt-price { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 800; color: #3b82f6; }
 
+        /* BUTTONS */
+        .main-btn {
+            position: fixed; bottom: 20px; left: 15px; right: 15px;
+            background: #3b82f6; color: #fff;
+            padding: 15px; border-radius: 12px; text-align: center;
+            font-weight: 800; font-size: 16px; text-transform: uppercase;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            display: none; cursor: pointer; z-index: 100;
+        }
+        .back-nav {
+            margin-bottom: 20px; font-size: 14px; color: #888; cursor: pointer;
+        }
+        
         /* PROFILE */
-        .profile-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
-        .profile-avatar { width: 80px; height: 80px; margin: 0 auto 15px; border-radius: 50%; background: linear-gradient(124deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #fff; box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-        .profile-name { font-size: 24px; font-weight: 800; font-family: 'Rajdhani', sans-serif; margin-bottom: 5px; color: #fff; }
-        .profile-id { font-size: 12px; color: var(--gray); margin-bottom: 20px; }
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stat-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
-        .stat-val { font-size: 20px; font-weight: 800; color: var(--accent); font-family: 'Rajdhani', sans-serif; }
-        .stat-label { font-size: 11px; color: var(--gray); text-transform: uppercase; margin-top: 5px; }
+        .profile-stat {
+            background: #18181b; padding: 20px; border-radius: 16px; 
+            text-align: center; border: 1px solid #27272a; margin-bottom: 20px;
+        }
+        .big-num { font-family: 'Rajdhani', sans-serif; font-size: 36px; font-weight: 800; color: #fff; }
+        .label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* DETAIL VIEW */
-        .detail-img-container { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, rgba(59,130,246,0.2) 0%, rgba(0,0,0,0) 70%); margin-bottom: 20px; border-radius: 16px; border: 1px solid var(--border); }
-        .detail-img { width: 120px; height: auto; filter: drop-shadow(0 0 20px rgba(59,130,246,0.3)); }
-        .detail-title { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 10px; text-transform: uppercase; font-family: 'Rajdhani', sans-serif; text-align: center; letter-spacing: 2px; }
-        .detail-desc { font-size: 13px; color: #d1d5db; line-height: 1.6; margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
-        .section-title { font-size: 12px; color: var(--gray); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; margin-top: 20px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        .features-list { margin-bottom: 10px; }
-        .feature-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; color: #9ca3af; }
-        .feature-icon { color: var(--accent); font-weight: bold; font-size: 16px; }
-        .plans-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        .plan-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s; }
-        .plan-card.active { border-color: var(--accent); background: rgba(59, 130, 246, 0.15); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-        .plan-info { text-align: left; }
-        .plan-name { font-size: 14px; font-weight: 700; color: #fff; }
-        .plan-sub { font-size: 11px; color: #666; margin-top: 2px; }
-        .plan-price { font-size: 16px; font-family: 'Rajdhani', sans-serif; color: var(--accent); font-weight: 800; }
-
-        .bottom-back-container { text-align: center; margin-top: 25px; }
-        .bottom-back-btn { display: inline-block; padding: 10px 25px; background: #222; border: 1px solid #333; border-radius: 20px; font-weight: 600; font-size: 12px; color: #aaa; cursor: pointer; transition: 0.3s; }
     </style>
 </head>
 <body>
 
     <div class="container">
         
-        <div class="header">
-            <div class="user-box">
-                <div id="back-btn" onclick="goBack()">‹</div>
-                <div class="avatar" id="avatar">X</div>
-                <div class="user-meta">
-                    <div id="username">Guest</div>
-                    <div id="userid">Loading...</div>
+        <div class="header" id="header-box">
+            <div class="user-info">
+                <div class="avatar" id="u-avatar">?</div>
+                <div class="user-text">
+                    <div id="u-name">Loading...</div>
+                    <div id="u-id">ID: ...</div>
                 </div>
             </div>
-            <div style="text-align: right;">
-                <div style="color:#10b981; font-size:12px; font-weight:bold;">● Work</div>
-                <div style="font-size:10px; color:#666;">Xenon Elo</div>
+            <div style="font-size: 20px;">🔥</div>
+        </div>
+
+        <div class="tabs" id="nav-tabs">
+            <div class="tab active" onclick="setTab('shop')">КАТАЛОГ</div>
+            <div class="tab" onclick="setTab('profile')">ПРОФИЛЬ</div>
+        </div>
+
+        <div id="view-shop" class="view active">
+            <div class="grid" id="grid"></div>
+        </div>
+
+        <div id="view-profile" class="view">
+            <div class="profile-stat">
+                <div class="big-num" id="stat-buys">0</div>
+                <div class="label">Успешных заказов</div>
+            </div>
+            <div class="profile-stat">
+                <div class="big-num" style="color:#3b82f6" id="stat-spent">0₽</div>
+                <div class="label">Потрачено средств</div>
+            </div>
+            <div class="profile-stat" onclick="window.open('https://t.me/audemaRRa')" style="cursor:pointer">
+                <div style="font-size:24px; margin-bottom:5px">👨‍💻</div>
+                <div class="label">Написать Поддержке</div>
             </div>
         </div>
 
-        <div id="main-hero" class="hero">
-            <h1>XENON ELO</h1>
-            <p>Professional Standoff 2 Boosting</p>
-        </div>
-
-        <div class="nav-tabs">
-            <div class="nav-tab active" id="tab-shop" onclick="switchTab('shop')">УСЛУГИ</div>
-            <div class="nav-tab" id="tab-profile" onclick="switchTab('profile')">ПРОФИЛЬ</div>
-        </div>
-
-        <div id="shop-view" class="view active">
-            <div class="grid" id="products-grid"></div>
-        </div>
-
-        <div id="profile-view" class="view">
-            <div class="profile-card">
-                <div class="profile-avatar" id="p-avatar">X</div>
-                <div class="profile-name" id="p-name">Guest</div>
-                <div class="profile-id" id="p-id">ID: ...</div>
-                
-                <div class="stats-row">
-                    <div class="stat-box">
-                        <div class="stat-val" id="p-buys">0</div>
-                        <div class="stat-label">Заказов</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-val" id="p-spent">0₽</div>
-                        <div class="stat-label">Потрачено</div>
-                    </div>
-                </div>
-            </div>
+        <div id="view-detail" class="view">
+            <div class="back-nav" onclick="setTab('shop')">← Вернуться назад</div>
             
-            <div class="section-title">ПОДДЕРЖКА</div>
-            <div class="card" onclick="window.open('https://t.me/audemaRRa', '_blank')" style="cursor: pointer; padding: 15px; flex-direction: row; align-items: center; gap: 15px;">
-                <div style="font-size: 24px;">👨‍💻</div>
-                <div style="text-align: left;">
-                    <div style="font-weight: bold; color: #fff;">Написать менеджеру</div>
-                    <div style="font-size: 11px; color: #888;">По вопросам заказа</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="detail-view" class="view">
-            <div class="detail-img-container">
+            <div class="detail-hero">
                 <img id="d-img" src="" class="detail-img">
+                <div id="d-title" class="detail-name">RANK NAME</div>
+                <div style="color:#888; font-size:13px; max-width:80%; margin:0 auto">
+                    Профессиональный буст до выбранного ранга. Быстро, безопасно, без читов на аккаунте клиента.
+                </div>
             </div>
-            <div id="d-title" class="detail-title"></div>
-            <div id="d-desc" class="detail-desc"></div>
-            
-            <div class="section-title">ГАРАНТИИ БУСТА</div>
-            <div id="d-features" class="features-list"></div>
 
-            <div class="section-title">ВЫБЕРИТЕ МЕТОД БУСТА</div>
-            <div class="plans-grid" id="plans-grid"></div>
-
-            <div class="bottom-back-container">
-                <div class="bottom-back-btn" onclick="goBack()">ВЕРНУТЬСЯ В КАТАЛОГ</div>
-            </div>
+            <div style="font-size:12px; font-weight:700; color:#666; margin-bottom:10px; margin-top:30px">ВЫБЕРИТЕ ТИП БУСТА:</div>
+            <div id="d-options"></div>
         </div>
 
     </div>
+
+    <div id="main-btn" class="main-btn">ОПЛАТИТЬ ЗАКАЗ</div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    function initData() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const nameFromUrl = urlParams.get('name');
-        const uidFromUrl = urlParams.get('uid');
-        const buys = urlParams.get('buys') || '0';
-        const spent = urlParams.get('spent') || '0';
-        
-        if (nameFromUrl) {
-            document.getElementById('username').innerText = nameFromUrl;
-            document.getElementById('userid').innerText = `ID: ${uidFromUrl}`;
-            document.getElementById('avatar').innerText = nameFromUrl[0].toUpperCase();
-
-            document.getElementById('p-name').innerText = nameFromUrl;
-            document.getElementById('p-id').innerText = `ID: ${uidFromUrl}`;
-            document.getElementById('p-avatar').innerText = nameFromUrl[0].toUpperCase();
-            document.getElementById('p-buys').innerText = buys;
-            document.getElementById('p-spent').innerText = `${spent}₽`;
-        }
-    }
-    initData();
-
-    // ПОЛНЫЙ СПИСОК ТОВАРОВ ПО ФАЙЛАМ
-    const products = [
-        { 
-            id: 'boost_bronze', 
-            name: 'Bronze (Бронза)', 
-            img: 'bronze4.png', 
-            short_desc: 'Стартовый уровень.',
-            full_desc: `Буст до ранга <b>Bronze</b>.<br>Самое начало пути. Быстрое прохождение калибровки и начальных званий.`,
-            features: ["Быстрое прохождение", "Дешевая цена", "Без риска"],
+    // --- CONFIG & DATA ---
+    // Генерируем полный список рангов
+    const ranks = [];
+    
+    // Helper to create ranks
+    function addRank(id, name, img, tier, priceLobby, priceLogin) {
+        ranks.push({
+            id: id,
+            name: name,
+            img: img,
+            tier: tier, // for css color
             plans: [
-                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 90 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 50 }
+                { name: 'В лобби (Пати)', desc: 'Вы играете с нами', price: priceLobby },
+                { name: 'Вход (Передача)', desc: 'Мы играем за вас', price: priceLogin }
             ]
-        },
-        { 
-            id: 'boost_silver', 
-            name: 'Silver (Серебро)', 
-            img: 'silver4.png', 
-            short_desc: 'Выход из песочницы.',
-            full_desc: `Буст до ранга <b>Silver</b>.<br>Поможем выбраться со дна и начать нормальную игру.`,
-            features: ["Legit игра", "Хороший старт", "Любой К/Д"],
-            plans: [
-                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 150 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 100 }
-            ]
-        },
-        { 
-            id: 'boost_gold', 
-            name: 'Gold (Золото)', 
-            img: 'gold4.png',
-            short_desc: 'Золотая середина.',
-            full_desc: `Буст до ранга <b>Gold</b>.<br>Самый популярный ранг. Получите уважение среди друзей.`,
-            features: ["Стабильный винрейт", "Опытные бустеры", "Конфиденциальность"],
-            plans: [
-                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 250 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 180 }
-            ]
-        },
-        { 
-            id: 'boost_phoenix', 
-            name: 'Phoenix (Феникс)', 
-            img: 'phoenix.png',
-            short_desc: 'Престижный ранг.',
-            full_desc: `Буст до ранга <b>Phoenix</b>.<br>Серьезный уровень игры. Требует скилла, который мы предоставим.`,
-            features: ["Скриншот результата", "Высокий скилл", "Быстро"],
-            plans: [
-                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 400 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 300 }
-            ]
-        },
-        { 
-            id: 'boost_ranger', 
-            name: 'Ranger (Рейнджер)', 
-            img: 'ranger.png',
-            short_desc: 'Элита игры.',
-            full_desc: `Буст до ранга <b>Ranger</b>.<br>Для тех, кто хочет играть с сильными противниками.`,
-            features: ["Legit / Rage", "Гарантия от бана", "VIP отношение"],
-            plans: [
-                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 600 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 450 }
-            ]
-        },
-        { 
-            id: 'boost_champion', 
-            name: 'Champion (Чемпион)', 
-            img: 'champion.png',
-            short_desc: 'Пред-топ уровень.',
-            full_desc: `Буст до ранга <b>Champion</b>.<br>Почти вершина. Очень сложный буст.`,
-            features: ["Только PRO бустеры", "Стрим (по запросу)", "Отчетность"],
-            plans: [
-                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 900 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 700 }
-            ]
-        },
-        { 
-            id: 'boost_master', 
-            name: 'Master (Мастер)', 
-            img: 'master.png',
-            short_desc: 'Уровень киберспорта.',
-            full_desc: `Буст до ранга <b>Master</b>.<br>Игра на результат.`,
-            features: ["Rage буст (быстро)", "Legit буст (безопасно)", "Связь с бустером"],
-            plans: [
-                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 1300 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 1000 }
-            ]
-        },
-        { 
-            id: 'boost_elite', 
-            name: 'Elite (Элита)', 
-            img: 'elite.png',
-            short_desc: 'Серебряная Элита.',
-            full_desc: `Буст до <b>Elite</b>.<br>Один из высших рангов.`,
-            features: ["Полная анонимность", "Максимальный приоритет", "Любые капризы"],
-            plans: [
-                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 1800 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 1400 }
-            ]
-        },
-        { 
-            id: 'boost_legend', 
-            name: 'THE LEGEND', 
-            img: 'legend.png',
-            short_desc: 'МАКСИМАЛЬНЫЙ РАНГ.',
-            full_desc: `Буст до <b>THE LEGEND</b>.<br>Вершина пищевой цепочки Standoff 2.<br>Самая дорогая и престижная услуга.`,
-            features: ["Легендарный статус", "Персональный менеджер", "Топ 1 сервера"],
-            plans: [
-                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 3000 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 2200 }
-            ]
-        }
-    ];
-
-    let currentProduct = null;
-    let selectedPlan = null;
-
-    window.switchTab = function(tabName) {
-        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
-
-        document.getElementById(tabName + '-view').classList.add('active');
-        document.getElementById('tab-' + tabName).classList.add('active');
-
-        if (tabName !== 'detail') {
-            document.getElementById('back-btn').style.display = 'none';
-            document.getElementById('main-hero').style.display = 'block';
-            tg.MainButton.hide();
-        }
+        });
     }
 
-    function renderShop() {
-        const grid = document.getElementById('products-grid');
+    // 1. Bronze 1-4
+    for(let i=1; i<=4; i++) addRank(`bronze_${i}`, `BRONZE ${i}`, `bronze${i}.png`, 'tier-bronze', 60 + (i*10), 40 + (i*10));
+    
+    // 2. Silver 1-4
+    for(let i=1; i<=4; i++) addRank(`silver_${i}`, `SILVER ${i}`, `silver${i}.png`, 'tier-silver', 120 + (i*20), 90 + (i*15));
+    
+    // 3. Gold 1-4
+    for(let i=1; i<=4; i++) addRank(`gold_${i}`, `GOLD ${i}`, `gold${i}.png`, 'tier-gold', 250 + (i*30), 180 + (i*20));
+
+    // 4. High Ranks
+    addRank('phoenix', 'PHOENIX', 'phoenix.png', 'tier-phoenix', 500, 350);
+    addRank('ranger', 'RANGER', 'ranger.png', 'tier-ranger', 700, 500);
+    addRank('champion', 'CHAMPION', 'champion.png', 'tier-high', 1000, 750);
+    addRank('master', 'MASTER', 'master.png', 'tier-high', 1500, 1100);
+    addRank('elite', 'ELITE', 'elite.png', 'tier-high', 2200, 1600);
+    addRank('legend', 'THE LEGEND', 'legend.png', 'tier-high', 3500, 2500);
+
+    let currentItem = null;
+    let selectedPlanIdx = -1;
+
+    // --- RENDER ---
+    function renderGrid() {
+        const grid = document.getElementById('grid');
         grid.innerHTML = '';
-        products.forEach(p => {
-            const div = document.createElement('div');
-            div.className = 'card';
-            div.innerHTML = `
-                <div class="card-img-container">
-                    <img src="${p.img}" class="card-img">
+        
+        ranks.forEach(rank => {
+            const el = document.createElement('div');
+            el.className = `card ${rank.tier}`;
+            el.onclick = () => openDetail(rank.id);
+            
+            // Минимальная цена для отображения "от..."
+            const minPrice = Math.min(...rank.plans.map(p => p.price));
+            
+            el.innerHTML = `
+                <div class="card-img-box">
+                    <img src="${rank.img}" class="card-img" onerror="this.src='bronze1.png'">
                 </div>
-                <div class="card-body">
-                    <div class="card-title">${p.name}</div>
-                    <div class="card-price">от ${p.plans[1].price}₽</div>
-                    <div class="mini-btn" onclick="openDetail('${p.id}')">ЗАКАЗАТЬ</div>
+                <div class="card-content">
+                    <div class="card-title" style="color: ${getColor(rank.tier)}">${rank.name}</div>
+                    <div class="price-tag">от <span class="accent-text">${minPrice}₽</span></div>
                 </div>
             `;
-            grid.appendChild(div);
+            grid.appendChild(el);
         });
+    }
+
+    function getColor(tier) {
+        if(tier.includes('bronze')) return '#cd7f32';
+        if(tier.includes('silver')) return '#fff';
+        if(tier.includes('gold')) return '#fbbf24';
+        if(tier.includes('phoenix')) return '#a855f7';
+        if(tier.includes('ranger')) return '#ef4444';
+        return '#3b82f6';
     }
 
     function openDetail(id) {
-        currentProduct = products.find(x => x.id === id);
-        selectedPlan = null;
-        tg.MainButton.hide();
+        currentItem = ranks.find(r => r.id === id);
+        selectedPlanIdx = -1;
+        updateMainButton();
 
-        document.getElementById('d-img').src = currentProduct.img;
-        document.getElementById('d-title').innerText = currentProduct.name;
-        document.getElementById('d-desc').innerHTML = currentProduct.full_desc;
-
-        const featureContainer = document.getElementById('d-features');
-        featureContainer.innerHTML = '';
-        currentProduct.features.forEach(feat => {
-            const el = document.createElement('div');
-            el.className = 'feature-item';
-            el.innerHTML = `<span class="feature-icon">✓</span> ${feat}`;
-            featureContainer.appendChild(el);
-        });
-
-        const plansContainer = document.getElementById('plans-grid');
-        plansContainer.innerHTML = '';
-        currentProduct.plans.forEach((plan, index) => {
-            const btn = document.createElement('div');
-            btn.className = 'plan-card';
-            btn.onclick = () => selectPlan(index);
-            btn.id = `plan-${index}`;
-            btn.innerHTML = `
-                <div class="plan-info">
-                    <div class="plan-name">${plan.label}</div>
-                    <div class="plan-sub">${plan.sub}</div>
-                </div>
-                <div class="plan-price">${plan.price}₽</div>
-            `;
-            plansContainer.appendChild(btn);
-        });
-
-        document.getElementById('shop-view').classList.remove('active');
-        document.getElementById('detail-view').classList.add('active');
-        document.getElementById('back-btn').style.display = 'block';
-        document.getElementById('main-hero').style.display = 'none';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function selectPlan(index) {
-        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-        document.querySelectorAll('.plan-card').forEach(el => el.classList.remove('active'));
-        document.getElementById(`plan-${index}`).classList.add('active');
+        document.getElementById('d-img').src = currentItem.img;
+        document.getElementById('d-title').innerText = currentItem.name;
+        document.getElementById('d-title').style.color = getColor(currentItem.tier);
         
-        selectedPlan = currentProduct.plans[index];
-        tg.MainButton.text = `ЗАКАЗАТЬ ЗА ${selectedPlan.price}₽`;
-        tg.MainButton.color = "#3b82f6";
-        tg.MainButton.textColor = "#fff";
-        tg.MainButton.show();
+        const optContainer = document.getElementById('d-options');
+        optContainer.innerHTML = '';
+        
+        currentItem.plans.forEach((plan, idx) => {
+            const div = document.createElement('div');
+            div.className = 'option-card';
+            div.onclick = () => selectPlan(idx);
+            div.id = `plan-${idx}`;
+            div.innerHTML = `
+                <div class="opt-left">
+                    <div>${plan.name}</div>
+                    <div>${plan.desc}</div>
+                </div>
+                <div class="opt-price">${plan.price}₽</div>
+            `;
+            optContainer.appendChild(div);
+        });
+
+        switchView('detail');
     }
 
-    window.goBack = function() {
+    function selectPlan(idx) {
         if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        document.getElementById('detail-view').classList.remove('active');
-        switchTab('shop');
-        document.getElementById('back-btn').style.display = 'none';
-        document.getElementById('main-hero').style.display = 'block';
-        tg.MainButton.hide();
-        currentProduct = null;
-        selectedPlan = null;
+        
+        // UI update
+        document.querySelectorAll('.option-card').forEach(el => el.classList.remove('active'));
+        document.getElementById(`plan-${idx}`).classList.add('active');
+        
+        selectedPlanIdx = idx;
+        updateMainButton();
     }
 
-    tg.MainButton.onClick(() => {
-        if (currentProduct && selectedPlan) {
-            const finalData = {
-                name: `Boost: ${currentProduct.name} (${selectedPlan.label})`,
-                price: selectedPlan.price
+    function updateMainButton() {
+        const btn = document.getElementById('main-btn');
+        if (selectedPlanIdx !== -1 && currentItem) {
+            const price = currentItem.plans[selectedPlanIdx].price;
+            btn.innerText = `КУПИТЬ ЗА ${price}₽`;
+            btn.style.display = 'block';
+            btn.onclick = () => {
+                const payload = {
+                    name: `Boost: ${currentItem.name} (${currentItem.plans[selectedPlanIdx].name})`,
+                    price: price
+                };
+                tg.sendData(JSON.stringify(payload));
             };
-            tg.sendData(JSON.stringify(finalData));
-            setTimeout(() => { tg.close(); }, 100);
+        } else {
+            btn.style.display = 'none';
         }
-    });
+    }
 
-    tg.BackButton.onClick(goBack);
-    renderShop();
+    // --- NAVIGATION ---
+    function setTab(tab) {
+        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        
+        document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+        // Find tab element manually based on text or index logic if needed, 
+        // strictly simple here:
+        if(tab === 'shop') document.querySelectorAll('.tab')[0].classList.add('active');
+        if(tab === 'profile') document.querySelectorAll('.tab')[1].classList.add('active');
+
+        if(tab === 'shop') switchView('shop');
+        if(tab === 'profile') switchView('profile');
+    }
+
+    function switchView(viewName) {
+        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+        document.getElementById(`view-${viewName}`).classList.add('active');
+        
+        const header = document.getElementById('header-box');
+        const nav = document.getElementById('nav-tabs');
+        
+        if (viewName === 'detail') {
+            header.style.display = 'none';
+            nav.style.display = 'none';
+        } else {
+            header.style.display = 'flex';
+            nav.style.display = 'flex';
+            document.getElementById('main-btn').style.display = 'none';
+        }
+        window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    // --- INIT ---
+    function init() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name') || (tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : 'Guest');
+        const uid = urlParams.get('uid') || (tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : '000000');
+        const buys = urlParams.get('buys') || '0';
+        const spent = urlParams.get('spent') || '0';
+
+        document.getElementById('u-name').innerText = name;
+        document.getElementById('u-id').innerText = `ID: ${uid}`;
+        document.getElementById('u-avatar').innerText = name[0].toUpperCase();
+
+        document.getElementById('stat-buys').innerText = buys;
+        document.getElementById('stat-spent').innerText = `${spent}₽`;
+
+        renderGrid();
+    }
+
+    init();
+
 </script>
 </body>
 </html>
