@@ -26,7 +26,6 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             margin: 0; padding: 0;
             min-height: 100vh;
-            /* Премиальный задний фон с пятнами света */
             background-image: 
                 radial-gradient(circle at 0% 0%, rgba(10, 132, 255, 0.15), transparent 50%),
                 radial-gradient(circle at 100% 100%, rgba(191, 90, 242, 0.1), transparent 50%);
@@ -72,7 +71,7 @@
             background: #636366; box-shadow: 0 3px 8px rgba(0,0,0,0.2); font-weight: 600;
         }
 
-        /* CARDS (GLASS + RGB BORDER ANIMATION) */
+        /* CARDS */
         .card {
             background: var(--glass); border: 1px solid var(--border);
             border-radius: 16px; padding: 18px; margin-bottom: 12px;
@@ -82,7 +81,6 @@
         }
         .card:active { transform: scale(0.98); background: rgba(50,50,50,0.6); }
         
-        /* RGB ACTIVE STATE */
         .card.selected {
             border-color: transparent;
             box-shadow: var(--active-glow);
@@ -145,7 +143,7 @@
         }
         .next-btn:active { transform: scale(0.98); opacity: 0.9; }
 
-        /* MAIN ACTION BUTTON */
+        /* PAY BUTTON */
         .pay-btn {
             position: fixed; bottom: 30px; left: 20px; right: 20px;
             background: var(--rgb-grad); color: #fff;
@@ -190,7 +188,7 @@
         .st-done { background: rgba(48, 209, 88, 0.15); color: #30d158; }
         .st-reject { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
 
-        /* VIEW TRANSITIONS */
+        /* VIEWS */
         .view-tab { display: none; }
         .view-tab.active { display: block; animation: fadeIn 0.3s ease; }
         
@@ -258,7 +256,7 @@
             <div class="card" onclick="selectType('login', this)" id="card-login">
                 <div class="c-info">
                     <h3>Вход (Передача)</h3>
-                    <p>Бустер играет сам. Быстрее.</p>
+                    <p>Бустер играет сам (Дешевле)</p>
                 </div>
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             </div>
@@ -266,7 +264,7 @@
             <div class="card" onclick="selectType('lobby', this)" id="card-lobby">
                 <div class="c-info">
                     <h3>Лобби (Пати)</h3>
-                    <p>Играете с нами (Цена x1.8)</p>
+                    <p>Играете с нами (Цена x1.5)</p>
                 </div>
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
             </div>
@@ -311,25 +309,26 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- SCHOOL FRIENDLY PRICES ---
-    // Цены за ШАГ (минимум, чтобы школьники могли купить)
+    // --- SUPER LOW PRICES ---
     const RANKS = [
         { name: "Бронза I", p: 5, i: "bronze1.png" }, { name: "Бронза II", p: 5, i: "bronze2.png" },
-        { name: "Бронза III", p: 5, i: "bronze3.png" }, { name: "Бронза IV", p: 10, i: "bronze4.png" },
+        { name: "Бронза III", p: 5, i: "bronze3.png" }, { name: "Бронза IV", p: 5, i: "bronze4.png" },
         
-        { name: "Сильвер I", p: 15, i: "silver1.png" }, { name: "Сильвер II", p: 15, i: "silver2.png" },
-        { name: "Сильвер III", p: 20, i: "silver3.png" }, { name: "Сильвер IV", p: 20, i: "silver4.png" },
+        { name: "Сильвер I", p: 10, i: "silver1.png" }, { name: "Сильвер II", p: 10, i: "silver2.png" },
+        { name: "Сильвер III", p: 10, i: "silver3.png" }, { name: "Сильвер IV", p: 15, i: "silver4.png" },
         
-        { name: "Голд I", p: 30, i: "gold1.png" }, { name: "Голд II", p: 30, i: "gold2.png" },
-        { name: "Голд III", p: 35, i: "gold3.png" }, { name: "Голд IV", p: 40, i: "gold4.png" },
+        { name: "Голд I", p: 20, i: "gold1.png" }, { name: "Голд II", p: 25, i: "gold2.png" },
+        { name: "Голд III", p: 30, i: "gold3.png" }, { name: "Голд IV", p: 35, i: "gold4.png" },
         
-        { name: "Феникс", p: 60, i: "phoenix.png" }, { name: "Рейнджер", p: 90, i: "ranger.png" },
-        { name: "Чемпион", p: 150, i: "champion.png" }, { name: "Мастер", p: 250, i: "master.png" },
-        { name: "Элита", p: 350, i: "elite.png" }, { name: "Легенда", p: 450, i: "legend.png" }
+        { name: "Феникс", p: 50, i: "phoenix.png" }, { name: "Рейнджер", p: 70, i: "ranger.png" },
+        { name: "Чемпион", p: 100, i: "champion.png" }, { name: "Мастер", p: 130, i: "master.png" },
+        { name: "Элита", p: 180, i: "elite.png" }, { name: "Легенда", p: 220, i: "legend.png" }
     ];
 
     const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.7} };
-    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:1.8} };
+    
+    // Лобби = x1.5 (не оверпрайс, но дороже)
+    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:1.5} };
 
     let s = { m:null, f:null, t:null, ty:null, p:0 };
     let orders = [];
