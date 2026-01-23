@@ -11,7 +11,7 @@
             --bg: #000000;
             --glass: rgba(30, 30, 30, 0.6);
             --border: rgba(255, 255, 255, 0.12);
-            --active-glow: 0 0 20px rgba(94, 92, 230, 0.3);
+            --active-glow: 0 0 25px rgba(94, 92, 230, 0.4);
             --text: #ffffff;
             --text-sec: #8e8e93;
             --ios-blue: #0a84ff;
@@ -28,7 +28,7 @@
             min-height: 100vh;
             background-image: 
                 radial-gradient(circle at 0% 0%, rgba(10, 132, 255, 0.15), transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(191, 90, 242, 0.1), transparent 50%);
+                radial-gradient(circle at 100% 100%, rgba(191, 90, 242, 0.15), transparent 50%);
             background-attachment: fixed;
             padding-bottom: 120px;
         }
@@ -45,7 +45,6 @@
             background: linear-gradient(90deg, #fff, #a0a0ff); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        
         .user-pill {
             background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
             padding: 6px 12px; border-radius: 20px;
@@ -58,14 +57,14 @@
             display: flex; align-items: center; justify-content: center; 
         }
 
-        /* IOS SEGMENTED CONTROL */
+        /* SEGMENTED CONTROL */
         .segmented {
             display: flex; background: rgba(118, 118, 128, 0.24); padding: 2px;
-            border-radius: 9px; margin-bottom: 30px; position: relative;
+            border-radius: 9px; margin-bottom: 30px;
         }
         .seg-btn {
             flex: 1; text-align: center; padding: 7px; font-size: 13px; font-weight: 500;
-            color: #fff; border-radius: 7px; cursor: pointer; transition: 0.2s; z-index: 2;
+            color: #fff; border-radius: 7px; cursor: pointer; transition: 0.2s;
         }
         .seg-btn.active {
             background: #636366; box-shadow: 0 3px 8px rgba(0,0,0,0.2); font-weight: 600;
@@ -90,7 +89,6 @@
 
         .c-info h3 { margin: 0 0 3px 0; font-size: 16px; font-weight: 600; color: #fff; }
         .c-info p { margin: 0; font-size: 13px; color: var(--text-sec); }
-        
         .c-icon { width: 24px; height: 24px; fill: var(--text-sec); transition: 0.2s; }
         .card.selected .c-icon { fill: #fff; filter: drop-shadow(0 0 5px rgba(255,255,255,0.8)); }
 
@@ -110,40 +108,25 @@
                         var(--rgb-grad) border-box;
         }
         
-        .rank-card img { 
-            width: 45px; height: 45px; object-fit: contain; 
-            margin-bottom: 6px; filter: grayscale(0.8); transition: 0.2s; 
-        }
-        .rank-card.selected img { 
-            filter: grayscale(0); transform: scale(1.1); 
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
-        }
+        .rank-card img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 6px; filter: grayscale(0.8); transition: 0.2s; }
+        .rank-card.selected img { filter: grayscale(0); transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); }
         
         .rank-name { font-size: 11px; font-weight: 600; color: var(--text-sec); }
         .rank-card.selected .rank-name { color: #fff; }
         .rank-card.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
 
         /* BUTTONS */
-        .step-title { 
-            font-size: 18px; font-weight: 700; color: #fff; 
-            margin-bottom: 16px; letter-spacing: -0.3px; 
-        }
-        
-        .back-btn {
-            font-size: 15px; font-weight: 500; color: var(--ios-blue);
-            margin-bottom: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
-        }
+        .step-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: -0.3px; }
+        .back-btn { font-size: 15px; font-weight: 500; color: var(--ios-blue); margin-bottom: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
 
         .next-btn {
             width: 100%; background: #fff; color: #000;
             padding: 15px; border-radius: 14px; font-weight: 600; font-size: 16px;
             text-align: center; margin-top: 20px; cursor: pointer;
-            box-shadow: 0 4px 20px rgba(255,255,255,0.15); transition: 0.2s;
-            display: none;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.15); transition: 0.2s; display: none;
         }
         .next-btn:active { transform: scale(0.98); opacity: 0.9; }
 
-        /* PAY BUTTON */
         .pay-btn {
             position: fixed; bottom: 30px; left: 20px; right: 20px;
             background: var(--rgb-grad); color: #fff;
@@ -154,19 +137,13 @@
         .pay-btn:active { transform: scale(0.97); }
 
         /* SUMMARY */
-        .summary {
-            background: #121212; border: 1px solid var(--border);
-            border-radius: 18px; padding: 24px; margin-top: 10px;
-        }
+        .summary { background: #121212; border: 1px solid var(--border); border-radius: 18px; padding: 24px; margin-top: 10px; }
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 12px; }
         .sum-row:last-child { border: none; padding-bottom: 0; margin-bottom: 0; }
         .sum-k { color: var(--text-sec); } .sum-v { font-weight: 600; color: #fff; }
         
         .total-box { text-align: center; margin-top: 25px; }
-        .total-price { 
-            font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-top: 5px;
-            background: var(--rgb-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .total-price { font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-top: 5px; background: var(--rgb-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .total-label { font-size: 12px; color: var(--text-sec); text-transform: uppercase; }
 
         /* PROFILE */
@@ -188,16 +165,13 @@
         .st-done { background: rgba(48, 209, 88, 0.15); color: #30d158; }
         .st-reject { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
 
-        /* VIEW TRANSITIONS */
+        /* VIEWS */
         .view-tab { display: none; }
         .view-tab.active { display: block; animation: fadeIn 0.3s ease; }
-        
         .step-slide { display: none; }
         .step-slide.active { display: block; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
     </style>
 </head>
 <body>
@@ -254,53 +228,37 @@
             <div class="step-title">Метод буста</div>
             
             <div class="card" onclick="selectType('login', this)" id="card-login">
-                <div class="c-info">
-                    <h3>Вход (Передача)</h3>
-                    <p>Бустер играет сам (Дешевле)</p>
-                </div>
+                <div class="c-info"><h3>Вход (Передача)</h3><p>Бустер играет сам</p></div>
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             </div>
-
             <div class="card" onclick="selectType('lobby', this)" id="card-lobby">
-                <div class="c-info">
-                    <h3>Лобби (Пати)</h3>
-                    <p>Играете с нами (Цена x2.5)</p>
-                </div>
+                <div class="c-info"><h3>Лобби (Пати)</h3><p>Играете с нами (Дороже)</p></div>
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
             </div>
-
             <div id="btn-next-4" class="next-btn" onclick="calc()">Рассчитать</div>
         </div>
 
         <div id="step-5" class="step-slide">
             <div class="back-btn" onclick="gotoStep(4)">‹ Изменить</div>
             <div class="step-title">Подтверждение</div>
-            
             <div class="summary">
                 <div class="sum-row"><span class="sum-k">Режим</span><span class="sum-v" id="out-mode"></span></div>
                 <div class="sum-row"><span class="sum-k">Буст</span><span class="sum-v"><span id="out-from"></span> → <span id="out-to" style="color:var(--ios-blue)"></span></span></div>
                 <div class="sum-row"><span class="sum-k">Метод</span><span class="sum-v" id="out-type"></span></div>
             </div>
-
             <div class="total-box">
                 <div class="total-label">Итоговая стоимость</div>
                 <div class="total-price" id="out-price">0₽</div>
             </div>
         </div>
-
     </div>
 
     <div id="view-profile" class="view-tab">
-        <div class="refresh-btn" onclick="refreshApp()">
-            ↻ Обновить статусы (Перезапуск)
-        </div>
+        <div class="refresh-btn" onclick="refreshApp()">↻ Обновить статусы (Перезапуск)</div>
         <div class="step-title">История заказов</div>
         <div id="orders-list"></div>
-        <div id="no-orders" style="display:none; text-align:center; color:var(--text-sec); margin-top:40px; font-size:13px;">
-            У вас пока нет заказов
-        </div>
+        <div id="no-orders" style="display:none; text-align:center; color:var(--text-sec); margin-top:40px; font-size:13px;">У вас пока нет заказов</div>
     </div>
-
 </div>
 
 <div id="pay-btn" class="pay-btn">ОПЛАТИТЬ ЗАКАЗ</div>
@@ -309,53 +267,46 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- RANK LIST ---
+    // --- ПРОГРЕССИВНЫЕ ЦЕНЫ (ANTI-ABUSE) ---
+    // 'p' - это цена перехода НА этот ранг с предыдущего
     const RANKS = [
-        { name: "Бронза I", i: "bronze1.png" }, { name: "Бронза II", i: "bronze2.png" },
-        { name: "Бронза III", i: "bronze3.png" }, { name: "Бронза IV", i: "bronze4.png" },
+        { name: "Бронза I", p: 25, i: "bronze1.png" }, { name: "Бронза II", p: 25, i: "bronze2.png" },
+        { name: "Бронза III", p: 25, i: "bronze3.png" }, { name: "Бронза IV", p: 30, i: "bronze4.png" },
         
-        { name: "Сильвер I", i: "silver1.png" }, { name: "Сильвер II", i: "silver2.png" },
-        { name: "Сильвер III", i: "silver3.png" }, { name: "Сильвер IV", i: "silver4.png" },
+        { name: "Сильвер I", p: 40, i: "silver1.png" }, { name: "Сильвер II", p: 40, i: "silver2.png" },
+        { name: "Сильвер III", p: 45, i: "silver3.png" }, { name: "Сильвер IV", p: 50, i: "silver4.png" },
         
-        { name: "Голд I", i: "gold1.png" }, { name: "Голд II", i: "gold2.png" },
-        { name: "Голд III", i: "gold3.png" }, { name: "Голд IV", i: "gold4.png" },
+        { name: "Голд I", p: 65, i: "gold1.png" }, { name: "Голд II", p: 70, i: "gold2.png" },
+        { name: "Голд III", p: 75, i: "gold3.png" }, { name: "Голд IV", p: 80, i: "gold4.png" },
         
-        { name: "Феникс", i: "phoenix.png" }, { name: "Рейнджер", i: "ranger.png" },
-        { name: "Чемпион", i: "champion.png" }, { name: "Мастер", i: "master.png" },
-        { name: "Элита", i: "elite.png" }, { name: "Легенда", i: "legend.png" }
+        // РЕЗКИЙ СКАЧОК ЦЕНЫ (Анти-Абуз)
+        { name: "Феникс", p: 140, i: "phoenix.png" }, 
+        { name: "Рейнджер", p: 200, i: "ranger.png" },
+        { name: "Чемпион", p: 300, i: "champion.png" },
+        { name: "Мастер", p: 450, i: "master.png" },
+        { name: "Элита", p: 700, i: "elite.png" }, 
+        { name: "Легенда", p: 1100, i: "legend.png" }
     ];
 
-    // --- STEP PRICES (RUB) ---
-    // Это цена ОДНОГО шага (перехода на следующий ранг)
-    const STEP_PRICE = 55; // 55р за каждый шаг (любой ранг)
-    
-    // --- MULTIPLIERS ---
-    const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.8} };
-    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:2.5} }; // Лобби 2.5x дороже
+    const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.7} };
+    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:2.0} }; // Лобби x2.0 (строго, но не х2.5)
 
     let s = { m:null, f:null, t:null, ty:null, p:0 };
     let orders = [];
 
-    // --- INIT ---
+    // INIT
     const url = new URLSearchParams(window.location.search);
     const uName = url.get('name') || 'Guest';
-    try {
-        const raw = url.get('orders');
-        if(raw) orders = JSON.parse(decodeURIComponent(raw));
-    } catch(e){}
-
+    try { const raw = url.get('orders'); if(raw) orders = JSON.parse(decodeURIComponent(raw)); } catch(e){}
     document.getElementById('u-name').innerText = uName;
     document.getElementById('u-avatar').innerText = uName[0].toUpperCase();
+    renderRanks(); renderOrders();
 
-    renderRanks();
-    renderOrders();
-
-    // --- FUNC ---
+    // LOGIC
     function switchTab(t) {
         document.querySelectorAll('.seg-btn').forEach(e => e.classList.remove('active'));
         document.querySelectorAll('.view-tab').forEach(e => e.classList.remove('active'));
         document.getElementById('pay-btn').style.display='none';
-
         if(t==='boost') {
             document.querySelectorAll('.seg-btn')[0].classList.add('active');
             document.getElementById('view-boost').classList.add('active');
@@ -379,15 +330,8 @@
         document.querySelectorAll('#step-1 .card').forEach(c=>c.classList.remove('selected'));
         el.classList.add('selected');
         document.getElementById('btn-next-1').style.display='block';
-        
-        // Hide Lobby for Duels
         const lobby = document.getElementById('card-lobby');
-        if(m === 'duels') {
-            lobby.style.display = 'none';
-        } else {
-            lobby.style.display = 'flex';
-        }
-        
+        if(m==='duels') lobby.style.display='none'; else lobby.style.display='flex';
         tg.HapticFeedback.impactOccurred('light');
     }
 
@@ -405,10 +349,8 @@
         document.querySelectorAll('#grid-from .rank-card').forEach(e=>e.classList.remove('selected'));
         document.getElementById(`f-${i}`).classList.add('selected');
         document.getElementById('btn-next-2').style.display='block';
-        
         document.querySelectorAll('#grid-to .rank-card').forEach((e, idx) => {
-            if(idx <= i) e.classList.add('disabled');
-            else e.classList.remove('disabled');
+            if(idx<=i) e.classList.add('disabled'); else e.classList.remove('disabled');
             e.classList.remove('selected');
         });
         document.getElementById('btn-next-3').style.display='none';
@@ -432,18 +374,14 @@
     }
 
     function calc() {
-        // --- NEW LOGIC: STEPS CALCULATION ---
-        const steps = s.t - s.f; // Количество рангов для поднятия
-        if (steps <= 0) return;
+        // PROGRESSIVE CALCULATION LOOP
+        let rawPrice = 0;
+        // Суммируем цену каждого ранга в промежутке
+        for(let i = s.f + 1; i <= s.t; i++) {
+            rawPrice += RANKS[i].p;
+        }
 
-        // Базовая цена за все шаги (55 руб * кол-во шагов)
-        let baseTotal = steps * STEP_PRICE;
-
-        // Умножаем на коэфф режима (ММ=1, Напарники=0.9)
-        baseTotal = baseTotal * MODES[s.m].k;
-
-        // Умножаем на коэфф типа (Вход=1, Лобби=2.5)
-        s.p = Math.round(baseTotal * TYPES[s.ty].k);
+        s.p = Math.round(rawPrice * MODES[s.m].k * TYPES[s.ty].k);
 
         document.getElementById('out-mode').innerText = MODES[s.m].n;
         document.getElementById('out-from').innerText = RANKS[s.f].name;
@@ -452,47 +390,32 @@
         document.getElementById('out-price').innerText = `${s.p}₽`;
 
         gotoStep(5);
-        
         const btn = document.getElementById('pay-btn');
         btn.innerText = `ОПЛАТИТЬ ${s.p}₽`;
         btn.style.display='block';
         btn.onclick = () => {
             tg.HapticFeedback.notificationOccurred('success');
-            const data = {
+            tg.sendData(JSON.stringify({
                 name: `Буст: ${RANKS[s.f].name} -> ${RANKS[s.t].name} (${MODES[s.m].n}, ${TYPES[s.ty].n})`,
                 price: s.p
-            };
-            tg.sendData(JSON.stringify(data));
+            }));
         };
     }
 
     function renderOrders() {
         const l = document.getElementById('orders-list');
         if(!orders.length) { document.getElementById('no-orders').style.display='block'; return; }
-        
         orders.forEach(o => {
-            let cl='', tx='';
-            if(o.status==='wait'){cl='st-wait';tx='Проверка';}
-            if(o.status==='work'){cl='st-work';tx='В работе';}
-            if(o.status==='done'){cl='st-done';tx='Готово';}
-            if(o.status==='reject'){cl='st-reject';tx='Отмена';}
-
-            l.innerHTML += `
-            <div class="order-item">
-                <div>
-                    <div style="font-weight:600; font-size:14px; margin-bottom:4px; color:#fff;">${o.desc}</div>
-                    <div style="font-size:11px; color:var(--text-sec);">#${o.id} • ${o.price}₽ • ${o.date}</div>
-                </div>
-                <div class="badge ${cl}">${tx}</div>
-            </div>`;
+            let c='', t='';
+            if(o.status==='wait'){c='st-wait';t='Проверка';}
+            if(o.status==='work'){c='st-work';t='В работе';}
+            if(o.status==='done'){c='st-done';t='Готово';}
+            if(o.status==='reject'){c='st-reject';t='Отмена';}
+            l.innerHTML += `<div class="order-item"><div><div style="font-weight:600;font-size:14px;margin-bottom:4px;color:#fff;">${o.desc}</div><div style="font-size:11px;color:var(--text-sec);">#${o.id} • ${o.price}₽ • ${o.date}</div></div><div class="badge ${c}">${t}</div></div>`;
         });
     }
 
-    function refreshApp() {
-        tg.sendData("REFRESH_PROFILE");
-        setTimeout(() => tg.close(), 100);
-    }
-
+    function refreshApp() { tg.sendData("REFRESH_PROFILE"); setTimeout(()=>tg.close(),100); }
 </script>
 </body>
 </html>
