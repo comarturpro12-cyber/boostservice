@@ -6,436 +6,193 @@
     <title>Veneku Boost</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    
     <style>
-        /* Шрифты */
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Rajdhani:wght@600;700&display=swap');
-
-        :root {
-            --primary: #6366f1; /* Индиго */
-            --accent: #a855f7;  /* Фиолетовый */
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --text-main: #ffffff;
-            --text-sec: #94a3b8;
-            --nav-height: 75px;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            background: #0f172a;
-            /* Живой градиентный фон */
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.3) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.3) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: var(--text-main);
-            font-family: 'Outfit', sans-serif;
-            margin: 0; padding: 0;
-            min-height: 100vh;
-            padding-bottom: 100px; /* Место под меню */
-            overflow-x: hidden;
-        }
-
-        /* АНИМАЦИИ ПОЯВЛЕНИЯ */
-        .fade-in { animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* СТЕКЛЯННЫЕ КАРТОЧКИ */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        /* ЗАГОЛОВКИ */
-        h1, h2 { margin: 0; font-weight: 800; letter-spacing: -0.5px; }
-        .page-title { font-size: 28px; margin-bottom: 5px; text-align: center; }
-        .page-subtitle { font-size: 14px; color: var(--text-sec); text-align: center; margin-bottom: 25px; }
-
-        /* --- ВКЛАДКА БУСТ --- */
-        .mode-card {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 15px; cursor: pointer; transition: transform 0.2s;
-            position: relative; overflow: hidden;
-        }
-        .mode-card:active { transform: scale(0.97); background: rgba(255,255,255,0.15); }
+        :root { --primary: #6366f1; --accent: #a855f7; --bg: #0f172a; --text: #fff; --nav-h: 70px; }
+        body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; margin: 0; padding: 20px 20px 90px 20px; overflow-x: hidden; min-height: 100vh; background-image: radial-gradient(at 0% 0%, rgba(99,102,241,0.2) 0, transparent 50%), radial-gradient(at 100% 100%, rgba(168,85,247,0.2) 0, transparent 50%); background-attachment: fixed; }
         
-        .mode-icon {
-            width: 50px; height: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 16px; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; color: #fff; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-        }
-        .mode-info { flex: 1; margin-left: 15px; }
-        .mode-title { font-size: 18px; font-weight: 600; }
-        .mode-desc { font-size: 12px; color: var(--text-sec); margin-top: 2px; }
-
-        /* СЕТКА ЗВАНИЙ */
-        .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
-        .rank-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 15px 5px; cursor: pointer; transition: 0.3s;
-            border-radius: 18px; border: 1px solid transparent; background: rgba(255,255,255,0.03);
-        }
-        .rank-item img { width: 100%; height: 55px; object-fit: contain; margin-bottom: 10px; transition: 0.3s; filter: grayscale(0.4); }
-        .rank-item span { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; color: var(--text-sec); }
-
-        /* Активное звание */
-        .rank-item.active {
-            background: rgba(99, 102, 241, 0.15);
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
-        }
-        .rank-item.active img { filter: grayscale(0) drop-shadow(0 0 10px var(--primary)); transform: scale(1.1); }
-        .rank-item.active span { color: #fff; }
-
-        /* КНОПКА ДАЛЕЕ */
-        .next-btn {
-            width: 100%; padding: 18px; margin-top: 25px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            color: #fff; border: none; border-radius: 18px;
-            font-size: 16px; font-weight: 700; cursor: pointer;
-            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
-            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .next-btn:active { transform: scale(0.95); opacity: 0.9; }
-
-        /* КНОПКА НАЗАД */
-        .back-btn {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 8px 16px; background: rgba(255,255,255,0.05);
-            border-radius: 30px; font-size: 12px; color: var(--text-sec);
-            margin-bottom: 20px; cursor: pointer;
-        }
-
-        /* --- ПРОФИЛЬ --- */
-        .profile-container { text-align: center; margin-top: 20px; }
-        .avatar-wrapper {
-            width: 100px; height: 100px; margin: 0 auto 20px;
-            padding: 3px; border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
-        }
-        .avatar-img {
-            width: 100%; height: 100%; border-radius: 50%;
-            background: #1e1e24; display: flex; align-items: center; justify-content: center;
-            font-size: 36px; font-weight: 700; color: #fff; overflow: hidden;
-        }
-        .avatar-img img { width: 100%; height: 100%; object-fit: cover; }
+        /* КАРТОЧКИ */
+        .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 15px; backdrop-filter: blur(10px); margin-bottom: 15px; }
+        h1 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 5px; }
+        p.sub { text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
         
-        .user-name { font-size: 24px; margin-bottom: 5px; }
-        .user-id { font-family: monospace; color: var(--text-sec); font-size: 13px; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 10px; display: inline-block; }
+        /* ПРОФИЛЬ */
+        .avatar { width: 90px; height: 90px; border-radius: 50%; background: #222; margin: 0 auto 15px; overflow: hidden; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* ЗВАНИЯ */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .rank { background: rgba(255,255,255,0.03); border-radius: 15px; padding: 10px 5px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+        .rank img { width: 100%; height: 50px; object-fit: contain; margin-bottom: 5px; filter: grayscale(1); }
+        .rank span { font-size: 11px; color: #94a3b8; font-family: 'Rajdhani', sans-serif; font-weight: 700; text-transform: uppercase; }
+        .rank.active { background: rgba(99,102,241,0.15); border-color: var(--primary); }
+        .rank.active img { filter: grayscale(0); transform: scale(1.1); }
+        .rank.active span { color: #fff; }
 
-        .stat-grid { display: flex; gap: 10px; margin-top: 30px; }
-        .stat-card {
-            flex: 1; background: rgba(255,255,255,0.03); border-radius: 20px; padding: 15px;
-            text-align: center; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .stat-val { font-size: 20px; font-weight: 800; color: var(--accent); margin-bottom: 5px; }
-        .stat-label { font-size: 11px; color: var(--text-sec); text-transform: uppercase; }
-
-        /* ЗАГЛУШКА ИСТОРИИ */
-        .empty-history {
-            text-align: center; padding: 60px 20px;
-            opacity: 0.6;
-        }
-        .empty-icon { font-size: 48px; margin-bottom: 15px; background: linear-gradient(to bottom, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        /* НИЖНЕЕ МЕНЮ (Floating) */
-        .bottom-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 400px;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            height: 65px;
-            display: flex; justify-content: space-around; align-items: center;
-            z-index: 100; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: var(--text-sec); transition: 0.3s; cursor: pointer; width: 60px;
-        }
-        .nav-item i { font-size: 24px; margin-bottom: 2px; transition: 0.3s; }
+        /* НАВИГАЦИЯ */
+        .nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; height: 65px; background: rgba(15,23,42,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; display: flex; justify-content: space-around; align-items: center; z-index: 99; backdrop-filter: blur(15px); }
+        .nav-item { color: #64748b; font-size: 24px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; width: 50px;}
         .nav-item span { font-size: 10px; font-weight: 600; opacity: 0; transform: translateY(10px); transition: 0.3s; }
-        
         .nav-item.active { color: #fff; }
-        .nav-item.active i { transform: translateY(-5px); color: var(--accent); text-shadow: 0 0 15px var(--accent); }
+        .nav-item.active i { color: var(--accent); transform: translateY(-3px); }
         .nav-item.active span { opacity: 1; transform: translateY(0); }
 
         .hidden { display: none !important; }
-        .page { display: none; padding: 20px; }
+        .page { display: none; animation: fade 0.3s ease; }
         .page.active { display: block; }
+        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); }}
 
+        .btn { width: 100%; padding: 15px; background: linear-gradient(90deg, var(--primary), var(--accent)); border: none; border-radius: 15px; color: #fff; font-weight: 700; font-size: 16px; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="page-boost" class="page active fade-in">
-        <h1 class="page-title">VENEKU</h1>
-        <p class="page-subtitle">Premium Boost Service</p>
+    <div id="p-boost" class="page active">
+        <h1>VENEKU</h1>
+        <p class="sub">Premium Boost</p>
 
         <div id="step-1">
-            <div class="glass mode-card" onclick="selectMode('Дуэли')">
-                <div class="mode-icon"><i class="ri-sword-fill"></i></div>
-                <div class="mode-info"><div class="mode-title">Дуэли</div><div class="mode-desc">Классика 1 на 1</div></div>
-                <i class="ri-arrow-right-s-line" style="font-size: 20px; color: #666;"></i>
+            <div class="glass" onclick="setMode('Дуэли')" style="display:flex; align-items:center; cursor:pointer;">
+                <i class="ri-sword-fill" style="font-size:24px; color:var(--primary); margin-right:15px;"></i>
+                <div style="flex:1"><b>Дуэли</b><div style="font-size:12px; color:#aaa">1 vs 1</div></div>
+                <i class="ri-arrow-right-s-line"></i>
             </div>
-            <div class="glass mode-card" onclick="selectMode('Союзники')">
-                <div class="mode-icon"><i class="ri-team-fill"></i></div>
-                <div class="mode-info"><div class="mode-title">Союзники</div><div class="mode-desc">Напарники 2 на 2</div></div>
-                <i class="ri-arrow-right-s-line" style="font-size: 20px; color: #666;"></i>
+            <div class="glass" onclick="setMode('Союзники')" style="display:flex; align-items:center; cursor:pointer;">
+                <i class="ri-team-fill" style="font-size:24px; color:var(--accent); margin-right:15px;"></i>
+                <div style="flex:1"><b>Союзники</b><div style="font-size:12px; color:#aaa">2 vs 2</div></div>
+                <i class="ri-arrow-right-s-line"></i>
             </div>
-            <div class="glass mode-card" onclick="selectMode('Соревновательный')">
-                <div class="mode-icon"><i class="ri-trophy-fill"></i></div>
-                <div class="mode-info"><div class="mode-title">ММ</div><div class="mode-desc">Команда 5 на 5</div></div>
-                <i class="ri-arrow-right-s-line" style="font-size: 20px; color: #666;"></i>
+            <div class="glass" onclick="setMode('Соревновательный')" style="display:flex; align-items:center; cursor:pointer;">
+                <i class="ri-trophy-fill" style="font-size:24px; color:#fff; margin-right:15px;"></i>
+                <div style="flex:1"><b>ММ</b><div style="font-size:12px; color:#aaa">5 vs 5</div></div>
+                <i class="ri-arrow-right-s-line"></i>
             </div>
         </div>
 
-        <div id="step-2" class="hidden fade-in">
-            <div class="back-btn" onclick="goStep(1)"><i class="ri-arrow-left-s-line"></i> Назад</div>
-            <div style="text-align: center;">
-                <h2>Ваш ранг</h2>
-                <p style="font-size: 13px; color: #888; margin-top: 5px;">Что у вас сейчас?</p>
-            </div>
-
-            <div class="ranks-grid" id="ranks-current"></div>
-            
-            <button id="btn-next-2" class="next-btn hidden" onclick="renderRanks('target'); goStep(3);">
-                ПРОДОЛЖИТЬ <i class="ri-arrow-right-line"></i>
-            </button>
+        <div id="step-2" class="hidden">
+            <div style="text-align:center; margin-bottom:15px;"><h2>Текущий ранг</h2></div>
+            <div class="grid" id="grid-curr"></div>
+            <button class="btn hidden" id="btn-next" onclick="render('targ'); go(3)">ДАЛЕЕ</button>
+            <div style="text-align:center; margin-top:15px; color:#666; font-size:12px;" onclick="go(1)">Назад</div>
         </div>
 
-        <div id="step-3" class="hidden fade-in">
-            <div class="back-btn" onclick="goStep(2)"><i class="ri-arrow-left-s-line"></i> Назад</div>
-
-            <div class="glass" style="padding: 15px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                <div>
-                    <div style="font-size: 10px; color: #888; text-transform: uppercase;">Сейчас</div>
-                    <div style="font-weight: 700; font-size: 15px;" id="disp-cur">...</div>
-                </div>
-                <i class="ri-arrow-right-double-line" style="color: var(--accent); font-size: 20px;"></i>
-                <div style="text-align: right;">
-                    <div style="font-size: 10px; color: #888; text-transform: uppercase;">Цель</div>
-                    <div style="font-weight: 700; font-size: 15px; color: var(--accent);" id="disp-tar">?</div>
-                </div>
+        <div id="step-3" class="hidden">
+            <div class="glass" style="display:flex; justify-content:space-between; align-items:center;">
+                <div><div style="font-size:10px; color:#888">СЕЙЧАС</div><b id="txt-curr">...</b></div>
+                <i class="ri-arrow-right-double-line" style="color:var(--accent)"></i>
+                <div style="text-align:right"><div style="font-size:10px; color:#888">ЦЕЛЬ</div><b id="txt-targ" style="color:var(--accent)">?</b></div>
             </div>
-
-            <div style="text-align: center;">
-                <h2>Желаемый ранг</h2>
-            </div>
-
-            <div class="ranks-grid" id="ranks-target"></div>
+            <div style="text-align:center;"><h2>Желаемый ранг</h2></div>
+            <div class="grid" id="grid-targ"></div>
+            <div style="text-align:center; margin-top:15px; color:#666; font-size:12px;" onclick="go(2)">Назад</div>
         </div>
     </div>
 
-    <div id="page-history" class="page fade-in">
-        <h1 class="page-title">История</h1>
-        <div class="glass empty-history">
-            <div class="empty-icon"><i class="ri-time-line"></i></div>
-            <h3>Пока пусто</h3>
-            <p style="font-size: 13px; color: #888; margin-top: 10px; line-height: 1.5;">
-                Здесь будут отображаться ваши заказы.<br>
-                На данный момент раздел в разработке.
-            </p>
+    <div id="p-hist" class="page">
+        <h1>История</h1>
+        <div style="text-align:center; padding:50px 0; color:#666;">
+            <i class="ri-file-list-3-line" style="font-size:40px; margin-bottom:10px; display:block;"></i>
+            Пока пусто
         </div>
     </div>
 
-    <div id="page-profile" class="page fade-in">
-        <h1 class="page-title">Профиль</h1>
-
-        <div class="glass profile-container">
-            <div class="avatar-wrapper">
-                <div class="avatar-img" id="user-avatar">?</div>
-            </div>
-            <div class="user-name" id="user-name">Guest</div>
-            <div class="user-id" id="user-id">ID: Unidentified</div>
-
-            <div class="stat-grid">
-                <div class="stat-card">
-                    <div class="stat-val">0 ₽</div>
-                    <div class="stat-label">Баланс</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-val">0</div>
-                    <div class="stat-label">Заказов</div>
-                </div>
-            </div>
+    <div id="p-prof" class="page">
+        <h1>Профиль</h1>
+        <div class="glass" style="text-align:center;">
+            <div class="avatar" id="u-ava">?</div>
+            <h2 id="u-name">Guest</h2>
+            <div style="background:rgba(0,0,0,0.3); display:inline-block; padding:5px 10px; border-radius:10px; font-family:monospace; font-size:12px; color:#aaa;" id="u-id">ID: 0000</div>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <div class="glass" style="flex:1; text-align:center; margin:0;"><b style="font-size:20px; color:var(--accent)">0 ₽</b><br><span style="font-size:11px; color:#888">БАЛАНС</span></div>
+            <div class="glass" style="flex:1; text-align:center; margin:0;"><b style="font-size:20px;">0</b><br><span style="font-size:11px; color:#888">ЗАКАЗОВ</span></div>
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('boost', this)">
-            <i class="ri-rocket-2-line"></i>
-            <span>Буст</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('history', this)">
-            <i class="ri-history-line"></i>
-            <span>История</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('profile', this)">
-            <i class="ri-user-smile-line"></i>
-            <span>Профиль</span>
-        </div>
+    <div class="nav">
+        <div class="nav-item active" onclick="tab('boost', this)"><i class="ri-rocket-2-line"></i><span>Буст</span></div>
+        <div class="nav-item" onclick="tab('hist', this)"><i class="ri-history-line"></i><span>История</span></div>
+        <div class="nav-item" onclick="tab('prof', this)"><i class="ri-user-smile-line"></i><span>Профиль</span></div>
     </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
+    tg.MainButton.color = "#a855f7"; tg.MainButton.textColor = "#fff";
+
+    // INIT USER
+    const u = tg.initDataUnsafe.user;
+    if(u) {
+        document.getElementById('u-name').innerText = u.first_name;
+        document.getElementById('u-id').innerText = "ID: " + u.id;
+        if(u.photo_url) document.getElementById('u-ava').innerHTML = `<img src="${u.photo_url}">`;
+        else document.getElementById('u-ava').innerText = u.first_name[0];
+    }
+
+    // TABS
+    function tab(id, el) {
+        document.querySelectorAll('.page').forEach(e => e.classList.remove('active'));
+        document.getElementById('p-'+id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
+        el.classList.add('active');
+        if(id !== 'boost') tg.MainButton.hide();
+        else if(order.price > 0 && curStep === 3) tg.MainButton.show();
+    }
+
+    // LOGIC
+    const FILES = ["bronze1.png","bronze2.png","bronze3.png","bronze4.png","silver1.png","silver2.png","silver3.png","silver4.png","gold1.png","gold2.png","gold3.png","gold4.png","phoenix.png","ranger.png","champion.png","master.png","elite.png","legend.png"];
+    const NAMES = ["Bronze I","Bronze II","Bronze III","Bronze IV","Silver I","Silver II","Silver III","Silver IV","Gold I","Gold II","Gold III","Gold IV","Phoenix","Ranger","Champion","Master","Elite","Legend"];
     
-    // Настройки главной кнопки (в цвет темы)
-    tg.MainButton.color = "#a855f7"; 
-    tg.MainButton.textColor = "#ffffff";
+    let order = { mode:null, curId:0, tarId:0, price:0, currentRankName:"", targetRankName:"" };
+    let curStep = 1;
 
-    /* --- ЛОГИКА ПРОФИЛЯ --- */
-    function initProfile() {
-        const user = tg.initDataUnsafe.user;
-        if (user) {
-            // Имя
-            document.getElementById('user-name').innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
-            // ID
-            document.getElementById('user-id').innerText = `ID: ${user.id}`;
-            
-            // Аватар
-            const av = document.getElementById('user-avatar');
-            if (user.photo_url) {
-                av.innerHTML = `<img src="${user.photo_url}" alt="User">`;
-            } else {
-                av.innerText = user.first_name[0].toUpperCase();
-            }
-        } else {
-            // Если открыто не в телеграме
-            document.getElementById('user-id').innerText = "Откройте через Telegram Бота";
-        }
-    }
-    initProfile();
-
-    /* --- НАВИГАЦИЯ (ТАБЫ) --- */
-    function switchTab(pageId, btn) {
-        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-
-        document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-        document.getElementById('page-' + pageId).classList.add('active');
-
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        btn.classList.add('active');
-
-        // MainButton видна только на вкладке буста (если цена > 0 и шаг 3)
-        updateMainButtonVisibility();
-    }
-
-    function updateMainButtonVisibility() {
-        const isBoostPage = document.getElementById('page-boost').classList.contains('active');
-        const isStep3 = !document.getElementById('step-3').classList.contains('hidden');
-        
-        if (isBoostPage && isStep3 && order.price > 0) {
-            tg.MainButton.show();
-        } else {
-            tg.MainButton.hide();
-        }
-    }
-
-    /* --- ЛОГИКА БУСТА --- */
-    const RANKS = [
-        {id: 1, name: "Bronze I", file: "bronze1.png"},
-        {id: 2, name: "Bronze II", file: "bronze2.png"},
-        {id: 3, name: "Bronze III", file: "bronze3.png"},
-        {id: 4, name: "Bronze IV", file: "bronze4.png"},
-        {id: 5, name: "Silver I", file: "silver1.png"},
-        {id: 6, name: "Silver II", file: "silver2.png"},
-        {id: 7, name: "Silver III", file: "silver3.png"},
-        {id: 8, name: "Silver IV", file: "silver4.png"},
-        {id: 9, name: "Gold I", file: "gold1.png"},
-        {id: 10, name: "Gold II", file: "gold2.png"},
-        {id: 11, name: "Gold III", file: "gold3.png"},
-        {id: 12, name: "Gold IV", file: "gold4.png"},
-        {id: 13, name: "Phoenix", file: "phoenix.png"},
-        {id: 14, name: "Ranger", file: "ranger.png"},
-        {id: 15, name: "Champion", file: "champion.png"},
-        {id: 16, name: "Master", file: "master.png"},
-        {id: 17, name: "Elite", file: "elite.png"},
-        {id: 18, name: "The Legend", file: "legend.png"}
-    ];
-    const PRICE_STEP = 150;
-    let order = { mode: null, currentRankId: null, targetRankId: null, price: 0 };
-
-    function goStep(step) {
-        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    function go(s) {
         document.getElementById('step-1').classList.add('hidden');
         document.getElementById('step-2').classList.add('hidden');
         document.getElementById('step-3').classList.add('hidden');
-        
-        document.getElementById('step-' + step).classList.remove('hidden');
-        updateMainButtonVisibility();
+        document.getElementById('step-'+s).classList.remove('hidden');
+        curStep = s;
+        if(s===3 && order.price > 0) tg.MainButton.show(); else tg.MainButton.hide();
     }
 
-    function selectMode(mode) {
-        order.mode = mode;
-        renderRanks('current');
-        goStep(2);
-    }
+    function setMode(m) { order.mode = m; render('curr'); go(2); }
 
-    function renderRanks(type) {
-        const container = document.getElementById(type === 'current' ? 'ranks-current' : 'ranks-target');
-        container.innerHTML = '';
-        
-        RANKS.forEach(rank => {
-            if (type === 'target' && rank.id <= order.currentRankId) return;
-
-            const div = document.createElement('div');
-            div.className = 'rank-item';
-            div.onclick = () => selectRank(type, rank, div);
-            div.innerHTML = `
-                <img src="${rank.file}" onerror="this.style.opacity='0'">
-                <span>${rank.name}</span>
-            `;
-            container.appendChild(div);
+    function render(type) {
+        const c = document.getElementById(type==='curr' ? 'grid-curr' : 'grid-targ');
+        c.innerHTML = '';
+        NAMES.forEach((name, i) => {
+            let id = i + 1;
+            if(type==='targ' && id <= order.curId) return;
+            let d = document.createElement('div');
+            d.className = 'rank';
+            d.onclick = () => sel(type, id, name, d);
+            d.innerHTML = `<img src="${FILES[i]}" onerror="this.style.opacity=0"><span>${name}</span>`;
+            c.appendChild(d);
         });
     }
 
-    function selectRank(type, rank, el) {
-        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-
-        const container = document.getElementById(type === 'current' ? 'ranks-current' : 'ranks-target');
-        container.querySelectorAll('.rank-item').forEach(e => e.classList.remove('active'));
+    function sel(type, id, name, el) {
+        const c = document.getElementById(type==='curr' ? 'grid-curr' : 'grid-targ');
+        c.querySelectorAll('.rank').forEach(e => e.classList.remove('active'));
         el.classList.add('active');
-
-        if (type === 'current') {
-            order.currentRankId = rank.id;
-            order.currentRankName = rank.name;
-            document.getElementById('disp-cur').innerText = rank.name;
-            // Показываем кнопку продолжить
-            document.getElementById('btn-next-2').classList.remove('hidden');
+        
+        if(type==='curr') {
+            order.curId = id; order.currentRankName = name;
+            document.getElementById('txt-curr').innerText = name;
+            document.getElementById('btn-next').classList.remove('hidden');
         } else {
-            order.targetRankId = rank.id;
-            order.targetRankName = rank.name;
-            document.getElementById('disp-tar').innerText = rank.name;
-            calculatePrice();
-        }
-    }
-
-    function calculatePrice() {
-        const steps = order.targetRankId - order.currentRankId;
-        order.price = steps * PRICE_STEP;
-        if (order.price > 0) {
-            tg.MainButton.text = `ЗАКАЗАТЬ ЗА ${order.price}₽`;
-            updateMainButtonVisibility();
+            order.tarId = id; order.targetRankName = name;
+            document.getElementById('txt-targ').innerText = name;
+            let steps = order.tarId - order.curId;
+            order.price = steps * 150;
+            tg.MainButton.text = `ЗАКАЗАТЬ • ${order.price} RUB`;
+            tg.MainButton.show();
         }
     }
 
     tg.MainButton.onClick(() => {
-        const data = { type: 'order', payload: order };
-        tg.sendData(JSON.stringify(data));
+        tg.sendData(JSON.stringify({ type:'order', payload:order }));
     });
-
 </script>
 </body>
 </html>
