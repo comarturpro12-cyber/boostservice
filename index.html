@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Xenon Boost</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Cinematic Dark Palette */
-            --bg: #09090b; /* Глубокий черный */
-            --card-bg: #18181b; /* Матовый серый */
+            --bg: #09090b; 
+            --card-bg: #18181b; 
             --card-border: #27272a;
-            --primary: #6366f1; /* Индиго (дорогой синий) */
-            --primary-grad: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --primary: #6366f1; 
             --text-main: #ffffff;
             --text-muted: #a1a1aa;
             
@@ -27,9 +26,8 @@
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             margin: 0; padding: 0;
-            min-height: 100vh;
-            /* Едва заметный фоновый свет */
-            background-image: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.15), transparent 70%);
+            /* Фоновое свечение */
+            background-image: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.1), transparent 60%);
             background-attachment: fixed;
             padding-bottom: calc(100px + var(--safe-area-bottom));
         }
@@ -41,19 +39,21 @@
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 24px; padding-top: 10px;
         }
-        .brand { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: #fff; }
+        .brand { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: #fff; text-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
+        
         .user-chip {
             background: var(--card-bg); border: 1px solid var(--card-border);
             padding: 6px 12px; border-radius: 100px; font-size: 13px; font-weight: 600;
             display: flex; align-items: center; gap: 8px;
         }
         .avatar {
-            width: 20px; height: 20px; border-radius: 50%;
-            background: var(--primary-grad); font-size: 10px;
-            display: flex; align-items: center; justify-content: center;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            display: flex; align-items: center; justify-content: center; font-size: 10px;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5); /* Avatar Glow */
         }
 
-        /* NAVIGATION TABS (IOS SEGMENTED) */
+        /* TABS */
         .nav-segment {
             display: flex; background: var(--card-bg); padding: 4px;
             border-radius: 14px; margin-bottom: 30px; border: 1px solid var(--card-border);
@@ -63,7 +63,15 @@
             color: var(--text-muted); border-radius: 10px; cursor: pointer; transition: all 0.2s ease;
         }
         .nav-item.active {
-            background: #27272a; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            background: #27272a; color: #fff; 
+            box-shadow: 0 0 15px rgba(255,255,255,0.05);
+        }
+
+        /* ANIMATIONS */
+        @keyframes border-glow {
+            0% { border-color: #6366f1; box-shadow: 0 0 5px rgba(99, 102, 241, 0.2); }
+            50% { border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+            100% { border-color: #6366f1; box-shadow: 0 0 5px rgba(99, 102, 241, 0.2); }
         }
 
         /* CARDS */
@@ -76,24 +84,15 @@
         .card:active { transform: scale(0.98); background: #202023; }
         
         .card.selected {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.08);
+            background: rgba(99, 102, 241, 0.05);
+            animation: border-glow 3s infinite alternate; /* RGB ANIMATION */
         }
-        /* Галочка при выборе */
-        .card.selected::after {
-            content: '✓'; position: absolute; right: 18px; top: 18px;
-            color: var(--primary); font-weight: 800; font-size: 14px;
-        }
-        /* Скрываем иконку когда выбрано, чтобы не мешала галочке, или двигаем */
-        .card.selected .card-icon { opacity: 0; }
-
+        
         .card-content h3 { margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: #fff; }
         .card-content p { margin: 0; font-size: 13px; color: var(--text-muted); }
         
-        .card-icon { 
-            width: 24px; height: 24px; fill: var(--text-muted); transition: 0.2s; 
-        }
-        .card.selected .card-icon { fill: var(--primary); opacity: 0; } 
+        .card-icon { width: 24px; height: 24px; fill: var(--text-muted); transition: 0.2s; }
+        .card.selected .card-icon { fill: #fff; filter: drop-shadow(0 0 5px #6366f1); }
 
         /* GRID SYSTEM (RANKS) */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -103,24 +102,24 @@
             cursor: pointer; transition: 0.2s;
         }
         .rank-box:active { transform: scale(0.96); }
+        
         .rank-box.selected {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.15);
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+            background: rgba(99, 102, 241, 0.1);
+            animation: border-glow 3s infinite alternate; /* RGB ANIMATION */
         }
         
         .rank-box img { width: 42px; height: 42px; object-fit: contain; margin-bottom: 8px; filter: grayscale(0.8); transition: 0.2s; }
-        .rank-box.selected img { filter: grayscale(0); transform: scale(1.1); }
+        .rank-box.selected img { filter: grayscale(0) drop-shadow(0 0 8px rgba(99, 102, 241, 0.6)); transform: scale(1.1); }
         
         .rank-name { font-size: 11px; font-weight: 600; color: var(--text-muted); }
         .rank-box.selected .rank-name { color: #fff; }
         .rank-box.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
 
-        /* BUTTONS & NAV */
-        .section-header { font-size: 18px; font-weight: 800; margin-bottom: 16px; color: #fff; letter-spacing: -0.5px; }
+        /* BUTTONS */
+        .step-title { font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
         
         .back-btn {
-            font-size: 14px; font-weight: 600; color: var(--text-muted);
+            font-size: 13px; font-weight: 600; color: var(--text-muted);
             margin-bottom: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
         }
         .back-btn:hover { color: #fff; }
@@ -129,20 +128,21 @@
             width: 100%; background: #fff; color: #000;
             padding: 16px; border-radius: 14px; font-weight: 700; font-size: 15px;
             text-align: center; margin-top: 20px; cursor: pointer;
-            transition: 0.2s; box-shadow: 0 4px 20px rgba(255,255,255,0.1);
-            display: none; /* Скрыто по умолчанию */
+            transition: 0.2s; box-shadow: 0 0 15px rgba(255,255,255,0.1);
+            display: none; 
         }
         .next-btn:active { transform: scale(0.98); opacity: 0.9; }
 
-        /* FINAL PAY BUTTON */
+        /* FINAL PAY BUTTON (GLOWING) */
         .pay-btn {
             position: fixed; bottom: 30px; left: 20px; right: 20px;
-            background: var(--primary-grad); color: #fff;
-            padding: 18px; border-radius: 18px; font-size: 16px; font-weight: 700;
-            text-align: center; box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
-            z-index: 100; cursor: pointer; transition: 0.2s; display: none;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            color: #fff; padding: 18px; border-radius: 18px; font-size: 16px; font-weight: 700;
+            text-align: center; cursor: pointer; transition: 0.2s; display: none;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4), inset 0 0 0 1px rgba(255,255,255,0.2);
         }
-        .pay-btn:active { transform: scale(0.97); }
+        .pay-btn:active { transform: scale(0.97); box-shadow: 0 0 10px rgba(99, 102, 241, 0.6); }
 
         /* SUMMARY */
         .summary-card {
@@ -154,15 +154,18 @@
         .sum-label { color: var(--text-muted); }
         .sum-val { color: #fff; font-weight: 600; }
         .total-wrapper { text-align: center; margin-top: 25px; }
-        .total-price { font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+        .total-price { 
+            font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -1px; 
+            text-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
         .total-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
         /* PROFILE */
         .refresh-btn {
-            background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2);
-            color: var(--primary); padding: 14px; border-radius: 12px;
+            background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #818cf8; padding: 14px; border-radius: 12px;
             text-align: center; font-weight: 600; font-size: 14px;
-            margin-bottom: 25px; cursor: pointer;
+            margin-bottom: 25px; cursor: pointer; transition: 0.2s;
         }
         .refresh-btn:active { background: rgba(99, 102, 241, 0.2); }
 
@@ -172,12 +175,12 @@
             display: flex; justify-content: space-between; align-items: center;
         }
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .b-wait { background: rgba(234, 179, 8, 0.1); color: #fbbf24; }
-        .b-work { background: rgba(99, 102, 241, 0.1); color: #818cf8; }
-        .b-done { background: rgba(34, 197, 94, 0.1); color: #4ade80; }
-        .b-reject { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+        .b-wait { background: rgba(234, 179, 8, 0.15); color: #fbbf24; border: 1px solid rgba(234, 179, 8, 0.2); }
+        .b-work { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.2); }
+        .b-done { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.2); }
+        .b-reject { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
 
-        /* VIEWS & ANIMATIONS */
+        /* VIEWS */
         .view-container { display: none; }
         .view-container.active { display: block; animation: fadeIn 0.3s ease; }
         
@@ -208,7 +211,7 @@
     <div id="view-boost" class="view-container active">
         
         <div id="step-1" class="step-container active">
-            <div class="section-header">Выберите режим</div>
+            <div class="step-title">Шаг 1 • Выберите режим</div>
             
             <div class="card" onclick="selectMode('mm', this)">
                 <div class="card-content"><h3>Соревновательный</h3><p>Классика 5x5</p></div>
@@ -228,21 +231,21 @@
 
         <div id="step-2" class="step-container">
             <div class="back-btn" onclick="gotoStep(1)">‹ Назад</div>
-            <div class="section-header">Ваш текущий ранг</div>
+            <div class="step-title">Шаг 2 • Ваш текущий ранг</div>
             <div class="grid" id="grid-from"></div>
             <div id="btn-next-2" class="next-btn" onclick="gotoStep(3)">Далее</div>
         </div>
 
         <div id="step-3" class="step-container">
             <div class="back-btn" onclick="gotoStep(2)">‹ Назад</div>
-            <div class="section-header">Желаемый ранг</div>
+            <div class="step-title">Шаг 3 • Желаемый ранг</div>
             <div class="grid" id="grid-to"></div>
             <div id="btn-next-3" class="next-btn" onclick="gotoStep(4)">Далее</div>
         </div>
 
         <div id="step-4" class="step-container">
             <div class="back-btn" onclick="gotoStep(3)">‹ Назад</div>
-            <div class="section-header">Метод выполнения</div>
+            <div class="step-title">Шаг 4 • Метод выполнения</div>
             
             <div class="card" onclick="selectType('login', this)">
                 <div class="card-content">
@@ -265,7 +268,7 @@
 
         <div id="step-5" class="step-container">
             <div class="back-btn" onclick="gotoStep(4)">‹ Изменить</div>
-            <div class="section-header">Итоговый расчет</div>
+            <div class="step-title">Подтверждение</div>
             
             <div class="summary-card">
                 <div class="sum-row">
@@ -292,9 +295,9 @@
 
     <div id="view-profile" class="view-container">
         <div class="refresh-btn" onclick="refreshApp()">
-            ↻ Обновить статус (Перезайти)
+            ↻ Обновить статус (Перезапуск)
         </div>
-        <div class="section-header">История заказов</div>
+        <div class="step-title">История заказов</div>
         <div id="orders-list"></div>
         <div id="no-orders" style="display:none; text-align:center; color:var(--text-muted); margin-top:40px; font-size:13px;">
             У вас пока нет заказов
@@ -328,7 +331,7 @@
     let s = { m:null, f:null, t:null, ty:null, p:0 };
     let orders = [];
 
-    // --- INITIALIZATION ---
+    // --- INIT ---
     const url = new URLSearchParams(window.location.search);
     const uName = url.get('name') || 'User';
     try {
@@ -342,7 +345,7 @@
     renderRanks();
     renderOrders();
 
-    // --- NAVIGATION LOGIC ---
+    // --- NAVIGATION ---
     function switchTab(tab) {
         document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
         document.querySelectorAll('.view-container').forEach(e => e.classList.remove('active'));
@@ -352,12 +355,12 @@
             document.querySelectorAll('.nav-item')[0].classList.add('active');
             document.getElementById('view-boost').classList.add('active');
             
-            // Fix: If returning to boost, ensure a step is visible. If none active, show step 1.
-            const hasActiveStep = document.querySelector('.step-container.active');
-            if (!hasActiveStep) {
+            // Если в бусте нет активного шага (баг), показываем первый
+            if(!document.querySelector('.step-container.active')) {
                 document.getElementById('step-1').classList.add('active');
-            } else if (hasActiveStep.id === 'step-5') {
-                // If we were on summary, show pay button again
+            }
+            // Если был открыт итог, показываем кнопку оплаты
+            if(document.getElementById('step-5').classList.contains('active')) {
                 document.getElementById('pay-btn').style.display = 'block';
             }
         } else {
@@ -368,17 +371,16 @@
     }
 
     function gotoStep(n) {
-        // Hide all steps first
+        // Hide all
         document.querySelectorAll('.step-container').forEach(e => e.classList.remove('active'));
-        // Show target step
+        // Show target
         document.getElementById(`step-${n}`).classList.add('active');
         document.getElementById('pay-btn').style.display = 'none';
-        
-        // Ensure parent view is active (if coming from back button)
+        // Make sure parent is active
         document.getElementById('view-boost').classList.add('active');
     }
 
-    // --- SELECTION LOGIC ---
+    // --- SELECTION ---
     function selectMode(m, el) {
         s.m = m;
         document.querySelectorAll('#step-1 .card').forEach(c => c.classList.remove('selected'));
@@ -391,8 +393,9 @@
         const gf = document.getElementById('grid-from');
         const gt = document.getElementById('grid-to');
         RANKS.forEach((r, i) => {
-            gf.innerHTML += `<div class="rank-box" id="f-${i}" onclick="setF(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
-            gt.innerHTML += `<div class="rank-box" id="t-${i}" onclick="setT(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
+            const h1 = `<div class="rank-box" id="f-${i}" onclick="setF(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
+            const h2 = `<div class="rank-box" id="t-${i}" onclick="setT(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
+            gf.innerHTML += h1; gt.innerHTML += h2;
         });
     }
 
@@ -402,9 +405,9 @@
         document.getElementById(`f-${i}`).classList.add('selected');
         document.getElementById('btn-next-2').style.display = 'block';
         
-        // Lock targets
+        // Disable invalid targets
         document.querySelectorAll('#grid-to .rank-box').forEach((e, idx) => {
-            if (idx <= i) e.classList.add('disabled');
+            if(idx <= i) e.classList.add('disabled');
             else e.classList.remove('disabled');
             e.classList.remove('selected');
         });
@@ -437,7 +440,7 @@
         document.getElementById('out-from').innerText = RANKS[s.f].name;
         document.getElementById('out-to').innerText = RANKS[s.t].name;
         document.getElementById('out-type').innerText = TYPES[s.ty].n;
-        document.getElementById('out-price').innerText = s.p + '₽';
+        document.getElementById('out-price').innerText = `${s.p}₽`;
 
         gotoStep(5);
         
@@ -454,11 +457,13 @@
         };
     }
 
+    // PROFILE
     function renderOrders() {
         const l = document.getElementById('orders-list');
         if (!orders.length) { document.getElementById('no-orders').style.display = 'block'; return; }
         
-        orders.slice().reverse().forEach(o => {
+        // Orders are already Newest -> Oldest from Python, no need to reverse
+        orders.forEach(o => {
             let cl = '', tx = '';
             if (o.status === 'wait') { cl = 'b-wait'; tx = 'Проверка'; }
             if (o.status === 'work') { cl = 'b-work'; tx = 'В работе'; }
@@ -477,9 +482,7 @@
     }
 
     function refreshApp() {
-        // Отправляем боту команду, чтобы он переприслал меню
         tg.sendData("REFRESH_PROFILE");
-        // Закрываем окно (бот сам пришлет новое)
         setTimeout(() => tg.close(), 100);
     }
 
