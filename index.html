@@ -26,7 +26,6 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             margin: 0; padding: 0;
             min-height: 100vh;
-            /* Премиальный задний фон с пятнами света */
             background-image: 
                 radial-gradient(circle at 0% 0%, rgba(10, 132, 255, 0.15), transparent 50%),
                 radial-gradient(circle at 100% 100%, rgba(191, 90, 242, 0.1), transparent 50%);
@@ -82,7 +81,6 @@
         }
         .card:active { transform: scale(0.98); background: rgba(50,50,50,0.6); }
         
-        /* RGB ACTIVE STATE */
         .card.selected {
             border-color: transparent;
             box-shadow: var(--active-glow);
@@ -311,26 +309,29 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- SUPER LOW PRICES ---
+    // --- RANK LIST ---
     const RANKS = [
-        { name: "Бронза I", p: 5, i: "bronze1.png" }, { name: "Бронза II", p: 5, i: "bronze2.png" },
-        { name: "Бронза III", p: 5, i: "bronze3.png" }, { name: "Бронза IV", p: 10, i: "bronze4.png" },
+        { name: "Бронза I", i: "bronze1.png" }, { name: "Бронза II", i: "bronze2.png" },
+        { name: "Бронза III", i: "bronze3.png" }, { name: "Бронза IV", i: "bronze4.png" },
         
-        { name: "Сильвер I", p: 10, i: "silver1.png" }, { name: "Сильвер II", p: 10, i: "silver2.png" },
-        { name: "Сильвер III", p: 10, i: "silver3.png" }, { name: "Сильвер IV", p: 15, i: "silver4.png" },
+        { name: "Сильвер I", i: "silver1.png" }, { name: "Сильвер II", i: "silver2.png" },
+        { name: "Сильвер III", i: "silver3.png" }, { name: "Сильвер IV", i: "silver4.png" },
         
-        { name: "Голд I", p: 20, i: "gold1.png" }, { name: "Голд II", p: 25, i: "gold2.png" },
-        { name: "Голд III", p: 30, i: "gold3.png" }, { name: "Голд IV", p: 35, i: "gold4.png" },
+        { name: "Голд I", i: "gold1.png" }, { name: "Голд II", i: "gold2.png" },
+        { name: "Голд III", i: "gold3.png" }, { name: "Голд IV", i: "gold4.png" },
         
-        { name: "Феникс", p: 60, i: "phoenix.png" }, { name: "Рейнджер", p: 90, i: "ranger.png" },
-        { name: "Чемпион", p: 150, i: "champion.png" }, { name: "Мастер", p: 250, i: "master.png" },
-        { name: "Элита", p: 350, i: "elite.png" }, { name: "Легенда", p: 450, i: "legend.png" }
+        { name: "Феникс", i: "phoenix.png" }, { name: "Рейнджер", i: "ranger.png" },
+        { name: "Чемпион", i: "champion.png" }, { name: "Мастер", i: "master.png" },
+        { name: "Элита", i: "elite.png" }, { name: "Легенда", i: "legend.png" }
     ];
 
-    const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.7} };
+    // --- STEP PRICES (RUB) ---
+    // Это цена ОДНОГО шага (перехода на следующий ранг)
+    const STEP_PRICE = 55; // 55р за каждый шаг (любой ранг)
     
-    // Лобби = x2.5 (жестко оверпрайс, чтобы брали вход)
-    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:2.5} };
+    // --- MULTIPLIERS ---
+    const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.8} };
+    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:2.5} }; // Лобби 2.5x дороже
 
     let s = { m:null, f:null, t:null, ty:null, p:0 };
     let orders = [];
@@ -431,9 +432,18 @@
     }
 
     function calc() {
-        let base = 0;
-        for(let i=s.f+1; i<=s.t; i++) base += RANKS[i].p;
-        s.p = Math.round(base * MODES[s.m].k * TYPES[s.ty].k);
+        // --- NEW LOGIC: STEPS CALCULATION ---
+        const steps = s.t - s.f; // Количество рангов для поднятия
+        if (steps <= 0) return;
+
+        // Базовая цена за все шаги (55 руб * кол-во шагов)
+        let baseTotal = steps * STEP_PRICE;
+
+        // Умножаем на коэфф режима (ММ=1, Напарники=0.9)
+        baseTotal = baseTotal * MODES[s.m].k;
+
+        // Умножаем на коэфф типа (Вход=1, Лобби=2.5)
+        s.p = Math.round(baseTotal * TYPES[s.ty].k);
 
         document.getElementById('out-mode').innerText = MODES[s.m].n;
         document.getElementById('out-from').innerText = RANKS[s.f].name;
