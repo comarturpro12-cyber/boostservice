@@ -6,11 +6,9 @@
     <title>Xenon ELO Boost</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* ИМПОРТ ШРИФТОВ И ПЕРЕМЕННЫЕ (ОСТАВИЛ КАК БЫЛО) */
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Inter:wght@400;600&display=swap');
         :root { --bg: #050505; --card: #0f0f11; --border: #27272a; --accent: #3b82f6; --text: #ffffff; --gray: #9ca3af; --danger: #ef4444; }
         
-        /* АНИМАЦИИ */
         @keyframes rgb-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -35,43 +33,47 @@
         .hero h1 { font-family: 'Rajdhani', sans-serif; font-size: 44px; margin: 0; text-transform: uppercase; letter-spacing: 3px; background: linear-gradient(90deg, #3b82f6, #8b5cf6, #00ffff, #3b82f6); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rgb-flow 5s linear infinite; }
         .hero p { color: var(--gray); font-size: 13px; margin-top: 5px; }
 
-        /* СЕТКА ТОВАРОВ */
+        /* TABS */
+        .nav-tabs { display: flex; background: var(--card); border-radius: 12px; padding: 4px; margin-bottom: 25px; border: 1px solid var(--border); }
+        .nav-tab { flex: 1; text-align: center; padding: 10px 5px; font-size: 12px; font-weight: 700; border-radius: 8px; color: var(--gray); cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        .nav-tab.active { background: linear-gradient(90deg, #3b82f6, #8b5cf6); color: white; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+
         .view { display: none; animation: fadeIn 0.3s ease; }
         .view.active { display: block; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; } /* Сделал 2 колонки, так красивее для рангов */
-        
-        /* КАРТОЧКА БУСТА */
+
+        /* SHOP GRID */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .card { background: rgba(15, 15, 17, 0.8); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; position: relative; transition: 0.2s; backdrop-filter: blur(5px); display: flex; flex-direction: column; }
         .card:active { transform: scale(0.98); border-color: var(--accent); }
-        
         .card-img-container { width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, rgba(59,130,246,0.1) 0%, rgba(0,0,0,0) 70%); padding-top: 10px;}
         .card-img { width: 80px; height: auto; object-fit: contain; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
-        
         .card-body { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; text-align: center; }
         .card-title { font-weight: 700; font-size: 16px; color: #fff; margin-bottom: 5px; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px;}
         .card-price { font-size: 12px; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
-        
-        /* КНОПКА ВНУТРИ КАРТОЧКИ */
         .mini-btn { width: 100%; padding: 8px 0; background: #1f1f22; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .mini-btn:active { background: var(--accent); border-color: var(--accent); }
 
-        /* ДЕТАЛЬНАЯ СТРАНИЦА */
+        /* PROFILE */
+        .profile-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .profile-avatar { width: 80px; height: 80px; margin: 0 auto 15px; border-radius: 50%; background: linear-gradient(124deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #fff; box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+        .profile-name { font-size: 24px; font-weight: 800; font-family: 'Rajdhani', sans-serif; margin-bottom: 5px; color: #fff; }
+        .profile-id { font-size: 12px; color: var(--gray); margin-bottom: 20px; }
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stat-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+        .stat-val { font-size: 20px; font-weight: 800; color: var(--accent); font-family: 'Rajdhani', sans-serif; }
+        .stat-label { font-size: 11px; color: var(--gray); text-transform: uppercase; margin-top: 5px; }
+
+        /* DETAIL VIEW */
         .detail-img-container { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at center, rgba(59,130,246,0.2) 0%, rgba(0,0,0,0) 70%); margin-bottom: 20px; border-radius: 16px; border: 1px solid var(--border); }
         .detail-img { width: 120px; height: auto; filter: drop-shadow(0 0 20px rgba(59,130,246,0.3)); }
-        
         .detail-title { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 10px; text-transform: uppercase; font-family: 'Rajdhani', sans-serif; text-align: center; letter-spacing: 2px; }
         .detail-desc { font-size: 13px; color: #d1d5db; line-height: 1.6; margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
-        
         .section-title { font-size: 12px; color: var(--gray); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; margin-top: 20px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        
         .features-list { margin-bottom: 10px; }
         .feature-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; color: #9ca3af; }
         .feature-icon { color: var(--accent); font-weight: bold; font-size: 16px; }
-
         .plans-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .plan-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.3s; }
         .plan-card.active { border-color: var(--accent); background: rgba(59, 130, 246, 0.15); box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-        
         .plan-info { text-align: left; }
         .plan-name { font-size: 14px; font-weight: 700; color: #fff; }
         .plan-sub { font-size: 11px; color: #666; margin-top: 2px; }
@@ -79,8 +81,6 @@
 
         .bottom-back-container { text-align: center; margin-top: 25px; }
         .bottom-back-btn { display: inline-block; padding: 10px 25px; background: #222; border: 1px solid #333; border-radius: 20px; font-weight: 600; font-size: 12px; color: #aaa; cursor: pointer; transition: 0.3s; }
-        .bottom-back-btn:active { background: #333; color: #fff; transform: scale(0.95); }
-
     </style>
 </head>
 <body>
@@ -107,8 +107,41 @@
             <p>Professional Standoff 2 Boosting</p>
         </div>
 
+        <div class="nav-tabs">
+            <div class="nav-tab active" id="tab-shop" onclick="switchTab('shop')">УСЛУГИ</div>
+            <div class="nav-tab" id="tab-profile" onclick="switchTab('profile')">ПРОФИЛЬ</div>
+        </div>
+
         <div id="shop-view" class="view active">
             <div class="grid" id="products-grid"></div>
+        </div>
+
+        <div id="profile-view" class="view">
+            <div class="profile-card">
+                <div class="profile-avatar" id="p-avatar">X</div>
+                <div class="profile-name" id="p-name">Guest</div>
+                <div class="profile-id" id="p-id">ID: ...</div>
+                
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-val" id="p-buys">0</div>
+                        <div class="stat-label">Заказов</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val" id="p-spent">0₽</div>
+                        <div class="stat-label">Потрачено</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-title">ПОДДЕРЖКА</div>
+            <div class="card" onclick="window.open('https://t.me/audemaRRa', '_blank')" style="cursor: pointer; padding: 15px; flex-direction: row; align-items: center; gap: 15px;">
+                <div style="font-size: 24px;">👨‍💻</div>
+                <div style="text-align: left;">
+                    <div style="font-weight: bold; color: #fff;">Написать менеджеру</div>
+                    <div style="font-size: 11px; color: #888;">По вопросам заказа</div>
+                </div>
+            </div>
         </div>
 
         <div id="detail-view" class="view">
@@ -135,100 +168,135 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- ДАННЫЕ ПОЛЬЗОВАТЕЛЯ ---
     function initData() {
         const urlParams = new URLSearchParams(window.location.search);
         const nameFromUrl = urlParams.get('name');
         const uidFromUrl = urlParams.get('uid');
+        const buys = urlParams.get('buys') || '0';
+        const spent = urlParams.get('spent') || '0';
         
         if (nameFromUrl) {
             document.getElementById('username').innerText = nameFromUrl;
             document.getElementById('userid').innerText = `ID: ${uidFromUrl}`;
             document.getElementById('avatar').innerText = nameFromUrl[0].toUpperCase();
-        } else {
-            const user = tg.initDataUnsafe.user;
-            if (user) {
-                document.getElementById('username').innerText = user.first_name;
-                document.getElementById('userid').innerText = `ID: ${user.id}`;
-                document.getElementById('avatar').innerText = user.first_name[0].toUpperCase();
-            }
+
+            document.getElementById('p-name').innerText = nameFromUrl;
+            document.getElementById('p-id').innerText = `ID: ${uidFromUrl}`;
+            document.getElementById('p-avatar').innerText = nameFromUrl[0].toUpperCase();
+            document.getElementById('p-buys').innerText = buys;
+            document.getElementById('p-spent').innerText = `${spent}₽`;
         }
     }
     initData();
 
-    // --- БАЗА УСЛУГ (БУСТ) ---
-    // Использую названия картинок из твоего скрина: ranger.png, elite.png, master.png и т.д.
+    // ПОЛНЫЙ СПИСОК ТОВАРОВ ПО ФАЙЛАМ
     const products = [
         { 
-            id: 'boost_gold', 
-            name: 'Gold (Голд)', 
-            img: 'gold4.png',
-            short_desc: 'Выход на золото. Быстрый старт.',
-            full_desc: `Буст до ранга <b>Gold (Золото)</b>.<br>Идеально для новичков, чтобы выбраться с сильверов.<br><br>Мы играем с легитным софтом, риск бана аккаунта клиента - 0%.`,
-            features: ["Legit игра", "Быстрое выполнение (1-2 часа)", "Конфиденциальность"],
+            id: 'boost_bronze', 
+            name: 'Bronze (Бронза)', 
+            img: 'bronze4.png', 
+            short_desc: 'Стартовый уровень.',
+            full_desc: `Буст до ранга <b>Bronze</b>.<br>Самое начало пути. Быстрое прохождение калибровки и начальных званий.`,
+            features: ["Быстрое прохождение", "Дешевая цена", "Без риска"],
             plans: [
-                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 150 },
+                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 90 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 50 }
+            ]
+        },
+        { 
+            id: 'boost_silver', 
+            name: 'Silver (Серебро)', 
+            img: 'silver4.png', 
+            short_desc: 'Выход из песочницы.',
+            full_desc: `Буст до ранга <b>Silver</b>.<br>Поможем выбраться со дна и начать нормальную игру.`,
+            features: ["Legit игра", "Хороший старт", "Любой К/Д"],
+            plans: [
+                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 150 },
                 { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 100 }
+            ]
+        },
+        { 
+            id: 'boost_gold', 
+            name: 'Gold (Золото)', 
+            img: 'gold4.png',
+            short_desc: 'Золотая середина.',
+            full_desc: `Буст до ранга <b>Gold</b>.<br>Самый популярный ранг. Получите уважение среди друзей.`,
+            features: ["Стабильный винрейт", "Опытные бустеры", "Конфиденциальность"],
+            plans: [
+                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 250 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 180 }
             ]
         },
         { 
             id: 'boost_phoenix', 
             name: 'Phoenix (Феникс)', 
             img: 'phoenix.png',
-            short_desc: 'Престижный ранг для уверенных.',
-            full_desc: `Буст до ранга <b>Phoenix (Феникс)</b>.<br>Один из самых красивых рангов в игре.<br><br>Гарантируем отсутствие сливов ммр.`,
-            features: ["Legit игра", "Играем до результата", "Скриншот по окончанию"],
+            short_desc: 'Престижный ранг.',
+            full_desc: `Буст до ранга <b>Phoenix</b>.<br>Серьезный уровень игры. Требует скилла, который мы предоставим.`,
+            features: ["Скриншот результата", "Высокий скилл", "Быстро"],
             plans: [
-                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 300 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 220 }
+                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 400 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 300 }
             ]
         },
         { 
             id: 'boost_ranger', 
             name: 'Ranger (Рейнджер)', 
             img: 'ranger.png',
-            short_desc: 'Высокий скилл. Элита игры.',
-            full_desc: `Буст до ранга <b>Ranger (Рейнджер)</b>.<br>Серьезный уровень. Буст выполняется опытными игроками с приватным софтом Xenon.`,
-            features: ["Legit игра / Rage (по желанию)", "Высокий винрейт", "Гарантия от бана"],
+            short_desc: 'Элита игры.',
+            full_desc: `Буст до ранга <b>Ranger</b>.<br>Для тех, кто хочет играть с сильными противниками.`,
+            features: ["Legit / Rage", "Гарантия от бана", "VIP отношение"],
             plans: [
-                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 500 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 350 }
+                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 600 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 450 }
             ]
         },
         { 
             id: 'boost_champion', 
             name: 'Champion (Чемпион)', 
             img: 'champion.png',
-            short_desc: 'Для настоящих профи.',
-            full_desc: `Буст до ранга <b>Champion</b>.<br>Очень сложный ранг, требующий времени.<br><br>⚠️ Рекомендуем метод 'Лобби' для безопасности основного аккаунта.`,
-            features: ["Приватный буст", "Игра с топ софтом", "Стриминг в Discord (по запросу)"],
+            short_desc: 'Пред-топ уровень.',
+            full_desc: `Буст до ранга <b>Champion</b>.<br>Почти вершина. Очень сложный буст.`,
+            features: ["Только PRO бустеры", "Стрим (по запросу)", "Отчетность"],
             plans: [
-                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 800 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 600 }
+                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 900 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 700 }
             ]
         },
         { 
             id: 'boost_master', 
             name: 'Master (Мастер)', 
             img: 'master.png',
-            short_desc: 'Предмаксимальный ранг.',
-            full_desc: `Буст до ранга <b>Master</b>.<br>Это уже киберспорт. Буст выполняется в Rage режиме для скорости, либо Legit для безопасности.`,
-            features: ["Rage/Legit буст", "VIP Подход", "Связь с бустером"],
+            short_desc: 'Уровень киберспорта.',
+            full_desc: `Буст до ранга <b>Master</b>.<br>Игра на результат.`,
+            features: ["Rage буст (быстро)", "Legit буст (безопасно)", "Связь с бустером"],
             plans: [
-                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 1200 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 900 }
+                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 1300 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 1000 }
+            ]
+        },
+        { 
+            id: 'boost_elite', 
+            name: 'Elite (Элита)', 
+            img: 'elite.png',
+            short_desc: 'Серебряная Элита.',
+            full_desc: `Буст до <b>Elite</b>.<br>Один из высших рангов.`,
+            features: ["Полная анонимность", "Максимальный приоритет", "Любые капризы"],
+            plans: [
+                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 1800 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 1400 }
             ]
         },
         { 
             id: 'boost_legend', 
-            name: 'Elite (Легенда)', 
-            img: 'legend.png', // В твоем скрине файл legend.png, хотя ранг Elite, но оставим как файл
+            name: 'THE LEGEND', 
+            img: 'legend.png',
             short_desc: 'МАКСИМАЛЬНЫЙ РАНГ.',
-            full_desc: `Буст до <b>ELITE / THE LEGEND</b>.<br>Вершина пищевой цепочки Standoff 2.<br>Самая дорогая и престижная услуга.`,
-            features: ["Полная анонимность", "Максимальный приоритет", "Любые капризы"],
+            full_desc: `Буст до <b>THE LEGEND</b>.<br>Вершина пищевой цепочки Standoff 2.<br>Самая дорогая и престижная услуга.`,
+            features: ["Легендарный статус", "Персональный менеджер", "Топ 1 сервера"],
             plans: [
-                { label: 'Лобби (Вы в пати)', sub: 'Вы играете с нами', price: 2500 },
-                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 1800 }
+                { label: 'Лобби (Пати)', sub: 'Игра с бустером', price: 3000 },
+                { label: 'Вход (Передача)', sub: 'Мы играем за вас', price: 2200 }
             ]
         }
     ];
@@ -236,7 +304,21 @@
     let currentProduct = null;
     let selectedPlan = null;
 
-    // --- ОТРИСОВКА КАТАЛОГА ---
+    window.switchTab = function(tabName) {
+        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+
+        document.getElementById(tabName + '-view').classList.add('active');
+        document.getElementById('tab-' + tabName).classList.add('active');
+
+        if (tabName !== 'detail') {
+            document.getElementById('back-btn').style.display = 'none';
+            document.getElementById('main-hero').style.display = 'block';
+            tg.MainButton.hide();
+        }
+    }
+
     function renderShop() {
         const grid = document.getElementById('products-grid');
         grid.innerHTML = '';
@@ -257,7 +339,6 @@
         });
     }
 
-    // --- ОТКРЫТИЕ ДЕТАЛЬНОЙ ---
     function openDetail(id) {
         currentProduct = products.find(x => x.id === id);
         selectedPlan = null;
@@ -297,11 +378,9 @@
         document.getElementById('detail-view').classList.add('active');
         document.getElementById('back-btn').style.display = 'block';
         document.getElementById('main-hero').style.display = 'none';
-        
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // --- ВЫБОР ТАРИФА ---
     function selectPlan(index) {
         if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         document.querySelectorAll('.plan-card').forEach(el => el.classList.remove('active'));
@@ -314,12 +393,10 @@
         tg.MainButton.show();
     }
 
-    // --- НАЗАД ---
     window.goBack = function() {
         if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
         document.getElementById('detail-view').classList.remove('active');
-        document.getElementById('shop-view').classList.add('active');
-        
+        switchTab('shop');
         document.getElementById('back-btn').style.display = 'none';
         document.getElementById('main-hero').style.display = 'block';
         tg.MainButton.hide();
@@ -327,11 +404,9 @@
         selectedPlan = null;
     }
 
-    // --- ОТПРАВКА В БОТА ---
     tg.MainButton.onClick(() => {
         if (currentProduct && selectedPlan) {
             const finalData = {
-                // Формат: "Boost: Ranger (Лобби)"
                 name: `Boost: ${currentProduct.name} (${selectedPlan.label})`,
                 price: selectedPlan.price
             };
@@ -340,9 +415,8 @@
         }
     });
 
-    tg.BackButton.onClick(goBack); // Обработка нативной кнопки назад
+    tg.BackButton.onClick(goBack);
     renderShop();
-
 </script>
 </body>
 </html>
