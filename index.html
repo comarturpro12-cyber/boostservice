@@ -8,14 +8,16 @@
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #000000;
-            --glass: rgba(30, 30, 30, 0.6);
-            --border: rgba(255, 255, 255, 0.12);
-            --active-glow: 0 0 20px rgba(94, 92, 230, 0.3);
+            --bg: #050505;
+            --glass: rgba(25, 25, 25, 0.6);
+            --glass-active: rgba(40, 40, 45, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --primary: #5e5ce6;
+            --accent: #bf5af2;
+            --rgb-grad: linear-gradient(135deg, #5e5ce6, #bf5af2, #ff375f);
+            --glow: 0 0 25px rgba(94, 92, 230, 0.25);
             --text: #ffffff;
             --text-sec: #8e8e93;
-            --ios-blue: #0a84ff;
-            --rgb-grad: linear-gradient(135deg, #0a84ff, #bf5af2, #ff375f);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,10 +28,11 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             margin: 0; padding: 0;
             min-height: 100vh;
-            /* Премиальный задний фон с пятнами света */
+            /* Живой фон */
             background-image: 
-                radial-gradient(circle at 0% 0%, rgba(10, 132, 255, 0.15), transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(191, 90, 242, 0.1), transparent 50%);
+                radial-gradient(circle at 0% 0%, rgba(94, 92, 230, 0.15), transparent 60%),
+                radial-gradient(circle at 100% 50%, rgba(191, 90, 242, 0.1), transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(255, 55, 95, 0.1), transparent 50%);
             background-attachment: fixed;
             padding-bottom: 120px;
         }
@@ -39,108 +42,112 @@
         /* HEADER */
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 24px; padding-top: 10px;
+            margin-bottom: 30px; padding-top: 10px;
         }
         .logo { 
-            font-size: 24px; font-weight: 800; letter-spacing: -0.5px;
-            background: linear-gradient(90deg, #fff, #a0a0ff); 
+            font-size: 26px; font-weight: 800; letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #fff, #b0b0ff); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(94, 92, 230, 0.5);
         }
         
         .user-pill {
-            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
             padding: 6px 12px; border-radius: 20px;
             font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
         }
         .u-avatar { 
-            width: 20px; height: 20px; border-radius: 50%; 
+            width: 22px; height: 22px; border-radius: 50%; 
             background: var(--rgb-grad); font-size: 10px; 
-            display: flex; align-items: center; justify-content: center; 
+            display: flex; align-items: center; justify-content: center; font-weight: 700;
         }
 
-        /* IOS SEGMENTED CONTROL */
+        /* TABS */
         .segmented {
-            display: flex; background: rgba(118, 118, 128, 0.24); padding: 2px;
-            border-radius: 9px; margin-bottom: 30px; position: relative;
+            display: flex; background: rgba(30, 30, 30, 0.5); padding: 4px;
+            border-radius: 12px; margin-bottom: 30px; border: 1px solid var(--border);
         }
         .seg-btn {
-            flex: 1; text-align: center; padding: 7px; font-size: 13px; font-weight: 500;
-            color: #fff; border-radius: 7px; cursor: pointer; transition: 0.2s; z-index: 2;
+            flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 600;
+            color: #aaa; border-radius: 9px; cursor: pointer; transition: 0.3s;
         }
         .seg-btn.active {
-            background: #636366; box-shadow: 0 3px 8px rgba(0,0,0,0.2); font-weight: 600;
+            background: #2c2c2e; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        /* CARDS (GLASS + RGB BORDER ANIMATION) */
+        /* CARDS */
         .card {
             background: var(--glass); border: 1px solid var(--border);
-            border-radius: 16px; padding: 18px; margin-bottom: 12px;
+            border-radius: 18px; padding: 20px; margin-bottom: 12px;
             display: flex; align-items: center; justify-content: space-between;
             position: relative; overflow: hidden; backdrop-filter: blur(20px);
-            transition: 0.2s; cursor: pointer;
+            transition: 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); cursor: pointer;
         }
-        .card:active { transform: scale(0.98); background: rgba(50,50,50,0.6); }
+        .card:active { transform: scale(0.98); }
         
-        /* RGB ACTIVE STATE */
         .card.selected {
-            border-color: transparent;
-            box-shadow: var(--active-glow);
-            background: linear-gradient(rgba(20,20,20,0.9), rgba(20,20,20,0.9)) padding-box,
-                        var(--rgb-grad) border-box;
+            border-color: rgba(94, 92, 230, 0.5);
+            background: linear-gradient(rgba(20,20,25,0.8), rgba(20,20,25,0.8));
+            box-shadow: var(--glow);
+        }
+        .card.selected::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            background: var(--rgb-grad);
         }
 
-        .c-info h3 { margin: 0 0 3px 0; font-size: 16px; font-weight: 600; color: #fff; }
-        .c-info p { margin: 0; font-size: 13px; color: var(--text-sec); }
+        .c-info h3 { margin: 0 0 4px 0; font-size: 17px; font-weight: 700; color: #fff; }
+        .c-info p { margin: 0; font-size: 13px; color: var(--text-sec); font-weight: 500; }
         
-        .c-icon { width: 24px; height: 24px; fill: var(--text-sec); transition: 0.2s; }
-        .card.selected .c-icon { fill: #fff; filter: drop-shadow(0 0 5px rgba(255,255,255,0.8)); }
+        .c-icon { width: 26px; height: 26px; fill: var(--text-sec); transition: 0.3s; }
+        .card.selected .c-icon { fill: #fff; filter: drop-shadow(0 0 8px var(--primary)); transform: scale(1.1); }
 
         /* RANK GRID */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .rank-card {
             background: var(--glass); border: 1px solid var(--border);
-            border-radius: 14px; padding: 14px 6px; text-align: center;
+            border-radius: 14px; padding: 15px 5px; text-align: center;
             cursor: pointer; transition: 0.2s; backdrop-filter: blur(10px);
         }
         .rank-card:active { transform: scale(0.96); }
         
         .rank-card.selected {
-            border-color: transparent;
-            box-shadow: var(--active-glow);
-            background: linear-gradient(rgba(20,20,20,0.8), rgba(20,20,20,0.8)) padding-box,
-                        var(--rgb-grad) border-box;
+            border-color: rgba(191, 90, 242, 0.5);
+            background: rgba(40, 40, 45, 0.9);
+            box-shadow: 0 0 15px rgba(191, 90, 242, 0.2);
         }
         
         .rank-card img { 
-            width: 45px; height: 45px; object-fit: contain; 
-            margin-bottom: 6px; filter: grayscale(0.8); transition: 0.2s; 
+            width: 48px; height: 48px; object-fit: contain; 
+            margin-bottom: 8px; filter: grayscale(0.7) opacity(0.8); transition: 0.3s; 
         }
         .rank-card.selected img { 
-            filter: grayscale(0); transform: scale(1.1); 
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
+            filter: grayscale(0) opacity(1) drop-shadow(0 0 10px rgba(191, 90, 242, 0.5)); 
+            transform: scale(1.15); 
         }
         
-        .rank-name { font-size: 11px; font-weight: 600; color: var(--text-sec); }
+        .rank-name { font-size: 11px; font-weight: 700; color: var(--text-sec); text-transform: uppercase; letter-spacing: 0.5px; }
         .rank-card.selected .rank-name { color: #fff; }
         .rank-card.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
 
         /* BUTTONS */
         .step-title { 
-            font-size: 18px; font-weight: 700; color: #fff; 
-            margin-bottom: 16px; letter-spacing: -0.3px; 
+            font-size: 15px; font-weight: 700; color: var(--text-sec); 
+            margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; 
         }
         
         .back-btn {
-            font-size: 15px; font-weight: 500; color: var(--ios-blue);
-            margin-bottom: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+            font-size: 15px; font-weight: 600; color: #fff;
+            margin-bottom: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+            opacity: 0.7; transition: 0.2s;
         }
+        .back-btn:hover { opacity: 1; }
 
         .next-btn {
             width: 100%; background: #fff; color: #000;
-            padding: 15px; border-radius: 14px; font-weight: 600; font-size: 16px;
-            text-align: center; margin-top: 20px; cursor: pointer;
-            box-shadow: 0 4px 20px rgba(255,255,255,0.15); transition: 0.2s;
+            padding: 16px; border-radius: 16px; font-weight: 700; font-size: 16px;
+            text-align: center; margin-top: 25px; cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255,255,255,0.15); transition: 0.2s;
             display: none;
         }
         .next-btn:active { transform: scale(0.98); opacity: 0.9; }
@@ -149,53 +156,55 @@
         .pay-btn {
             position: fixed; bottom: 30px; left: 20px; right: 20px;
             background: var(--rgb-grad); color: #fff;
-            padding: 16px; border-radius: 18px; font-size: 17px; font-weight: 700;
+            padding: 18px; border-radius: 20px; font-size: 18px; font-weight: 800;
             text-align: center; cursor: pointer; display: none; z-index: 100;
-            box-shadow: 0 8px 30px rgba(10, 132, 255, 0.4); transition: 0.2s;
+            box-shadow: 0 10px 40px rgba(94, 92, 230, 0.5); transition: 0.2s;
+            letter-spacing: 0.5px;
         }
         .pay-btn:active { transform: scale(0.97); }
 
         /* SUMMARY */
         .summary {
-            background: #121212; border: 1px solid var(--border);
-            border-radius: 18px; padding: 24px; margin-top: 10px;
+            background: #101012; border: 1px solid var(--border);
+            border-radius: 20px; padding: 25px; margin-top: 10px;
         }
-        .sum-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 12px; }
+        .sum-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 15px; }
         .sum-row:last-child { border: none; padding-bottom: 0; margin-bottom: 0; }
-        .sum-k { color: var(--text-sec); } .sum-v { font-weight: 600; color: #fff; }
+        .sum-k { color: var(--text-sec); } .sum-v { font-weight: 700; color: #fff; }
         
-        .total-box { text-align: center; margin-top: 25px; }
+        .total-box { text-align: center; margin-top: 30px; }
         .total-price { 
-            font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-top: 5px;
+            font-size: 46px; font-weight: 800; letter-spacing: -1.5px; margin-top: 5px;
             background: var(--rgb-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .total-label { font-size: 12px; color: var(--text-sec); text-transform: uppercase; }
+        .total-label { font-size: 12px; color: var(--text-sec); text-transform: uppercase; letter-spacing: 1px; }
 
         /* PROFILE */
         .refresh-btn {
-            width: 100%; background: rgba(44, 44, 46, 0.7); color: var(--ios-blue);
-            padding: 12px; border-radius: 12px; font-weight: 600; text-align: center;
+            width: 100%; background: rgba(30, 30, 35, 0.8); color: #fff;
+            padding: 14px; border-radius: 14px; font-weight: 600; text-align: center;
             margin-bottom: 25px; cursor: pointer; border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-        .refresh-btn:active { background: rgba(60, 60, 62, 0.9); }
+        .refresh-btn:active { background: #333; }
 
         .order-item {
-            background: var(--glass); border-radius: 16px; padding: 16px;
-            margin-bottom: 10px; border: 1px solid var(--border);
+            background: var(--glass); border-radius: 16px; padding: 18px;
+            margin-bottom: 12px; border: 1px solid var(--border);
             display: flex; justify-content: space-between; align-items: center;
         }
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .badge { padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
         .st-wait { background: rgba(255, 214, 10, 0.15); color: #ffd60a; }
         .st-work { background: rgba(10, 132, 255, 0.15); color: #0a84ff; }
         .st-done { background: rgba(48, 209, 88, 0.15); color: #30d158; }
         .st-reject { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
 
-        /* VIEW TRANSITIONS */
+        /* VIEWS */
         .view-tab { display: none; }
-        .view-tab.active { display: block; animation: fadeIn 0.3s ease; }
+        .view-tab.active { display: block; animation: fadeIn 0.4s ease; }
         
         .step-slide { display: none; }
-        .step-slide.active { display: block; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .step-slide.active { display: block; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -221,7 +230,7 @@
     <div id="view-boost" class="view-tab active">
         
         <div id="step-1" class="step-slide active">
-            <div class="step-title">Режим игры</div>
+            <div class="step-title">Шаг 1 • Режим игры</div>
             <div class="card" onclick="selectMode('mm', this)">
                 <div class="c-info"><h3>Соревновательный</h3><p>Классика 5x5</p></div>
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
@@ -239,26 +248,26 @@
 
         <div id="step-2" class="step-slide">
             <div class="back-btn" onclick="gotoStep(1)">‹ Назад</div>
-            <div class="step-title">Текущий ранг</div>
+            <div class="step-title">Шаг 2 • Текущий ранг</div>
             <div class="grid" id="grid-from"></div>
             <div id="btn-next-2" class="next-btn" onclick="gotoStep(3)">Далее</div>
         </div>
 
         <div id="step-3" class="step-slide">
             <div class="back-btn" onclick="gotoStep(2)">‹ Назад</div>
-            <div class="step-title">Желаемый ранг</div>
+            <div class="step-title">Шаг 3 • Желаемый ранг</div>
             <div class="grid" id="grid-to"></div>
             <div id="btn-next-3" class="next-btn" onclick="gotoStep(4)">Далее</div>
         </div>
 
         <div id="step-4" class="step-slide">
             <div class="back-btn" onclick="gotoStep(3)">‹ Назад</div>
-            <div class="step-title">Метод буста</div>
+            <div class="step-title">Шаг 4 • Метод выполнения</div>
             
             <div class="card" onclick="selectType('login', this)" id="card-login">
                 <div class="c-info">
                     <h3>Вход (Передача)</h3>
-                    <p>Бустер играет сам. Быстрее.</p>
+                    <p>Бустер играет сам (Быстро)</p>
                 </div>
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             </div>
@@ -271,7 +280,7 @@
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
             </div>
 
-            <div id="btn-next-4" class="next-btn" onclick="calc()">К расчету</div>
+            <div id="btn-next-4" class="next-btn" onclick="calc()">Рассчитать</div>
         </div>
 
         <div id="step-5" class="step-slide">
@@ -280,7 +289,7 @@
             
             <div class="summary">
                 <div class="sum-row"><span class="sum-k">Режим</span><span class="sum-v" id="out-mode"></span></div>
-                <div class="sum-row"><span class="sum-k">Буст</span><span class="sum-v"><span id="out-from"></span> → <span id="out-to" style="color:var(--ios-blue)"></span></span></div>
+                <div class="sum-row"><span class="sum-k">Буст</span><span class="sum-v"><span id="out-from"></span> → <span id="out-to" style="color:var(--primary)"></span></span></div>
                 <div class="sum-row"><span class="sum-k">Метод</span><span class="sum-v" id="out-type"></span></div>
             </div>
 
@@ -294,7 +303,8 @@
 
     <div id="view-profile" class="view-tab">
         <div class="refresh-btn" onclick="refreshApp()">
-            ↻ Обновить статусы (Перезапуск)
+            <svg style="width:16px;height:16px;fill:#fff" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+            Обновить статус (Перезапуск)
         </div>
         <div class="step-title">История заказов</div>
         <div id="orders-list"></div>
@@ -311,22 +321,17 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- NEW PRICES (CHEAP & REALISTIC) ---
-    // Цены указаны за ШАГ.
-    // Элита (16) -> Легенда (17). Цена шага Легенды = 600р.
+    // --- UPDATED PRICES (Balanced) ---
     const RANKS = [
-        { name: "Бронза I", p: 5, i: "bronze1.png" }, { name: "Бронза II", p: 5, i: "bronze2.png" },
-        { name: "Бронза III", p: 5, i: "bronze3.png" }, { name: "Бронза IV", p: 10, i: "bronze4.png" },
-        
-        { name: "Сильвер I", p: 15, i: "silver1.png" }, { name: "Сильвер II", p: 15, i: "silver2.png" },
-        { name: "Сильвер III", p: 20, i: "silver3.png" }, { name: "Сильвер IV", p: 25, i: "silver4.png" },
-        
-        { name: "Голд I", p: 35, i: "gold1.png" }, { name: "Голд II", p: 40, i: "gold2.png" },
-        { name: "Голд III", p: 45, i: "gold3.png" }, { name: "Голд IV", p: 50, i: "gold4.png" },
-        
-        { name: "Феникс", p: 100, i: "phoenix.png" }, { name: "Рейнджер", p: 180, i: "ranger.png" },
-        { name: "Чемпион", p: 280, i: "champion.png" }, { name: "Мастер", p: 400, i: "master.png" },
-        { name: "Элита", p: 550, i: "elite.png" }, { name: "Легенда", p: 600, i: "legend.png" }
+        { name: "Бронза I", p: 30, i: "bronze1.png" }, { name: "Бронза II", p: 30, i: "bronze2.png" },
+        { name: "Бронза III", p: 30, i: "bronze3.png" }, { name: "Бронза IV", p: 35, i: "bronze4.png" },
+        { name: "Сильвер I", p: 40, i: "silver1.png" }, { name: "Сильвер II", p: 40, i: "silver2.png" },
+        { name: "Сильвер III", p: 45, i: "silver3.png" }, { name: "Сильвер IV", p: 50, i: "silver4.png" },
+        { name: "Голд I", p: 65, i: "gold1.png" }, { name: "Голд II", p: 70, i: "gold2.png" },
+        { name: "Голд III", p: 75, i: "gold3.png" }, { name: "Голд IV", p: 80, i: "gold4.png" },
+        { name: "Феникс", p: 130, i: "phoenix.png" }, { name: "Рейнджер", p: 180, i: "ranger.png" },
+        { name: "Чемпион", p: 250, i: "champion.png" }, { name: "Мастер", p: 350, i: "master.png" },
+        { name: "Элита", p: 500, i: "elite.png" }, { name: "Легенда", p: 600, i: "legend.png" }
     ];
 
     const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.7} };
@@ -349,7 +354,7 @@
     renderRanks();
     renderOrders();
 
-    // --- FUNC ---
+    // --- NAVIGATION ---
     function switchTab(t) {
         document.querySelectorAll('.seg-btn').forEach(e => e.classList.remove('active'));
         document.querySelectorAll('.view-tab').forEach(e => e.classList.remove('active'));
@@ -358,6 +363,7 @@
         if(t==='boost') {
             document.querySelectorAll('.seg-btn')[0].classList.add('active');
             document.getElementById('view-boost').classList.add('active');
+            
             if(!document.querySelector('.step-slide.active')) document.getElementById('step-1').classList.add('active');
             if(document.getElementById('step-5').classList.contains('active')) document.getElementById('pay-btn').style.display='block';
         } else {
@@ -373,30 +379,30 @@
         document.getElementById('pay-btn').style.display='none';
     }
 
+    // --- SELECT ---
     function selectMode(m, el) {
         s.m = m;
         document.querySelectorAll('#step-1 .card').forEach(c=>c.classList.remove('selected'));
         el.classList.add('selected');
         document.getElementById('btn-next-1').style.display='block';
         
-        // LOGIC: DUELS = NO LOBBY
-        const lobbyCard = document.getElementById('card-lobby');
-        if (m === 'duels') {
-            lobbyCard.style.display = 'none';
+        // Hide Lobby for Duels
+        const lobby = document.getElementById('card-lobby');
+        if(m === 'duels') {
+            lobby.style.display = 'none';
         } else {
-            lobbyCard.style.display = 'flex';
+            lobby.style.display = 'flex';
         }
         
         tg.HapticFeedback.impactOccurred('light');
     }
 
     function renderRanks() {
-        const gf = document.getElementById('grid-from');
-        const gt = document.getElementById('grid-to');
+        const f = document.getElementById('grid-from');
+        const t = document.getElementById('grid-to');
         RANKS.forEach((r, i) => {
-            const h1 = `<div class="rank-card" id="f-${i}" onclick="setF(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
-            const h2 = `<div class="rank-card" id="t-${i}" onclick="setT(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
-            gf.innerHTML += h1; gt.innerHTML += h2;
+            f.innerHTML += `<div class="rank-card" id="f-${i}" onclick="setF(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
+            t.innerHTML += `<div class="rank-card" id="t-${i}" onclick="setT(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
         });
     }
 
@@ -434,7 +440,6 @@
     function calc() {
         let base = 0;
         for(let i=s.f+1; i<=s.t; i++) base += RANKS[i].p;
-        
         s.p = Math.round(base * MODES[s.m].k * TYPES[s.ty].k);
 
         document.getElementById('out-mode').innerText = MODES[s.m].n;
