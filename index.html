@@ -3,192 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Xenon Boost</title>
+    <title>Xenon</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Cinematic Dark Palette */
-            --bg: #09090b; 
-            --card-bg: #18181b; 
-            --card-border: #27272a;
-            --primary: #6366f1; 
+            /* iOS Dark Premium Palette */
+            --bg-body: #000000;
+            --bg-card: #1c1c1e;
+            --bg-card-active: #2c2c2e;
+            --primary: #5e5ce6; /* Indigo iOS */
+            --primary-glow: rgba(94, 92, 230, 0.5);
             --text-main: #ffffff;
-            --text-muted: #a1a1aa;
+            --text-sec: #8e8e93;
+            --border: rgba(255, 255, 255, 0.1);
             
-            --safe-area-bottom: env(safe-area-inset-bottom);
+            --safe-area: env(safe-area-inset-bottom);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg);
+            background-color: var(--bg-body);
             color: var(--text-main);
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif;
             margin: 0; padding: 0;
-            /* Фоновое свечение */
-            background-image: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.1), transparent 60%);
+            min-height: 100vh;
+            /* Богатый задний фон */
+            background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, #000000 80%);
             background-attachment: fixed;
-            padding-bottom: calc(100px + var(--safe-area-bottom));
+            padding-bottom: calc(100px + var(--safe-area));
         }
 
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .container { padding: 20px; max-width: 480px; margin: 0 auto; }
 
         /* HEADER */
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 24px; padding-top: 10px;
+            margin-bottom: 20px; padding-top: 10px;
         }
-        .brand { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: #fff; text-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
+        .logo { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(to right, #fff, #a0a0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .user-chip {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            padding: 6px 12px; border-radius: 100px; font-size: 13px; font-weight: 600;
-            display: flex; align-items: center; gap: 8px;
+        .user-badge {
+            background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 20px;
+            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+            backdrop-filter: blur(10px);
         }
-        .avatar {
-            width: 22px; height: 22px; border-radius: 50%;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            display: flex; align-items: center; justify-content: center; font-size: 10px;
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5); /* Avatar Glow */
-        }
+        .u-pic { width: 22px; height: 22px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; }
 
-        /* TABS */
-        .nav-segment {
-            display: flex; background: var(--card-bg); padding: 4px;
-            border-radius: 14px; margin-bottom: 30px; border: 1px solid var(--card-border);
+        /* TABS (IOS SEGMENTED CONTROL) */
+        .segmented {
+            display: flex; background: rgba(118, 118, 128, 0.24); padding: 2px;
+            border-radius: 9px; margin-bottom: 25px;
         }
-        .nav-item {
-            flex: 1; text-align: center; padding: 10px; font-size: 13px; font-weight: 600;
-            color: var(--text-muted); border-radius: 10px; cursor: pointer; transition: all 0.2s ease;
+        .seg-item {
+            flex: 1; text-align: center; padding: 7px; font-size: 13px; font-weight: 500;
+            color: #fff; border-radius: 7px; cursor: pointer; transition: 0.2s;
         }
-        .nav-item.active {
-            background: #27272a; color: #fff; 
-            box-shadow: 0 0 15px rgba(255,255,255,0.05);
-        }
-
-        /* ANIMATIONS */
-        @keyframes border-glow {
-            0% { border-color: #6366f1; box-shadow: 0 0 5px rgba(99, 102, 241, 0.2); }
-            50% { border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
-            100% { border-color: #6366f1; box-shadow: 0 0 5px rgba(99, 102, 241, 0.2); }
+        .seg-item.active {
+            background: #636366; box-shadow: 0 3px 8px rgba(0,0,0,0.12); font-weight: 600;
         }
 
         /* CARDS */
         .card {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: 16px; padding: 18px; margin-bottom: 12px;
+            background: var(--bg-card); border-radius: 14px; padding: 16px; margin-bottom: 10px;
             display: flex; align-items: center; justify-content: space-between;
             transition: all 0.2s ease; cursor: pointer; position: relative;
+            border: 0.5px solid rgba(255,255,255,0.05);
         }
-        .card:active { transform: scale(0.98); background: #202023; }
+        .card:active { transform: scale(0.98); background: var(--bg-card-active); }
         
         .card.selected {
-            background: rgba(99, 102, 241, 0.05);
-            animation: border-glow 3s infinite alternate; /* RGB ANIMATION */
+            background: rgba(94, 92, 230, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(94, 92, 230, 0.15);
         }
         
-        .card-content h3 { margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: #fff; }
-        .card-content p { margin: 0; font-size: 13px; color: var(--text-muted); }
-        
-        .card-icon { width: 24px; height: 24px; fill: var(--text-muted); transition: 0.2s; }
-        .card.selected .card-icon { fill: #fff; filter: drop-shadow(0 0 5px #6366f1); }
+        .c-info h3 { margin: 0 0 3px 0; font-size: 16px; font-weight: 600; color: #fff; }
+        .c-info p { margin: 0; font-size: 13px; color: var(--text-sec); }
+        .c-icon { width: 24px; height: 24px; fill: var(--text-sec); transition: 0.2s; }
+        .card.selected .c-icon { fill: var(--primary); }
 
-        /* GRID SYSTEM (RANKS) */
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .rank-box {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: 12px; padding: 14px 5px; text-align: center;
-            cursor: pointer; transition: 0.2s;
+        /* RANK GRID */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .rank-card {
+            background: var(--bg-card); border-radius: 12px; padding: 12px 6px; text-align: center;
+            cursor: pointer; transition: 0.2s; border: 0.5px solid rgba(255,255,255,0.05);
         }
-        .rank-box:active { transform: scale(0.96); }
-        
-        .rank-box.selected {
-            background: rgba(99, 102, 241, 0.1);
-            animation: border-glow 3s infinite alternate; /* RGB ANIMATION */
+        .rank-card:active { transform: scale(0.96); }
+        .rank-card.selected {
+            background: rgba(94, 92, 230, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(94, 92, 230, 0.15);
         }
-        
-        .rank-box img { width: 42px; height: 42px; object-fit: contain; margin-bottom: 8px; filter: grayscale(0.8); transition: 0.2s; }
-        .rank-box.selected img { filter: grayscale(0) drop-shadow(0 0 8px rgba(99, 102, 241, 0.6)); transform: scale(1.1); }
-        
-        .rank-name { font-size: 11px; font-weight: 600; color: var(--text-muted); }
-        .rank-box.selected .rank-name { color: #fff; }
-        .rank-box.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
+        .rank-card img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 6px; filter: grayscale(0.5); transition: 0.2s; }
+        .rank-card.selected img { filter: grayscale(0) drop-shadow(0 0 8px rgba(94, 92, 230, 0.4)); transform: scale(1.1); }
+        .rank-card .name { font-size: 11px; font-weight: 600; color: var(--text-sec); }
+        .rank-card.selected .name { color: #fff; }
+        .rank-card.disabled { opacity: 0.3; pointer-events: none; }
 
         /* BUTTONS */
-        .step-title { font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .step-title { font-size: 20px; font-weight: 700; margin-bottom: 15px; color: #fff; }
         
         .back-btn {
-            font-size: 13px; font-weight: 600; color: var(--text-muted);
-            margin-bottom: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+            color: var(--primary); font-size: 16px; margin-bottom: 15px; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 5px; font-weight: 500;
         }
-        .back-btn:hover { color: #fff; }
 
         .next-btn {
             width: 100%; background: #fff; color: #000;
-            padding: 16px; border-radius: 14px; font-weight: 700; font-size: 15px;
-            text-align: center; margin-top: 20px; cursor: pointer;
-            transition: 0.2s; box-shadow: 0 0 15px rgba(255,255,255,0.1);
-            display: none; 
+            padding: 14px; border-radius: 12px; font-weight: 600; font-size: 16px;
+            text-align: center; margin-top: 20px; cursor: pointer; display: none;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.1); transition: 0.2s;
         }
         .next-btn:active { transform: scale(0.98); opacity: 0.9; }
 
-        /* FINAL PAY BUTTON (GLOWING) */
         .pay-btn {
             position: fixed; bottom: 30px; left: 20px; right: 20px;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            color: #fff; padding: 18px; border-radius: 18px; font-size: 16px; font-weight: 700;
-            text-align: center; cursor: pointer; transition: 0.2s; display: none;
-            z-index: 100;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4), inset 0 0 0 1px rgba(255,255,255,0.2);
+            background: var(--primary); color: #fff;
+            padding: 16px; border-radius: 16px; font-size: 16px; font-weight: 700;
+            text-align: center; cursor: pointer; display: none; z-index: 100;
+            box-shadow: 0 8px 30px rgba(94, 92, 230, 0.4);
         }
-        .pay-btn:active { transform: scale(0.97); box-shadow: 0 0 10px rgba(99, 102, 241, 0.6); }
+        .pay-btn:active { transform: scale(0.97); }
 
         /* SUMMARY */
-        .summary-card {
-            background: #131316; border: 1px solid var(--card-border);
-            border-radius: 18px; padding: 24px; margin-top: 10px;
+        .summary {
+            background: #151517; border-radius: 16px; padding: 20px; margin-top: 10px;
+            border: 0.5px solid var(--border);
         }
-        .sum-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 14px; border-bottom: 1px solid #27272a; padding-bottom: 14px; }
-        .sum-row:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
-        .sum-label { color: var(--text-muted); }
-        .sum-val { color: #fff; font-weight: 600; }
-        .total-wrapper { text-align: center; margin-top: 25px; }
-        .total-price { 
-            font-size: 36px; font-weight: 800; color: #fff; letter-spacing: -1px; 
-            text-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
-        }
-        .total-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .sum-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid #2c2c2e; padding-bottom: 12px; }
+        .sum-row:last-child { border: none; padding-bottom: 0; margin-bottom: 0; }
+        .sum-k { color: var(--text-sec); } .sum-v { font-weight: 600; color: #fff; }
+        
+        .total-box { text-align: center; margin-top: 25px; }
+        .total-price { font-size: 40px; font-weight: 800; color: #fff; letter-spacing: -1px; }
+        .total-desc { font-size: 12px; color: var(--text-sec); text-transform: uppercase; margin-top: 5px; }
 
         /* PROFILE */
         .refresh-btn {
-            background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3);
-            color: #818cf8; padding: 14px; border-radius: 12px;
-            text-align: center; font-weight: 600; font-size: 14px;
-            margin-bottom: 25px; cursor: pointer; transition: 0.2s;
+            width: 100%; background: rgba(44, 44, 46, 0.8); color: var(--primary);
+            padding: 12px; border-radius: 12px; font-weight: 600; text-align: center;
+            margin-bottom: 25px; cursor: pointer;
         }
-        .refresh-btn:active { background: rgba(99, 102, 241, 0.2); }
-
+        
         .order-item {
-            background: var(--card-bg); border-radius: 16px; padding: 16px;
-            margin-bottom: 12px; border: 1px solid var(--card-border);
+            background: var(--bg-card); border-radius: 14px; padding: 16px; margin-bottom: 10px;
             display: flex; justify-content: space-between; align-items: center;
         }
         .badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .b-wait { background: rgba(234, 179, 8, 0.15); color: #fbbf24; border: 1px solid rgba(234, 179, 8, 0.2); }
-        .b-work { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.2); }
-        .b-done { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.2); }
-        .b-reject { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .st-wait { background: rgba(255, 204, 0, 0.15); color: #FFD60A; }
+        .st-work { background: rgba(10, 132, 255, 0.15); color: #0A84FF; }
+        .st-done { background: rgba(48, 209, 88, 0.15); color: #30D158; }
+        .st-reject { background: rgba(255, 69, 58, 0.15); color: #FF453A; }
 
         /* VIEWS */
-        .view-container { display: none; }
-        .view-container.active { display: block; animation: fadeIn 0.3s ease; }
+        .view-tab { display: none; }
+        .view-tab.active { display: block; animation: fadeIn 0.3s ease; }
         
-        .step-container { display: none; }
-        .step-container.active { display: block; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .step-slide { display: none; }
+        .step-slide.active { display: block; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
     </style>
 </head>
@@ -196,111 +173,98 @@
 
 <div class="container">
     <div class="header">
-        <div class="brand">XENON</div>
-        <div class="user-chip">
-            <div class="avatar" id="u-avatar">?</div>
+        <div class="logo">XENON</div>
+        <div class="user-badge">
+            <div class="u-pic" id="u-avatar">?</div>
             <span id="u-name">Guest</span>
         </div>
     </div>
 
-    <div class="nav-segment">
-        <div class="nav-item active" onclick="switchTab('boost')">Заказать буст</div>
-        <div class="nav-item" onclick="switchTab('profile')">Профиль</div>
+    <div class="segmented">
+        <div class="seg-item active" onclick="switchTab('boost')">Заказать Буст</div>
+        <div class="seg-item" onclick="switchTab('profile')">Профиль</div>
     </div>
 
-    <div id="view-boost" class="view-container active">
+    <div id="view-boost" class="view-tab active">
         
-        <div id="step-1" class="step-container active">
-            <div class="step-title">Шаг 1 • Выберите режим</div>
-            
+        <div id="step-1" class="step-slide active">
+            <div class="step-title">Выберите режим</div>
             <div class="card" onclick="selectMode('mm', this)">
-                <div class="card-content"><h3>Соревновательный</h3><p>Классика 5x5</p></div>
-                <svg class="card-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                <div class="c-info"><h3>Соревновательный</h3><p>Классика 5x5</p></div>
+                <svg class="c-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
             </div>
             <div class="card" onclick="selectMode('wingman', this)">
-                <div class="card-content"><h3>Напарники</h3><p>Дуо режим 2x2</p></div>
-                <svg class="card-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <div class="c-info"><h3>Напарники</h3><p>Режим 2x2</p></div>
+                <svg class="c-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
             </div>
             <div class="card" onclick="selectMode('duels', this)">
-                <div class="card-content"><h3>Дуэли</h3><p>1x1 Снайперы</p></div>
-                <svg class="card-icon" viewBox="0 0 24 24"><path d="M7 2h10v2H7zm0 4h10v2H7zm0 4h10v2H7z"/></svg>
+                <div class="c-info"><h3>Дуэли</h3><p>1x1 Снайперы</p></div>
+                <svg class="c-icon" viewBox="0 0 24 24"><path d="M7 2h10v2H7zm0 4h10v2H7zm0 4h10v2H7z"/></svg>
             </div>
-
             <div id="btn-next-1" class="next-btn" onclick="gotoStep(2)">Далее</div>
         </div>
 
-        <div id="step-2" class="step-container">
+        <div id="step-2" class="step-slide">
             <div class="back-btn" onclick="gotoStep(1)">‹ Назад</div>
-            <div class="step-title">Шаг 2 • Ваш текущий ранг</div>
+            <div class="step-title">Ваш текущий ранг</div>
             <div class="grid" id="grid-from"></div>
             <div id="btn-next-2" class="next-btn" onclick="gotoStep(3)">Далее</div>
         </div>
 
-        <div id="step-3" class="step-container">
+        <div id="step-3" class="step-slide">
             <div class="back-btn" onclick="gotoStep(2)">‹ Назад</div>
-            <div class="step-title">Шаг 3 • Желаемый ранг</div>
+            <div class="step-title">Желаемый ранг</div>
             <div class="grid" id="grid-to"></div>
             <div id="btn-next-3" class="next-btn" onclick="gotoStep(4)">Далее</div>
         </div>
 
-        <div id="step-4" class="step-container">
+        <div id="step-4" class="step-slide">
             <div class="back-btn" onclick="gotoStep(3)">‹ Назад</div>
-            <div class="step-title">Шаг 4 • Метод выполнения</div>
+            <div class="step-title">Метод буста</div>
             
             <div class="card" onclick="selectType('login', this)">
-                <div class="card-content">
+                <div class="c-info">
                     <h3>Вход (Передача)</h3>
-                    <p>Бустер играет сам. Быстро и дешево.</p>
+                    <p>Бустер играет сам. Быстрее и дешевле.</p>
                 </div>
-                <svg class="card-icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                <svg class="c-icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             </div>
-            
             <div class="card" onclick="selectType('lobby', this)">
-                <div class="card-content">
+                <div class="c-info">
                     <h3>Лобби (Пати)</h3>
-                    <p>Вы играете с нами. Цена x2.5</p>
+                    <p>Играете с нами (Цена x2)</p>
                 </div>
-                <svg class="card-icon" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                <svg class="c-icon" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
             </div>
-
-            <div id="btn-next-4" class="next-btn" onclick="calc()">К расчету</div>
+            <div id="btn-next-4" class="next-btn" onclick="calc()">Рассчитать</div>
         </div>
 
-        <div id="step-5" class="step-container">
+        <div id="step-5" class="step-slide">
             <div class="back-btn" onclick="gotoStep(4)">‹ Изменить</div>
             <div class="step-title">Подтверждение</div>
             
-            <div class="summary-card">
-                <div class="sum-row">
-                    <span class="sum-label">Режим</span>
-                    <span class="sum-val" id="out-mode"></span>
-                </div>
-                <div class="sum-row">
-                    <span class="sum-label">Буст</span>
-                    <span class="sum-val"><span id="out-from"></span> → <span id="out-to" style="color:var(--primary)"></span></span>
-                </div>
-                <div class="sum-row">
-                    <span class="sum-label">Метод</span>
-                    <span class="sum-val" id="out-type"></span>
-                </div>
+            <div class="summary">
+                <div class="sum-row"><span class="sum-k">Режим</span><span class="sum-v" id="out-mode"></span></div>
+                <div class="sum-row"><span class="sum-k">Буст</span><span class="sum-v"><span id="out-from"></span> → <span id="out-to" style="color:var(--primary)"></span></span></div>
+                <div class="sum-row"><span class="sum-k">Метод</span><span class="sum-v" id="out-type"></span></div>
             </div>
 
-            <div class="total-wrapper">
-                <div class="total-label">Итоговая стоимость</div>
+            <div class="total-box">
+                <div class="total-desc">Итого к оплате</div>
                 <div class="total-price" id="out-price">0₽</div>
             </div>
         </div>
 
     </div>
 
-    <div id="view-profile" class="view-container">
+    <div id="view-profile" class="view-tab">
         <div class="refresh-btn" onclick="refreshApp()">
             ↻ Обновить статус (Перезапуск)
         </div>
         <div class="step-title">История заказов</div>
         <div id="orders-list"></div>
-        <div id="no-orders" style="display:none; text-align:center; color:var(--text-muted); margin-top:40px; font-size:13px;">
-            У вас пока нет заказов
+        <div id="no-orders" style="display:none; text-align:center; color:var(--text-sec); margin-top:40px; font-size:13px;">
+            Список заказов пуст
         </div>
     </div>
 
@@ -312,32 +276,34 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- DATA ---
+    // --- RANKS & PRICES (Low Base) ---
     const RANKS = [
-        { name: "Бронза I", p: 15, i: "bronze1.png" }, { name: "Бронза II", p: 15, i: "bronze2.png" },
-        { name: "Бронза III", p: 15, i: "bronze3.png" }, { name: "Бронза IV", p: 20, i: "bronze4.png" },
-        { name: "Сильвер I", p: 30, i: "silver1.png" }, { name: "Сильвер II", p: 30, i: "silver2.png" },
-        { name: "Сильвер III", p: 35, i: "silver3.png" }, { name: "Сильвер IV", p: 40, i: "silver4.png" },
-        { name: "Голд I", p: 55, i: "gold1.png" }, { name: "Голд II", p: 65, i: "gold2.png" },
-        { name: "Голд III", p: 75, i: "gold3.png" }, { name: "Голд IV", p: 85, i: "gold4.png" },
+        { name: "Бронза 1", p: 10, i: "bronze1.png" }, { name: "Бронза 2", p: 10, i: "bronze2.png" },
+        { name: "Бронза 3", p: 10, i: "bronze3.png" }, { name: "Бронза 4", p: 15, i: "bronze4.png" },
+        { name: "Сильвер 1", p: 25, i: "silver1.png" }, { name: "Сильвер 2", p: 25, i: "silver2.png" },
+        { name: "Сильвер 3", p: 30, i: "silver3.png" }, { name: "Сильвер 4", p: 35, i: "silver4.png" },
+        { name: "Голд 1", p: 50, i: "gold1.png" }, { name: "Голд 2", p: 60, i: "gold2.png" },
+        { name: "Голд 3", p: 70, i: "gold3.png" }, { name: "Голд 4", p: 80, i: "gold4.png" },
         { name: "Феникс", p: 150, i: "phoenix.png" }, { name: "Рейнджер", p: 250, i: "ranger.png" },
-        { name: "Чемпион", p: 450, i: "champion.png" }, { name: "Мастер", p: 750, i: "master.png" },
-        { name: "Элита", p: 1300, i: "elite.png" }, { name: "Легенда", p: 2200, i: "legend.png" }
+        { name: "Чемпион", p: 400, i: "champion.png" }, { name: "Мастер", p: 600, i: "master.png" },
+        { name: "Элита", p: 900, i: "elite.png" }, { name: "Легенда", p: 1500, i: "legend.png" }
     ];
 
     const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.8}, 'duels':{n:'Дуэли',k:1.2} };
-    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:2.5} };
+    
+    // Лобби = x2 (было x2.5)
+    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:2.0} };
 
     let s = { m:null, f:null, t:null, ty:null, p:0 };
     let orders = [];
 
     // --- INIT ---
     const url = new URLSearchParams(window.location.search);
-    const uName = url.get('name') || 'User';
+    const uName = url.get('name') || 'Guest';
     try {
         const raw = url.get('orders');
         if(raw) orders = JSON.parse(decodeURIComponent(raw));
-    } catch(e) {}
+    } catch(e){}
 
     document.getElementById('u-name').innerText = uName;
     document.getElementById('u-avatar').innerText = uName[0].toUpperCase();
@@ -345,136 +311,122 @@
     renderRanks();
     renderOrders();
 
-    // --- NAVIGATION ---
-    function switchTab(tab) {
-        document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
-        document.querySelectorAll('.view-container').forEach(e => e.classList.remove('active'));
-        document.getElementById('pay-btn').style.display = 'none';
+    // --- NAV ---
+    function switchTab(t) {
+        document.querySelectorAll('.seg-item').forEach(e => e.classList.remove('active'));
+        document.querySelectorAll('.view-tab').forEach(e => e.classList.remove('active'));
+        document.getElementById('pay-btn').style.display='none';
 
-        if (tab === 'boost') {
-            document.querySelectorAll('.nav-item')[0].classList.add('active');
+        if(t==='boost') {
+            document.querySelectorAll('.seg-item')[0].classList.add('active');
             document.getElementById('view-boost').classList.add('active');
             
-            // Если в бусте нет активного шага (баг), показываем первый
-            if(!document.querySelector('.step-container.active')) {
-                document.getElementById('step-1').classList.add('active');
-            }
-            // Если был открыт итог, показываем кнопку оплаты
-            if(document.getElementById('step-5').classList.contains('active')) {
-                document.getElementById('pay-btn').style.display = 'block';
-            }
+            if(!document.querySelector('.step-slide.active')) document.getElementById('step-1').classList.add('active');
+            if(document.getElementById('step-5').classList.contains('active')) document.getElementById('pay-btn').style.display='block';
         } else {
-            document.querySelectorAll('.nav-item')[1].classList.add('active');
+            document.querySelectorAll('.seg-item')[1].classList.add('active');
             document.getElementById('view-profile').classList.add('active');
         }
         tg.HapticFeedback.selectionChanged();
     }
 
     function gotoStep(n) {
-        // Hide all
-        document.querySelectorAll('.step-container').forEach(e => e.classList.remove('active'));
-        // Show target
+        document.querySelectorAll('.step-slide').forEach(e => e.classList.remove('active'));
         document.getElementById(`step-${n}`).classList.add('active');
-        document.getElementById('pay-btn').style.display = 'none';
-        // Make sure parent is active
-        document.getElementById('view-boost').classList.add('active');
+        document.getElementById('pay-btn').style.display='none';
     }
 
-    // --- SELECTION ---
+    // --- SELECT ---
     function selectMode(m, el) {
         s.m = m;
-        document.querySelectorAll('#step-1 .card').forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('#step-1 .card').forEach(c=>c.classList.remove('selected'));
         el.classList.add('selected');
-        document.getElementById('btn-next-1').style.display = 'block';
+        document.getElementById('btn-next-1').style.display='block';
         tg.HapticFeedback.impactOccurred('light');
     }
 
     function renderRanks() {
-        const gf = document.getElementById('grid-from');
-        const gt = document.getElementById('grid-to');
+        const f = document.getElementById('grid-from');
+        const t = document.getElementById('grid-to');
         RANKS.forEach((r, i) => {
-            const h1 = `<div class="rank-box" id="f-${i}" onclick="setF(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
-            const h2 = `<div class="rank-box" id="t-${i}" onclick="setT(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
-            gf.innerHTML += h1; gt.innerHTML += h2;
+            f.innerHTML += `<div class="rank-card" id="f-${i}" onclick="setF(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="name">${r.name}</div></div>`;
+            t.innerHTML += `<div class="rank-card" id="t-${i}" onclick="setT(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="name">${r.name}</div></div>`;
         });
     }
 
     function setF(i) {
         s.f = i; s.t = null;
-        document.querySelectorAll('#grid-from .rank-box').forEach(e => e.classList.remove('selected'));
+        document.querySelectorAll('#grid-from .rank-card').forEach(e=>e.classList.remove('selected'));
         document.getElementById(`f-${i}`).classList.add('selected');
-        document.getElementById('btn-next-2').style.display = 'block';
+        document.getElementById('btn-next-2').style.display='block';
         
-        // Disable invalid targets
-        document.querySelectorAll('#grid-to .rank-box').forEach((e, idx) => {
+        // Lock targets
+        document.querySelectorAll('#grid-to .rank-card').forEach((e, idx) => {
             if(idx <= i) e.classList.add('disabled');
             else e.classList.remove('disabled');
             e.classList.remove('selected');
         });
-        document.getElementById('btn-next-3').style.display = 'none';
+        document.getElementById('btn-next-3').style.display='none';
         tg.HapticFeedback.selectionChanged();
     }
 
     function setT(i) {
         s.t = i;
-        document.querySelectorAll('#grid-to .rank-box').forEach(e => e.classList.remove('selected'));
+        document.querySelectorAll('#grid-to .rank-card').forEach(e=>e.classList.remove('selected'));
         document.getElementById(`t-${i}`).classList.add('selected');
-        document.getElementById('btn-next-3').style.display = 'block';
+        document.getElementById('btn-next-3').style.display='block';
         tg.HapticFeedback.selectionChanged();
     }
 
     function selectType(t, el) {
         s.ty = t;
-        document.querySelectorAll('#step-4 .card').forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('#step-4 .card').forEach(c=>c.classList.remove('selected'));
         el.classList.add('selected');
-        document.getElementById('btn-next-4').style.display = 'block';
+        document.getElementById('btn-next-4').style.display='block';
         tg.HapticFeedback.impactOccurred('light');
     }
 
     function calc() {
         let base = 0;
-        for (let i = s.f + 1; i <= s.t; i++) base += RANKS[i].p;
+        for(let i=s.f+1; i<=s.t; i++) base += RANKS[i].p;
         s.p = Math.round(base * MODES[s.m].k * TYPES[s.ty].k);
 
         document.getElementById('out-mode').innerText = MODES[s.m].n;
         document.getElementById('out-from').innerText = RANKS[s.f].name;
         document.getElementById('out-to').innerText = RANKS[s.t].name;
         document.getElementById('out-type').innerText = TYPES[s.ty].n;
-        document.getElementById('out-price').innerText = `${s.p}₽`;
+        document.getElementById('out-price').innerText = s.p + '₽';
 
         gotoStep(5);
         
         const btn = document.getElementById('pay-btn');
         btn.innerText = `ОПЛАТИТЬ ${s.p}₽`;
-        btn.style.display = 'block';
+        btn.style.display='block';
         btn.onclick = () => {
             tg.HapticFeedback.notificationOccurred('success');
-            const data = {
+            tg.sendData(JSON.stringify({
                 name: `Буст: ${RANKS[s.f].name} -> ${RANKS[s.t].name} (${MODES[s.m].n}, ${TYPES[s.ty].n})`,
                 price: s.p
-            };
-            tg.sendData(JSON.stringify(data));
+            }));
         };
     }
 
-    // PROFILE
     function renderOrders() {
         const l = document.getElementById('orders-list');
-        if (!orders.length) { document.getElementById('no-orders').style.display = 'block'; return; }
+        if(!orders.length) { document.getElementById('no-orders').style.display='block'; return; }
         
-        // Orders are already Newest -> Oldest from Python, no need to reverse
         orders.forEach(o => {
-            let cl = '', tx = '';
-            if (o.status === 'wait') { cl = 'b-wait'; tx = 'Проверка'; }
-            if (o.status === 'work') { cl = 'b-work'; tx = 'В работе'; }
-            if (o.status === 'done') { cl = 'b-done'; tx = 'Готово'; }
-            if (o.status === 'reject') { cl = 'b-reject'; tx = 'Отмена'; }
+            let cl='', tx='';
+            if(o.status==='wait'){cl='st-wait';tx='Проверка';}
+            if(o.status==='work'){cl='st-work';tx='В работе';}
+            if(o.status==='done'){cl='st-done';tx='Готово';}
+            if(o.status==='reject'){cl='st-reject';tx='Отмена';}
 
             l.innerHTML += `
             <div class="order-item">
                 <div>
                     <div style="font-weight:600; font-size:14px; margin-bottom:4px; color:#fff;">${o.desc}</div>
-                    <div style="font-size:11px; color:var(--text-muted);">#${o.id} • ${o.price}₽ • ${o.date}</div>
+                    <div style="font-size:11px; color:var(--text-sec);">#${o.id} • ${o.price}₽ • ${o.date}</div>
                 </div>
                 <div class="badge ${cl}">${tx}</div>
             </div>`;
