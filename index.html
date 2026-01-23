@@ -290,16 +290,16 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- ULTRA LOW PRICES (FOR SCHOOL) ---
+    // --- ULTRA LOW PRICES FOR SCHOOL ---
     const RANKS = [
         { name: "Бронза I", p: 5, i: "bronze1.png" }, { name: "Бронза II", p: 5, i: "bronze2.png" },
-        { name: "Бронза III", p: 5, i: "bronze3.png" }, { name: "Бронза IV", p: 5, i: "bronze4.png" },
+        { name: "Бронза III", p: 5, i: "bronze3.png" }, { name: "Бронза IV", p: 10, i: "bronze4.png" },
         
         { name: "Сильвер I", p: 10, i: "silver1.png" }, { name: "Сильвер II", p: 10, i: "silver2.png" },
         { name: "Сильвер III", p: 10, i: "silver3.png" }, { name: "Сильвер IV", p: 15, i: "silver4.png" },
         
         { name: "Голд I", p: 15, i: "gold1.png" }, { name: "Голд II", p: 20, i: "gold2.png" },
-        { name: "Голд III", p: 20, i: "gold3.png" }, { name: "Голд IV", p: 25, i: "gold4.png" },
+        { name: "Голд III", p: 25, i: "gold3.png" }, { name: "Голд IV", p: 30, i: "gold4.png" },
         
         { name: "Феникс", p: 30, i: "phoenix.png" }, 
         { name: "Рейнджер", p: 50, i: "ranger.png" },
@@ -310,7 +310,7 @@
     ];
 
     const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.7} };
-    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:2.5} }; // Лобби очень дорогое
+    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:2.5} };
 
     let s = { m:null, f:null, t:null, ty:null, p:0 };
     let orders = [];
@@ -365,13 +365,15 @@
         });
     }
 
+    // --- LOCK TARGET RANKS BELOW GOLD 4 (Index 11) ---
     function setF(i) {
         s.f = i; s.t = null;
         document.querySelectorAll('#grid-from .rank-card').forEach(e=>e.classList.remove('selected'));
         document.getElementById(`f-${i}`).classList.add('selected');
         document.getElementById('btn-next-2').style.display='block';
         document.querySelectorAll('#grid-to .rank-card').forEach((e, idx) => {
-            if(idx<=i) e.classList.add('disabled'); else e.classList.remove('disabled');
+            // Lock if target <= current OR target < Gold 4 (Index 11)
+            if(idx<=i || idx < 11) e.classList.add('disabled'); else e.classList.remove('disabled');
             e.classList.remove('selected');
         });
         document.getElementById('btn-next-3').style.display='none';
