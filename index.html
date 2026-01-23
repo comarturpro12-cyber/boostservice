@@ -11,7 +11,7 @@
             --bg: #000000;
             --glass: rgba(30, 30, 30, 0.6);
             --border: rgba(255, 255, 255, 0.12);
-            --active-glow: 0 0 25px rgba(94, 92, 230, 0.4);
+            --active-glow: 0 0 20px rgba(94, 92, 230, 0.3);
             --text: #ffffff;
             --text-sec: #8e8e93;
             --ios-blue: #0a84ff;
@@ -28,7 +28,7 @@
             min-height: 100vh;
             background-image: 
                 radial-gradient(circle at 0% 0%, rgba(10, 132, 255, 0.15), transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(191, 90, 242, 0.15), transparent 50%);
+                radial-gradient(circle at 100% 100%, rgba(191, 90, 242, 0.1), transparent 50%);
             background-attachment: fixed;
             padding-bottom: 120px;
         }
@@ -45,6 +45,7 @@
             background: linear-gradient(90deg, #fff, #a0a0ff); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
+        
         .user-pill {
             background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
             padding: 6px 12px; border-radius: 20px;
@@ -60,11 +61,11 @@
         /* SEGMENTED CONTROL */
         .segmented {
             display: flex; background: rgba(118, 118, 128, 0.24); padding: 2px;
-            border-radius: 9px; margin-bottom: 30px;
+            border-radius: 9px; margin-bottom: 30px; position: relative;
         }
         .seg-btn {
             flex: 1; text-align: center; padding: 7px; font-size: 13px; font-weight: 500;
-            color: #fff; border-radius: 7px; cursor: pointer; transition: 0.2s;
+            color: #fff; border-radius: 7px; cursor: pointer; transition: 0.2s; z-index: 2;
         }
         .seg-btn.active {
             background: #636366; box-shadow: 0 3px 8px rgba(0,0,0,0.2); font-weight: 600;
@@ -89,6 +90,7 @@
 
         .c-info h3 { margin: 0 0 3px 0; font-size: 16px; font-weight: 600; color: #fff; }
         .c-info p { margin: 0; font-size: 13px; color: var(--text-sec); }
+        
         .c-icon { width: 24px; height: 24px; fill: var(--text-sec); transition: 0.2s; }
         .card.selected .c-icon { fill: #fff; filter: drop-shadow(0 0 5px rgba(255,255,255,0.8)); }
 
@@ -108,25 +110,40 @@
                         var(--rgb-grad) border-box;
         }
         
-        .rank-card img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 6px; filter: grayscale(0.8); transition: 0.2s; }
-        .rank-card.selected img { filter: grayscale(0); transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); }
+        .rank-card img { 
+            width: 45px; height: 45px; object-fit: contain; 
+            margin-bottom: 6px; filter: grayscale(0.8); transition: 0.2s; 
+        }
+        .rank-card.selected img { 
+            filter: grayscale(0); transform: scale(1.1); 
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
+        }
         
         .rank-name { font-size: 11px; font-weight: 600; color: var(--text-sec); }
         .rank-card.selected .rank-name { color: #fff; }
         .rank-card.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
 
         /* BUTTONS */
-        .step-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: -0.3px; }
-        .back-btn { font-size: 15px; font-weight: 500; color: var(--ios-blue); margin-bottom: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+        .step-title { 
+            font-size: 18px; font-weight: 700; color: #fff; 
+            margin-bottom: 16px; letter-spacing: -0.3px; 
+        }
+        
+        .back-btn {
+            font-size: 15px; font-weight: 500; color: var(--ios-blue);
+            margin-bottom: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
+        }
 
         .next-btn {
             width: 100%; background: #fff; color: #000;
             padding: 15px; border-radius: 14px; font-weight: 600; font-size: 16px;
             text-align: center; margin-top: 20px; cursor: pointer;
-            box-shadow: 0 4px 20px rgba(255,255,255,0.15); transition: 0.2s; display: none;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.15); transition: 0.2s;
+            display: none;
         }
         .next-btn:active { transform: scale(0.98); opacity: 0.9; }
 
+        /* PAY BUTTON */
         .pay-btn {
             position: fixed; bottom: 30px; left: 20px; right: 20px;
             background: var(--rgb-grad); color: #fff;
@@ -137,13 +154,19 @@
         .pay-btn:active { transform: scale(0.97); }
 
         /* SUMMARY */
-        .summary { background: #121212; border: 1px solid var(--border); border-radius: 18px; padding: 24px; margin-top: 10px; }
+        .summary {
+            background: #121212; border: 1px solid var(--border);
+            border-radius: 18px; padding: 24px; margin-top: 10px;
+        }
         .sum-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid #222; padding-bottom: 12px; }
         .sum-row:last-child { border: none; padding-bottom: 0; margin-bottom: 0; }
         .sum-k { color: var(--text-sec); } .sum-v { font-weight: 600; color: #fff; }
         
         .total-box { text-align: center; margin-top: 25px; }
-        .total-price { font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-top: 5px; background: var(--rgb-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .total-price { 
+            font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-top: 5px;
+            background: var(--rgb-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
         .total-label { font-size: 12px; color: var(--text-sec); text-transform: uppercase; }
 
         /* PROFILE */
@@ -165,7 +188,7 @@
         .st-done { background: rgba(48, 209, 88, 0.15); color: #30d158; }
         .st-reject { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
 
-        /* VIEWS */
+        /* VIEW TRANSITIONS */
         .view-tab { display: none; }
         .view-tab.active { display: block; animation: fadeIn 0.3s ease; }
         .step-slide { display: none; }
@@ -232,7 +255,7 @@
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             </div>
             <div class="card" onclick="selectType('lobby', this)" id="card-lobby">
-                <div class="c-info"><h3>Лобби (Пати)</h3><p>Играете с нами (Дороже)</p></div>
+                <div class="c-info"><h3>Лобби (Пати)</h3><p>Играете с нами (x2.5)</p></div>
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
             </div>
             <div id="btn-next-4" class="next-btn" onclick="calc()">Рассчитать</div>
@@ -267,29 +290,27 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- ПРОГРЕССИВНЫЕ ЦЕНЫ (ANTI-ABUSE) ---
-    // 'p' - это цена перехода НА этот ранг с предыдущего
+    // --- ULTRA LOW PRICES (FOR SCHOOL) ---
     const RANKS = [
-        { name: "Бронза I", p: 25, i: "bronze1.png" }, { name: "Бронза II", p: 25, i: "bronze2.png" },
-        { name: "Бронза III", p: 25, i: "bronze3.png" }, { name: "Бронза IV", p: 30, i: "bronze4.png" },
+        { name: "Бронза I", p: 5, i: "bronze1.png" }, { name: "Бронза II", p: 5, i: "bronze2.png" },
+        { name: "Бронза III", p: 5, i: "bronze3.png" }, { name: "Бронза IV", p: 5, i: "bronze4.png" },
         
-        { name: "Сильвер I", p: 40, i: "silver1.png" }, { name: "Сильвер II", p: 40, i: "silver2.png" },
-        { name: "Сильвер III", p: 45, i: "silver3.png" }, { name: "Сильвер IV", p: 50, i: "silver4.png" },
+        { name: "Сильвер I", p: 10, i: "silver1.png" }, { name: "Сильвер II", p: 10, i: "silver2.png" },
+        { name: "Сильвер III", p: 10, i: "silver3.png" }, { name: "Сильвер IV", p: 15, i: "silver4.png" },
         
-        { name: "Голд I", p: 65, i: "gold1.png" }, { name: "Голд II", p: 70, i: "gold2.png" },
-        { name: "Голд III", p: 75, i: "gold3.png" }, { name: "Голд IV", p: 80, i: "gold4.png" },
+        { name: "Голд I", p: 15, i: "gold1.png" }, { name: "Голд II", p: 20, i: "gold2.png" },
+        { name: "Голд III", p: 20, i: "gold3.png" }, { name: "Голд IV", p: 25, i: "gold4.png" },
         
-        // РЕЗКИЙ СКАЧОК ЦЕНЫ (Анти-Абуз)
-        { name: "Феникс", p: 140, i: "phoenix.png" }, 
-        { name: "Рейнджер", p: 200, i: "ranger.png" },
-        { name: "Чемпион", p: 300, i: "champion.png" },
-        { name: "Мастер", p: 450, i: "master.png" },
-        { name: "Элита", p: 700, i: "elite.png" }, 
-        { name: "Легенда", p: 1100, i: "legend.png" }
+        { name: "Феникс", p: 30, i: "phoenix.png" }, 
+        { name: "Рейнджер", p: 50, i: "ranger.png" },
+        { name: "Чемпион", p: 70, i: "champion.png" },
+        { name: "Мастер", p: 90, i: "master.png" },
+        { name: "Элита", p: 110, i: "elite.png" }, 
+        { name: "Легенда", p: 150, i: "legend.png" }
     ];
 
     const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.7} };
-    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:2.0} }; // Лобби x2.0 (строго, но не х2.5)
+    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:2.5} }; // Лобби очень дорогое
 
     let s = { m:null, f:null, t:null, ty:null, p:0 };
     let orders = [];
@@ -374,13 +395,10 @@
     }
 
     function calc() {
-        // PROGRESSIVE CALCULATION LOOP
         let rawPrice = 0;
-        // Суммируем цену каждого ранга в промежутке
         for(let i = s.f + 1; i <= s.t; i++) {
             rawPrice += RANKS[i].p;
         }
-
         s.p = Math.round(rawPrice * MODES[s.m].k * TYPES[s.ty].k);
 
         document.getElementById('out-mode').innerText = MODES[s.m].n;
