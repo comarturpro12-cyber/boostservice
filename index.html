@@ -5,476 +5,457 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Xenon Boost</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&family=Inter:wght@400;600;700&display=swap');
-        
         :root {
-            --bg: #030304;
-            --surface: #0e0e10;
-            --surface-2: #18181b;
-            --primary: #5b21b6;
-            --accent: #8b5cf6;
-            --text: #ffffff;
-            --gray: #71717a;
-            --success: #10b981;
-            --wait: #f59e0b;
-            --danger: #ef4444;
+            --bg-dark: #050507;
+            --card-bg: rgba(20, 20, 25, 0.8);
+            --accent: #7c3aed; /* Фиолетовый неон */
+            --accent-glow: rgba(124, 58, 237, 0.5);
+            --text-main: #ffffff;
+            --text-sec: #9ca3af;
+            --green: #10b981;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+            --blue: #3b82f6;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
         body {
-            background-color: var(--bg);
-            color: var(--text);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             font-family: 'Inter', sans-serif;
             margin: 0; padding: 0;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(91, 33, 182, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+                radial-gradient(circle at 10% 10%, rgba(124, 58, 237, 0.15), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(59, 130, 246, 0.1), transparent 40%);
             background-attachment: fixed;
             min-height: 100vh;
-            padding-bottom: 100px;
+            overflow-x: hidden;
+            padding-bottom: 100px; /* Место под кнопку */
         }
 
-        /* --- HEADER & TABS --- */
-        .container { padding: 16px; max-width: 600px; margin: 0 auto; }
-        
+        /* --- UI COMPONENTS --- */
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 25px;
         }
-        .logo { font-family: 'Rajdhani', sans-serif; font-size: 24px; font-weight: 800; letter-spacing: 1px; color: #fff; text-shadow: 0 0 15px rgba(139,92,246,0.5); }
-        .user-pill {
-            background: rgba(255,255,255,0.05); padding: 6px 12px; border-radius: 20px;
-            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 15px var(--accent-glow); background: linear-gradient(90deg, #fff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .user-pill { background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .user-pill img { width: 20px; height: 20px; border-radius: 50%; }
 
-        .nav {
-            display: flex; background: var(--surface); padding: 4px; border-radius: 12px;
-            margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .nav-item {
-            flex: 1; text-align: center; padding: 10px; font-size: 12px; font-weight: 700;
-            color: var(--gray); border-radius: 8px; cursor: pointer; transition: 0.3s;
-            text-transform: uppercase;
-        }
-        .nav-item.active { background: var(--surface-2); color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .tabs { display: flex; background: rgba(255,255,255,0.03); padding: 5px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        .tab { flex: 1; text-align: center; padding: 12px; font-size: 13px; font-weight: 700; color: var(--text-sec); border-radius: 8px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .tab.active { background: rgba(255,255,255,0.1); color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
 
-        /* --- VIEWS --- */
-        .view { display: none; animation: fadeUp 0.3s ease forwards; }
-        .view.active { display: block; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- CARDS --- */
+        .card-title { font-size: 14px; color: var(--text-sec); margin-bottom: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- STEP 1: MODE SELECTOR --- */
-        .mode-card {
-            background: var(--surface); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 16px; padding: 20px; margin-bottom: 12px;
+        .mode-item {
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px; padding: 20px; margin-bottom: 10px;
             display: flex; align-items: center; justify-content: space-between;
-            cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
+            transition: 0.2s; cursor: pointer; position: relative; overflow: hidden;
         }
-        .mode-card:active { transform: scale(0.98); border-color: var(--accent); }
-        .mode-info h3 { margin: 0 0 4px 0; font-family: 'Rajdhani', sans-serif; font-size: 20px; text-transform: uppercase; }
-        .mode-info p { margin: 0; font-size: 12px; color: var(--gray); }
+        .mode-item::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--accent); opacity: 0; transition: 0.2s; }
+        .mode-item.active { border-color: var(--accent); background: rgba(124, 58, 237, 0.1); box-shadow: 0 0 20px rgba(124, 58, 237, 0.1); }
+        .mode-item.active::before { opacity: 1; }
+        
+        .mode-name { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+        .mode-desc { font-size: 12px; color: var(--text-sec); }
         .mode-icon { font-size: 24px; }
-        .mode-card.selected { border-color: var(--accent); background: rgba(139,92,246,0.1); }
 
-        /* --- STEP 2 & 3: RANK GRID --- */
-        .step-title { font-size: 14px; color: var(--gray); text-transform: uppercase; font-weight: 700; margin-bottom: 12px; text-align: center; }
-        
-        .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        /* --- RANK GRID --- */
+        .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .rank-card {
-            background: var(--surface); border-radius: 12px; padding: 10px 5px;
-            text-align: center; border: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer; transition: 0.2s;
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px; padding: 15px 5px; text-align: center;
+            transition: 0.2s; cursor: pointer; position: relative;
         }
-        .rank-card img { width: 40px; height: 40px; object-fit: contain; margin-bottom: 5px; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
-        .rank-name { font-size: 10px; font-weight: 700; color: #ccc; text-transform: uppercase; }
+        .rank-card img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 8px; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); transition: 0.2s; }
+        .rank-card div { font-size: 10px; font-weight: 700; color: var(--text-sec); text-transform: uppercase; }
         
-        .rank-card.active { border-color: var(--accent); background: rgba(139,92,246,0.15); box-shadow: 0 0 10px rgba(139,92,246,0.2); }
-        .rank-card.disabled { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
+        .rank-card.active { border-color: var(--accent); background: rgba(124, 58, 237, 0.15); box-shadow: 0 0 15px rgba(124, 58, 237, 0.2); }
+        .rank-card.active img { transform: scale(1.1); filter: drop-shadow(0 0 10px var(--accent)); color: #fff; }
+        .rank-card.active div { color: #fff; }
+        
+        .rank-card.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
 
-        /* --- SUMMARY & PRICE --- */
-        .summary-box {
-            background: var(--surface-2); border-radius: 16px; padding: 20px;
-            margin-top: 20px; border: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
+        /* --- STEPS NAV --- */
+        .step-view { display: none; animation: slideUp 0.3s ease forwards; }
+        .step-view.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .back-btn { 
+            color: var(--text-sec); font-size: 14px; margin-bottom: 15px; cursor: pointer; 
+            display: inline-flex; align-items: center; gap: 5px; font-weight: 600;
         }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
-        .price-display { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 800; color: var(--accent); margin-top: 10px; }
+        .back-btn:hover { color: #fff; }
+
+        /* --- SUMMARY --- */
+        .summary-box {
+            background: rgba(255,255,255,0.03); border-radius: 20px; padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1); text-align: center; position: relative;
+            overflow: hidden;
+        }
+        .summary-box::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 60%);
+            animation: rotate 10s linear infinite; pointer-events: none;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .sum-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; position: relative; z-index: 1; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
+        .sum-val { font-weight: 700; color: #fff; }
+        
+        .total-price { font-family: 'Orbitron', sans-serif; font-size: 36px; font-weight: 900; color: var(--accent); margin-top: 15px; text-shadow: 0 0 20px var(--accent-glow); position: relative; z-index: 1; }
 
         /* --- PROFILE --- */
-        .profile-header { text-align: center; margin-bottom: 30px; }
-        .p-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; box-shadow: 0 0 20px rgba(139,92,246,0.4); }
-        .p-name { font-size: 20px; font-weight: 700; }
-        .p-id { font-size: 12px; color: var(--gray); }
-
-        .history-title { font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
-        .order-item {
-            background: var(--surface); padding: 15px; border-radius: 12px; margin-bottom: 10px;
-            border-left: 3px solid var(--gray); display: flex; justify-content: space-between; align-items: center;
+        .profile-head { text-align: center; margin-bottom: 30px; }
+        .avatar-circle { 
+            width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;
+            font-size: 36px; font-weight: 800; border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
         }
-        /* Status Colors */
-        .status-wait { border-color: var(--wait); } 
-        .status-work { border-color: #3b82f6; background: rgba(59, 130, 246, 0.05); }
-        .status-done { border-color: var(--success); }
-        .status-reject { border-color: var(--danger); opacity: 0.7; }
-
-        .order-info div:first-child { font-weight: 600; font-size: 13px; margin-bottom: 4px; }
-        .order-info div:last-child { font-size: 11px; color: var(--gray); }
-        .order-badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: #000; }
         
-        .badge-wait { background: var(--wait); }
-        .badge-work { background: #3b82f6; color: #fff; }
-        .badge-done { background: var(--success); }
-        .badge-reject { background: var(--danger); color: #fff; }
-
-        /* --- MAIN BUTTON --- */
-        .main-btn {
-            position: fixed; bottom: 20px; left: 16px; right: 16px;
-            background: var(--text); color: #000;
-            padding: 16px; border-radius: 14px;
-            font-size: 16px; font-weight: 800; text-transform: uppercase;
-            text-align: center; cursor: pointer; box-shadow: 0 5px 20px rgba(255,255,255,0.1);
-            transition: 0.2s; display: none; z-index: 100;
+        .order-card {
+            background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 12px;
+            border-left: 4px solid #333; display: flex; justify-content: space-between; align-items: center;
         }
-        .main-btn:active { transform: scale(0.98); }
+        .order-info div:first-child { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #fff; }
+        .order-info div:last-child { font-size: 11px; color: var(--text-sec); }
+        .order-status { padding: 5px 10px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
 
-        /* Navigation Arrows */
-        .back-btn { color: var(--gray); font-size: 14px; margin-bottom: 15px; cursor: pointer; display: inline-block; }
+        /* STATUS STYLES */
+        .st-wait { border-color: var(--yellow); } .st-wait .order-status { background: rgba(245, 158, 11, 0.2); color: var(--yellow); }
+        .st-work { border-color: var(--blue); } .st-work .order-status { background: rgba(59, 130, 246, 0.2); color: var(--blue); }
+        .st-done { border-color: var(--green); } .st-done .order-status { background: rgba(16, 185, 129, 0.2); color: var(--green); }
+        .st-reject { border-color: var(--red); } .st-reject .order-status { background: rgba(239, 68, 68, 0.2); color: var(--red); }
 
+        /* --- BUTTON --- */
+        .main-btn {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            background: #fff; color: #000;
+            padding: 16px; border-radius: 16px;
+            font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 800; letter-spacing: 1px;
+            text-align: center; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 5px 25px rgba(255,255,255,0.15); z-index: 100;
+            text-transform: uppercase; display: none;
+        }
+        .main-btn:active { transform: scale(0.97); }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <div class="logo">XENON</div>
-            <div class="user-pill">
-                <span id="user-name">Guest</span>
-            </div>
+<div class="container">
+    <div class="header">
+        <div class="logo">XENON</div>
+        <div class="user-pill" id="user-display">
+            <div id="u-avatar">?</div>
+            <span id="u-name">Guest</span>
         </div>
+    </div>
 
-        <div class="nav">
-            <div class="nav-item active" onclick="switchTab('boost')">Заказать Буст</div>
-            <div class="nav-item" onclick="switchTab('profile')">Профиль</div>
-        </div>
+    <div class="tabs">
+        <div class="tab active" onclick="setTab('boost')">Заказать Буст</div>
+        <div class="tab" onclick="setTab('profile')">Мой Профиль</div>
+    </div>
 
-        <div id="view-boost" class="view active">
+    <div id="view-boost" class="view" style="display:block">
+        
+        <div id="step-1" class="step-view active">
+            <div class="card-title">1. Выберите режим игры</div>
             
-            <div id="step-1">
-                <div class="step-title">1. Выберите режим</div>
-                <div class="mode-card" onclick="selectMode('mm')">
-                    <div class="mode-info"><h3>Соревновательный</h3><p>Классический режим 5x5</p></div>
-                    <div class="mode-icon">🏆</div>
+            <div class="mode-item" onclick="selectMode('mm')">
+                <div>
+                    <div class="mode-name">COMPETITIVE</div>
+                    <div class="mode-desc">Классический режим 5x5</div>
                 </div>
-                <div class="mode-card" onclick="selectMode('wingman')">
-                    <div class="mode-info"><h3>Союзники</h3><p>Режим 2x2</p></div>
-                    <div class="mode-icon">🤝</div>
-                </div>
-                <div class="mode-card" onclick="selectMode('duels')">
-                    <div class="mode-info"><h3>Дуэли</h3><p>1x1 Снайперы</p></div>
-                    <div class="mode-icon">🎯</div>
-                </div>
+                <div class="mode-icon">🏆</div>
             </div>
 
-            <div id="step-2" style="display:none">
-                <div class="back-btn" onclick="gotoStep(1)">← Назад</div>
-                <div class="step-title">2. Ваш текущий ранг</div>
-                <div class="ranks-grid" id="grid-current"></div>
-            </div>
-
-            <div id="step-3" style="display:none">
-                <div class="back-btn" onclick="gotoStep(2)">← Назад</div>
-                <div class="step-title">3. Желаемый ранг</div>
-                <div class="ranks-grid" id="grid-target"></div>
-            </div>
-
-            <div id="step-4" style="display:none">
-                <div class="back-btn" onclick="gotoStep(3)">← Изменить ранги</div>
-                <div class="summary-box">
-                    <div class="summary-row">
-                        <span style="color:#888">Режим:</span>
-                        <span id="sum-mode" style="font-weight:bold">...</span>
-                    </div>
-                    <div class="summary-row">
-                        <span style="color:#888">Буст:</span>
-                        <span><span id="sum-from"></span> ➔ <span id="sum-to" style="color:var(--accent)"></span></span>
-                    </div>
-                    <div class="price-display" id="final-price">0₽</div>
-                    <div style="font-size:11px; color:#555; margin-top:5px">Цена рассчитана автоматически</div>
+            <div class="mode-item" onclick="selectMode('wingman')">
+                <div>
+                    <div class="mode-name">WINGMAN</div>
+                    <div class="mode-desc">Напарники 2x2</div>
                 </div>
+                <div class="mode-icon">👥</div>
             </div>
 
+            <div class="mode-item" onclick="selectMode('duels')">
+                <div>
+                    <div class="mode-name">SNIPER DUELS</div>
+                    <div class="mode-desc">Дуэли на снайперках</div>
+                </div>
+                <div class="mode-icon">🎯</div>
+            </div>
         </div>
 
-        <div id="view-profile" class="view">
-            <div class="profile-header">
-                <div class="p-avatar" id="p-avatar">?</div>
-                <div class="p-name" id="p-name">Loading...</div>
-                <div class="p-id" id="p-id">ID: ...</div>
+        <div id="step-2" class="step-view">
+            <div class="back-btn" onclick="gotoStep(1)">‹ Назад к режимам</div>
+            <div class="card-title">2. Ваш текущий ранг</div>
+            <div class="ranks-grid" id="grid-current"></div>
+        </div>
+
+        <div id="step-3" class="step-view">
+            <div class="back-btn" onclick="gotoStep(2)">‹ Назад к текущему</div>
+            <div class="card-title">3. Желаемый ранг</div>
+            <div class="ranks-grid" id="grid-target"></div>
+        </div>
+
+        <div id="step-4" class="step-view">
+            <div class="back-btn" onclick="gotoStep(3)">‹ Изменить ранги</div>
+            
+            <div class="summary-box">
+                <div class="sum-row">
+                    <span style="color:#aaa">Режим игры</span>
+                    <span id="res-mode">...</span>
+                </div>
+                <div class="sum-row">
+                    <span style="color:#aaa">Текущий ранг</span>
+                    <span id="res-from">...</span>
+                </div>
+                <div class="sum-row" style="border:none">
+                    <span style="color:#aaa">Желаемый ранг</span>
+                    <span id="res-to" style="color:var(--accent)">...</span>
+                </div>
+                
+                <div class="total-price" id="res-price">0₽</div>
+                <div style="font-size:11px; color:#555; margin-top:5px">Цена рассчитана автоматически</div>
             </div>
 
-            <div class="history-title">История заказов</div>
-            <div id="orders-list">
-                </div>
-            <div id="no-orders" style="text-align:center; color:#444; font-size:12px; margin-top:20px; display:none">
-                История заказов пуста
+            <div style="margin-top:20px; font-size:12px; color:#666; text-align:center; line-height:1.5">
+                Нажимая кнопку оплаты, вы соглашаетесь с условиями сервиса.<br>
+                Бустер приступит к работе в течение 30 минут.
             </div>
         </div>
 
     </div>
 
-    <div id="main-btn" class="main-btn">ОФОРМИТЬ ЗАКАЗ</div>
+    <div id="view-profile" class="view" style="display:none">
+        <div class="profile-head">
+            <div class="avatar-circle" id="p-avatar">X</div>
+            <div class="p-name" id="p-name">Username</div>
+            <div class="p-id" id="p-id">ID: 000000</div>
+        </div>
+        
+        <div class="card-title">История заказов</div>
+        <div id="orders-container">
+            </div>
+        <div id="no-orders" style="text-align:center; color:#444; font-size:12px; margin-top:20px; display:none">Нет активных заказов</div>
+    </div>
+
+</div>
+
+<div id="main-btn" class="main-btn">Оплатить</div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- CONFIG ---
-    // Цены за ШАГ (например от Gold 1 до Gold 2)
-    // Чем выше ранг, тем дороже шаг
+    // --- DATA ---
     const RANKS = [
-        { id: 0, name: "Bronze I", img: "bronze1.png", price: 50 },
-        { id: 1, name: "Bronze II", img: "bronze2.png", price: 50 },
-        { id: 2, name: "Bronze III", img: "bronze3.png", price: 50 },
-        { id: 3, name: "Bronze IV", img: "bronze4.png", price: 60 },
-        
-        { id: 4, name: "Silver I", img: "silver1.png", price: 80 },
-        { id: 5, name: "Silver II", img: "silver2.png", price: 80 },
-        { id: 6, name: "Silver III", img: "silver3.png", price: 90 },
-        { id: 7, name: "Silver IV", img: "silver4.png", price: 100 },
-
-        { id: 8, name: "Gold I", img: "gold1.png", price: 150 },
-        { id: 9, name: "Gold II", img: "gold2.png", price: 160 },
-        { id: 10, name: "Gold III", img: "gold3.png", price: 170 },
-        { id: 11, name: "Gold IV", img: "gold4.png", price: 180 },
-
-        { id: 12, name: "Phoenix", img: "phoenix.png", price: 300 },
-        { id: 13, name: "Ranger", img: "ranger.png", price: 450 },
-        { id: 14, name: "Champion", img: "champion.png", price: 600 },
-        { id: 15, name: "Master", img: "master.png", price: 900 },
-        { id: 16, name: "Elite", img: "elite.png", price: 1500 },
-        { id: 17, name: "Legend", img: "legend.png", price: 2500 }
+        { name: "Bronze I", img: "bronze1.png", price: 50 },
+        { name: "Bronze II", img: "bronze2.png", price: 50 },
+        { name: "Bronze III", img: "bronze3.png", price: 50 },
+        { name: "Bronze IV", img: "bronze4.png", price: 60 },
+        { name: "Silver I", img: "silver1.png", price: 80 },
+        { name: "Silver II", img: "silver2.png", price: 80 },
+        { name: "Silver III", img: "silver3.png", price: 90 },
+        { name: "Silver IV", img: "silver4.png", price: 100 },
+        { name: "Gold I", img: "gold1.png", price: 150 },
+        { name: "Gold II", img: "gold2.png", price: 160 },
+        { name: "Gold III", img: "gold3.png", price: 170 },
+        { name: "Gold IV", img: "gold4.png", price: 180 },
+        { name: "Phoenix", img: "phoenix.png", price: 300 },
+        { name: "Ranger", img: "ranger.png", price: 450 },
+        { name: "Champion", img: "champion.png", price: 600 },
+        { name: "Master", img: "master.png", price: 900 },
+        { name: "Elite", img: "elite.png", price: 1500 },
+        { name: "The Legend", img: "legend.png", price: 2500 }
     ];
 
-    // Коэффициенты режимов
-    const MODE_MULTIPLIERS = {
-        'mm': 1.0,     // Соревновательный - стандарт
-        'wingman': 0.8, // Напарники - дешевле
-        'duels': 1.2    // Дуэли - дороже (сложнее)
+    const MODES = {
+        'mm': { name: 'Competitive', factor: 1.0 },
+        'wingman': { name: 'Wingman', factor: 0.8 },
+        'duels': { name: 'Duels', factor: 1.2 }
     };
-    
-    const MODE_NAMES = { 'mm': 'Соревновательный', 'wingman': 'Напарники', 'duels': 'Дуэли' };
 
-    // --- STATE ---
     let state = {
         mode: null,
-        currentRankIdx: null,
-        targetRankIdx: null
+        fromIdx: null,
+        toIdx: null,
+        price: 0
     };
 
     // --- INIT ---
-    function init() {
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // Получаем данные
-        const name = urlParams.get('name') || "Guest";
-        const uid = urlParams.get('uid') || "0000";
-        
-        // Безопасно парсим историю заказов
-        let orders = [];
-        try {
-            const ordersRaw = urlParams.get('orders');
-            if (ordersRaw) orders = JSON.parse(decodeURIComponent(ordersRaw));
-        } catch (e) { console.error("Error parsing orders", e); }
+    const urlParams = new URLSearchParams(window.location.search);
+    const uName = urlParams.get('name') || 'Guest';
+    const uId = urlParams.get('uid') || '0000';
+    let orders = [];
 
-        // Заполняем UI
-        document.getElementById('user-name').innerText = name;
-        document.getElementById('p-name').innerText = name;
-        document.getElementById('p-id').innerText = `ID: ${uid}`;
-        document.getElementById('p-avatar').innerText = name[0].toUpperCase();
+    try {
+        const oRaw = urlParams.get('orders');
+        if (oRaw) orders = JSON.parse(decodeURIComponent(oRaw));
+    } catch(e) {}
 
-        renderOrders(orders);
-        renderRanks(); // Генерируем сетку рангов
-    }
+    document.getElementById('u-name').innerText = uName;
+    document.getElementById('u-avatar').innerText = uName[0];
+    document.getElementById('p-name').innerText = uName;
+    document.getElementById('p-avatar').innerText = uName[0];
+    document.getElementById('p-id').innerText = `ID: ${uId}`;
 
-    // --- RENDER RANKS ---
-    function renderRanks() {
-        // Генерируем сетку для шага 2 (Текущий)
-        const gridCurr = document.getElementById('grid-current');
-        const gridTarg = document.getElementById('grid-target');
-        
-        RANKS.forEach((rank, idx) => {
-            // Карточка для текущего ранга
-            const card1 = createRankCard(rank, idx, 'current');
-            gridCurr.appendChild(card1);
-
-            // Карточка для желаемого ранга
-            const card2 = createRankCard(rank, idx, 'target');
-            gridTarg.appendChild(card2);
-        });
-    }
-
-    function createRankCard(rank, idx, type) {
-        const el = document.createElement('div');
-        el.className = 'rank-card';
-        el.id = `${type}-rank-${idx}`;
-        el.innerHTML = `
-            <img src="${rank.img}" onerror="this.src='bronze1.png'">
-            <div class="rank-name">${rank.name}</div>
-        `;
-        el.onclick = () => selectRank(idx, type);
-        return el;
-    }
+    renderOrders();
+    renderRanksGrid();
 
     // --- LOGIC ---
-    function switchTab(tab) {
-        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    function setTab(t) {
+        document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
+        document.querySelectorAll('.view').forEach(e => e.style.display = 'none');
         
-        if (tab === 'boost') {
-            document.getElementById('view-boost').classList.add('active');
-            document.querySelectorAll('.nav-item')[0].classList.add('active');
-            updateMainButtonVisibility();
+        if (t === 'boost') {
+            document.querySelectorAll('.tab')[0].classList.add('active');
+            document.getElementById('view-boost').style.display = 'block';
+            updateBtn();
         } else {
-            document.getElementById('view-profile').classList.add('active');
-            document.querySelectorAll('.nav-item')[1].classList.add('active');
+            document.querySelectorAll('.tab')[1].classList.add('active');
+            document.getElementById('view-profile').style.display = 'block';
             document.getElementById('main-btn').style.display = 'none';
         }
-        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        tg.HapticFeedback.selectionChanged();
     }
 
-    function gotoStep(step) {
-        // Скрываем все шаги
-        for(let i=1; i<=4; i++) document.getElementById(`step-${i}`).style.display = 'none';
-        // Показываем нужный
-        document.getElementById(`step-${step}`).style.display = 'block';
-        updateMainButtonVisibility();
+    function gotoStep(n) {
+        document.querySelectorAll('.step-view').forEach(e => e.classList.remove('active'));
+        document.getElementById(`step-${n}`).classList.add('active');
+        updateBtn();
     }
 
-    function selectMode(mode) {
-        state.mode = mode;
-        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    function selectMode(m) {
+        state.mode = m;
+        tg.HapticFeedback.impactOccurred('light');
         gotoStep(2);
     }
 
-    function selectRank(idx, type) {
-        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    function renderRanksGrid() {
+        const cGrid = document.getElementById('grid-current');
+        const tGrid = document.getElementById('grid-target');
 
-        if (type === 'current') {
-            state.currentRankIdx = idx;
-            // Сброс таргета если он меньше текущего
-            if (state.targetRankIdx !== null && state.targetRankIdx <= idx) state.targetRankIdx = null;
-            
-            highlightRank('current', idx);
-            gotoStep(3);
-            updateTargetGridAvailability(idx); // Блокируем ранги ниже текущего
-        } 
-        else if (type === 'target') {
-            state.targetRankIdx = idx;
-            highlightRank('target', idx);
-            calculatePrice();
-            gotoStep(4);
-        }
-    }
-
-    function highlightRank(type, idx) {
-        // Сброс активных
-        document.querySelectorAll(`#grid-${type} .rank-card`).forEach(el => el.classList.remove('active'));
-        // Сет активного
-        document.getElementById(`${type}-rank-${idx}`).classList.add('active');
-    }
-
-    function updateTargetGridAvailability(currentIdx) {
         RANKS.forEach((r, i) => {
-            const card = document.getElementById(`target-rank-${i}`);
-            if (i <= currentIdx) card.classList.add('disabled');
-            else card.classList.remove('disabled');
+            // From Card
+            const c1 = document.createElement('div');
+            c1.className = 'rank-card';
+            c1.id = `from-${i}`;
+            c1.innerHTML = `<img src="${r.img}" onerror="this.src='bronze1.png'"><div>${r.name}</div>`;
+            c1.onclick = () => selectFrom(i);
+            cGrid.appendChild(c1);
+
+            // To Card
+            const c2 = document.createElement('div');
+            c2.className = 'rank-card';
+            c2.id = `to-${i}`;
+            c2.innerHTML = `<img src="${r.img}" onerror="this.src='bronze1.png'"><div>${r.name}</div>`;
+            c2.onclick = () => selectTo(i);
+            tGrid.appendChild(c2);
         });
     }
 
-    function calculatePrice() {
-        if (state.currentRankIdx === null || state.targetRankIdx === null) return;
+    function selectFrom(i) {
+        state.fromIdx = i;
+        state.toIdx = null; // reset target
+        tg.HapticFeedback.selectionChanged();
         
-        let rawPrice = 0;
-        // Суммируем цену КАЖДОГО шага от (Current + 1) до Target
-        // Пример: Bronze 1 -> Bronze 3. Считаем цену Bronze 2 + Bronze 3.
-        for (let i = state.currentRankIdx + 1; i <= state.targetRankIdx; i++) {
-            rawPrice += RANKS[i].price;
-        }
-
-        const multiplier = MODE_MULTIPLIERS[state.mode];
-        const finalPrice = Math.round(rawPrice * multiplier);
-
-        // Обновляем UI
-        document.getElementById('sum-mode').innerText = MODE_NAMES[state.mode];
-        document.getElementById('sum-from').innerText = RANKS[state.currentRankIdx].name;
-        document.getElementById('sum-to').innerText = RANKS[state.targetRankIdx].name;
-        document.getElementById('final-price').innerText = finalPrice + "₽";
+        // Visuals
+        document.querySelectorAll('#grid-current .rank-card').forEach(e => e.classList.remove('active'));
+        document.getElementById(`from-${i}`).classList.add('active');
         
-        state.finalPrice = finalPrice;
+        // Lock invalid targets
+        document.querySelectorAll('#grid-target .rank-card').forEach((e, idx) => {
+            if (idx <= i) e.classList.add('disabled');
+            else e.classList.remove('disabled');
+            e.classList.remove('active');
+        });
+
+        gotoStep(3);
     }
 
-    function updateMainButtonVisibility() {
-        const btn = document.getElementById('main-btn');
-        const step4 = document.getElementById('step-4');
+    function selectTo(i) {
+        state.toIdx = i;
+        tg.HapticFeedback.selectionChanged();
+
+        document.querySelectorAll('#grid-target .rank-card').forEach(e => e.classList.remove('active'));
+        document.getElementById(`to-${i}`).classList.add('active');
+
+        calcPrice();
+        gotoStep(4);
+    }
+
+    function calcPrice() {
+        if (state.fromIdx === null || state.toIdx === null) return;
         
-        if (step4.style.display === 'block') {
-            btn.innerText = `ОПЛАТИТЬ ${state.finalPrice}₽`;
+        let base = 0;
+        for (let i = state.fromIdx + 1; i <= state.toIdx; i++) {
+            base += RANKS[i].price;
+        }
+        
+        state.price = Math.round(base * MODES[state.mode].factor);
+        
+        document.getElementById('res-mode').innerText = MODES[state.mode].name;
+        document.getElementById('res-from').innerText = RANKS[state.fromIdx].name;
+        document.getElementById('res-to').innerText = RANKS[state.toIdx].name;
+        document.getElementById('res-price').innerText = `${state.price}₽`;
+    }
+
+    function updateBtn() {
+        const step4 = document.getElementById('step-4');
+        const btn = document.getElementById('main-btn');
+        
+        if (step4.classList.contains('active')) {
+            btn.innerText = `ОПЛАТИТЬ ${state.price}₽`;
             btn.style.display = 'block';
-            btn.onclick = sendOrder;
+            btn.onclick = () => {
+                tg.HapticFeedback.notificationOccurred('success');
+                const data = {
+                    name: `Boost: ${RANKS[state.fromIdx].name} -> ${RANKS[state.toIdx].name} (${MODES[state.mode].name})`,
+                    price: state.price
+                };
+                tg.sendData(JSON.stringify(data));
+            };
         } else {
             btn.style.display = 'none';
         }
     }
 
-    function sendOrder() {
-        if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        
-        const data = {
-            name: `${MODE_NAMES[state.mode]}: ${RANKS[state.currentRankIdx].name} -> ${RANKS[state.targetRankIdx].name}`,
-            price: state.finalPrice
-        };
-        
-        tg.sendData(JSON.stringify(data));
-        tg.close();
-    }
-
-    // --- ORDER HISTORY RENDER ---
-    function renderOrders(orders) {
-        const list = document.getElementById('orders-list');
-        const empty = document.getElementById('no-orders');
-        
-        if (!orders || orders.length === 0) {
-            empty.style.display = 'block';
+    function renderOrders() {
+        const cont = document.getElementById('orders-container');
+        if (!orders.length) {
+            document.getElementById('no-orders').style.display = 'block';
             return;
         }
+        
+        // Reverse to show new first
+        orders.slice().reverse().forEach(o => {
+            let stClass = 'st-wait';
+            let stText = 'Ожидание';
+            
+            if (o.status === 'work') { stClass = 'st-work'; stText = 'В работе'; }
+            if (o.status === 'done') { stClass = 'st-done'; stText = 'Выполнен'; }
+            if (o.status === 'reject') { stClass = 'st-reject'; stText = 'Отклонен'; }
 
-        // Сортировка (новые сверху)
-        orders.reverse().forEach(o => {
-            let statusText = 'Ожидание';
-            let badgeClass = 'badge-wait';
-            let borderClass = 'status-wait';
-
-            if (o.status === 'work') { statusText = 'В работе'; badgeClass = 'badge-work'; borderClass = 'status-work'; }
-            if (o.status === 'done') { statusText = 'Выполнен'; badgeClass = 'badge-done'; borderClass = 'status-done'; }
-            if (o.status === 'reject') { statusText = 'Отклонен'; badgeClass = 'badge-reject'; borderClass = 'status-reject'; }
-
-            const el = document.createElement('div');
-            el.className = `order-item ${borderClass}`;
-            el.innerHTML = `
+            const div = document.createElement('div');
+            div.className = `order-card ${stClass}`;
+            div.innerHTML = `
                 <div class="order-info">
                     <div>${o.desc}</div>
-                    <div>Заказ #${o.id} • ${o.date} • ${o.price}₽</div>
+                    <div>Заказ #${o.id} • ${o.price}₽ • ${o.date}</div>
                 </div>
-                <div class="order-badge ${badgeClass}">${statusText}</div>
+                <div class="order-status">${stText}</div>
             `;
-            list.appendChild(el);
+            cont.appendChild(div);
         });
     }
-
-    init();
 
 </script>
 </body>
