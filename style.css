@@ -1,0 +1,39 @@
+body {
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+    font-family: sans-serif;
+    padding: 20px;
+}
+
+.hidden { display: none; }
+
+.mode-btn {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0;
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.ranks-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.rank-card {
+    background: var(--tg-theme-secondary-bg-color);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.rank-card img {
+    width: 100%;
+    height: auto;
+}
