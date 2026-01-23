@@ -8,19 +8,13 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Rajdhani:wght@600;700&display=swap');
-        :root { --primary: #6366f1; --accent: #a855f7; --bg: #0f172a; --text: #fff; --nav-h: 70px; }
+        :root { --primary: #6366f1; --accent: #a855f7; --bg: #0f172a; --text: #fff; }
         body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; margin: 0; padding: 20px 20px 90px 20px; overflow-x: hidden; min-height: 100vh; background-image: radial-gradient(at 0% 0%, rgba(99,102,241,0.2) 0, transparent 50%), radial-gradient(at 100% 100%, rgba(168,85,247,0.2) 0, transparent 50%); background-attachment: fixed; }
-        
-        /* КАРТОЧКИ */
         .glass { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 15px; backdrop-filter: blur(10px); margin-bottom: 15px; }
         h1 { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 5px; }
         p.sub { text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
-        
-        /* ПРОФИЛЬ */
         .avatar { width: 90px; height: 90px; border-radius: 50%; background: #222; margin: 0 auto 15px; overflow: hidden; border: 2px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 30px; }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* ЗВАНИЯ */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
         .rank { background: rgba(255,255,255,0.03); border-radius: 15px; padding: 10px 5px; text-align: center; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
         .rank img { width: 100%; height: 50px; object-fit: contain; margin-bottom: 5px; filter: grayscale(1); }
@@ -28,20 +22,16 @@
         .rank.active { background: rgba(99,102,241,0.15); border-color: var(--primary); }
         .rank.active img { filter: grayscale(0); transform: scale(1.1); }
         .rank.active span { color: #fff; }
-
-        /* НАВИГАЦИЯ */
         .nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; height: 65px; background: rgba(15,23,42,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; display: flex; justify-content: space-around; align-items: center; z-index: 99; backdrop-filter: blur(15px); }
         .nav-item { color: #64748b; font-size: 24px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; width: 50px;}
         .nav-item span { font-size: 10px; font-weight: 600; opacity: 0; transform: translateY(10px); transition: 0.3s; }
         .nav-item.active { color: #fff; }
         .nav-item.active i { color: var(--accent); transform: translateY(-3px); }
         .nav-item.active span { opacity: 1; transform: translateY(0); }
-
         .hidden { display: none !important; }
         .page { display: none; animation: fade 0.3s ease; }
         .page.active { display: block; }
         @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); }}
-
         .btn { width: 100%; padding: 15px; background: linear-gradient(90deg, var(--primary), var(--accent)); border: none; border-radius: 15px; color: #fff; font-weight: 700; font-size: 16px; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
