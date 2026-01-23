@@ -5,173 +5,172 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Xenon Boost</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
         :root {
-            --bg: #09090b;
-            --surface: rgba(255, 255, 255, 0.03);
-            --surface-active: rgba(255, 255, 255, 0.08);
-            --border: rgba(255, 255, 255, 0.08);
-            --accent: #6366f1; /* Indigo */
-            --accent-grad: linear-gradient(135deg, #6366f1, #a855f7);
-            --text-main: #ffffff;
-            --text-sec: #9ca3af;
+            --bg-color: #000000;
+            --card-bg: rgba(28, 28, 30, 0.65);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --accent: #0A84FF; /* iOS Blue Dark Mode */
+            --accent-gradient: linear-gradient(135deg, #0A84FF, #5E5CE6);
+            --text-primary: #FFFFFF;
+            --text-secondary: #8E8E93;
+            --danger: #FF453A;
+            --success: #30D158;
+            --warning: #FFD60A;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; /* iOS Fonts */
             margin: 0; padding: 0;
-            /* Живой фон */
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15), transparent 40%),
-                radial-gradient(circle at 100% 60%, rgba(168, 85, 247, 0.1), transparent 40%);
+            /* Глубокий, едва заметный градиент на фоне */
+            background-image: radial-gradient(circle at 50% 0%, #1c1c1e 0%, #000000 70%);
             background-attachment: fixed;
             min-height: 100vh;
             padding-bottom: 120px;
         }
 
-        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .container { padding: 20px; max-width: 480px; margin: 0 auto; }
 
         /* HEADER */
         .header {
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 24px; padding-top: 10px;
         }
-        .logo { 
-            font-family: 'Rajdhani', sans-serif; font-size: 26px; font-weight: 700; 
-            letter-spacing: 1px; color: #fff; text-shadow: 0 0 20px rgba(99, 102, 241, 0.5); 
-        }
+        .brand { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
         .user-pill {
-            background: rgba(0,0,0,0.4); border: 1px solid var(--border);
-            padding: 6px 12px; border-radius: 30px; font-size: 13px; font-weight: 600;
-            display: flex; align-items: center; gap: 8px; backdrop-filter: blur(10px);
+            background: rgba(118, 118, 128, 0.24); 
+            padding: 6px 12px; border-radius: 20px;
+            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         }
-        .u-avatar { 
-            width: 22px; height: 22px; background: var(--accent-grad); 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; 
+        .avatar-circle {
+            width: 20px; height: 20px; border-radius: 50%;
+            background: var(--accent-gradient); font-size: 10px;
+            display: flex; align-items: center; justify-content: center; font-weight: 700;
         }
 
-        /* TABS */
-        .tabs {
-            display: flex; background: #121215; padding: 5px; border-radius: 16px;
-            margin-bottom: 30px; border: 1px solid var(--border);
+        /* SEGMENTED CONTROL (TABS) */
+        .segmented-control {
+            display: flex; background: rgba(118, 118, 128, 0.24); 
+            padding: 2px; border-radius: 9px; margin-bottom: 30px;
+            position: relative;
         }
-        .tab {
-            flex: 1; text-align: center; padding: 12px; font-size: 13px; font-weight: 700;
-            color: var(--text-sec); border-radius: 12px; cursor: pointer; transition: 0.3s;
+        .segment-btn {
+            flex: 1; text-align: center; padding: 8px; font-size: 13px; font-weight: 500;
+            color: var(--text-primary); border-radius: 7px; cursor: pointer; z-index: 2;
+            transition: 0.2s;
         }
-        .tab.active {
-            background: #27272a; color: #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        .segment-btn.active {
+            background: #636366; /* Fallback */
+            background: rgba(99, 99, 102, 0.5); /* iOS Dark Segment Active */
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04);
+            font-weight: 600;
         }
 
         /* CARDS */
-        .card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 18px; padding: 20px; margin-bottom: 12px;
-            display: flex; align-items: center; justify-content: space-between;
-            transition: 0.2s; cursor: pointer; position: relative; overflow: hidden;
-        }
-        .card:active { transform: scale(0.98); }
-        
-        .card.active {
-            background: linear-gradient(rgba(30,30,35,0.9), rgba(30,30,35,0.9)) padding-box,
-                        var(--accent-grad) border-box;
-            border: 1px solid transparent;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
-        }
-        
-        .card-info h3 { margin: 0 0 4px 0; font-size: 16px; font-weight: 700; color: #fff; }
-        .card-info p { margin: 0; font-size: 13px; color: var(--text-sec); }
-        .card-icon { font-size: 24px; filter: grayscale(1); opacity: 0.7; transition: 0.3s; }
-        .card.active .card-icon { filter: grayscale(0); opacity: 1; transform: scale(1.1); }
-
-        /* RANK GRID */
-        .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .rank-item {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 14px; padding: 15px 5px; text-align: center;
-            cursor: pointer; transition: 0.2s; position: relative;
-        }
-        .rank-item img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 8px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
-        .rank-name { font-size: 11px; font-weight: 700; color: var(--text-sec); text-transform: uppercase; }
-        
-        .rank-item.active {
-            background: linear-gradient(rgba(30,30,35,0.9), rgba(30,30,35,0.9)) padding-box,
-                        var(--accent-grad) border-box;
-            border: 1px solid transparent;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
-        }
-        .rank-item.active .rank-name { color: #fff; }
-        .rank-item.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
-
-        /* BUTTONS */
-        .step-title { font-size: 14px; font-weight: 700; color: var(--text-sec); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .back-btn {
-            font-size: 13px; font-weight: 600; color: var(--text-sec); 
-            margin-bottom: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
-        }
-        .back-btn:hover { color: #fff; }
-
-        .next-btn {
-            width: 100%; background: #fff; color: #000; padding: 15px;
-            border-radius: 14px; font-weight: 800; font-size: 14px;
-            margin-top: 20px; cursor: pointer; text-align: center;
-            box-shadow: 0 4px 15px rgba(255,255,255,0.1);
-            transition: 0.2s; display: none; /* Скрыта по умолчанию */
-        }
-        .next-btn:active { transform: scale(0.98); opacity: 0.9; }
-
-        .main-btn {
-            position: fixed; bottom: 20px; left: 20px; right: 20px;
-            background: var(--accent-grad); color: #fff;
-            padding: 16px; border-radius: 16px;
-            font-size: 16px; font-weight: 800; text-transform: uppercase;
-            text-align: center; cursor: pointer;
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-            z-index: 100; display: none;
-        }
-        .main-btn:active { transform: scale(0.97); }
-
-        /* SUMMARY */
-        .summary {
-            background: rgba(0,0,0,0.3); border: 1px solid var(--border);
-            border-radius: 20px; padding: 25px; text-align: center; margin-top: 10px;
-        }
-        .sum-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
-        .sum-label { color: var(--text-sec); }
-        .sum-val { color: #fff; font-weight: 700; }
-        .price-display { font-size: 40px; font-weight: 800; background: var(--accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: 10px; }
-
-        /* PROFILE ORDERS */
-        .refresh-btn {
-            background: var(--surface); color: var(--text-sec); border: 1px solid var(--border);
-            padding: 12px; border-radius: 12px; text-align: center; font-weight: 600; font-size: 13px;
-            margin-bottom: 25px; cursor: pointer; transition: 0.2s;
-        }
-        .refresh-btn:active { background: var(--surface-active); color: #fff; }
-
-        .order-card {
-            background: var(--surface); border: 1px solid var(--border);
+        .glass-card {
+            background: var(--card-bg);
+            border: 0.5px solid var(--card-border);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-radius: 16px; padding: 16px; margin-bottom: 12px;
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: transform 0.1s, background-color 0.2s; cursor: pointer;
         }
-        .st-badge { padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
-        .st-wait { background: rgba(234, 179, 8, 0.15); color: #eab308; }
-        .st-work { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
-        .st-done { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
-        .st-reject { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+        .glass-card:active { transform: scale(0.98); background: rgba(44, 44, 46, 0.8); }
+        
+        .glass-card.selected {
+            border-color: var(--accent);
+            background: rgba(10, 132, 255, 0.15);
+        }
+
+        .card-content h3 { margin: 0 0 2px 0; font-size: 16px; font-weight: 600; }
+        .card-content p { margin: 0; font-size: 12px; color: var(--text-secondary); }
+        
+        /* SVG ICONS (Вместо эмодзи) */
+        .icon { width: 24px; height: 24px; fill: var(--text-secondary); transition: 0.2s; }
+        .glass-card.selected .icon { fill: var(--accent); }
+
+        /* GRID SYSTEM */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .grid-item {
+            background: var(--card-bg); border: 0.5px solid var(--card-border);
+            border-radius: 14px; padding: 14px 8px; text-align: center;
+            cursor: pointer; transition: 0.2s; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        }
+        .grid-item:active { transform: scale(0.96); }
+        .grid-item.selected { border-color: var(--accent); background: rgba(10, 132, 255, 0.15); }
+        
+        .grid-item img { width: 42px; height: 42px; object-fit: contain; margin-bottom: 8px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3)); }
+        .grid-item .name { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+        .grid-item.selected .name { color: #fff; }
+        .grid-item.disabled { opacity: 0.3; pointer-events: none; filter: grayscale(1); }
+
+        /* NAV & TITLES */
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.5px; }
+        .subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+
+        .back-link {
+            color: var(--accent); font-size: 15px; font-weight: 500; 
+            margin-bottom: 20px; cursor: pointer; display: inline-flex; align-items: center;
+        }
+        
+        .next-btn {
+            width: 100%; background: var(--text-primary); color: #000;
+            padding: 14px; border-radius: 12px; font-weight: 600; font-size: 16px;
+            text-align: center; margin-top: 20px; cursor: pointer; transition: 0.2s;
+        }
+        .next-btn:active { opacity: 0.8; transform: scale(0.99); }
+
+        /* FLOATING ACTION BUTTON */
+        .fab {
+            position: fixed; bottom: 30px; left: 20px; right: 20px;
+            background: var(--accent); color: #fff;
+            padding: 16px; border-radius: 16px; font-weight: 600; font-size: 17px;
+            text-align: center; box-shadow: 0 8px 24px rgba(10, 132, 255, 0.4);
+            z-index: 100; cursor: pointer; display: none; transition: transform 0.2s;
+        }
+        .fab:active { transform: scale(0.96); }
+
+        /* SUMMARY PAGE */
+        .summary-card {
+            background: rgba(44, 44, 46, 0.6); border-radius: 16px; padding: 20px;
+            border: 0.5px solid var(--card-border); margin-top: 10px;
+        }
+        .sum-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; border-bottom: 0.5px solid rgba(255,255,255,0.1); padding-bottom: 12px; }
+        .sum-row:last-child { border: none; padding-bottom: 0; margin-bottom: 0; }
+        .sum-label { color: var(--text-secondary); }
+        .sum-val { font-weight: 600; }
+        
+        .total-container { text-align: center; margin-top: 25px; }
+        .total-price { font-size: 42px; font-weight: 700; letter-spacing: -1px; background: linear-gradient(to right, #fff, #aaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* PROFILE */
+        .refresh-btn {
+            background: rgba(28, 28, 30, 0.8); color: var(--accent); font-weight: 500; font-size: 15px;
+            padding: 12px; border-radius: 12px; text-align: center; margin-bottom: 24px; cursor: pointer;
+        }
+        .refresh-btn:active { background: rgba(44, 44, 46, 1); }
+
+        .order-item {
+            background: var(--card-bg); border-radius: 14px; padding: 16px; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center; border: 0.5px solid var(--card-border);
+        }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .st-wait { color: var(--warning); } .st-wait .status-dot { background: var(--warning); }
+        .st-work { color: var(--accent); } .st-work .status-dot { background: var(--accent); }
+        .st-done { color: var(--success); } .st-done .status-dot { background: var(--success); }
+        .st-reject { color: var(--danger); } .st-reject .status-dot { background: var(--danger); }
 
         /* VIEWS */
         .view { display: none; }
-        .step-view { display: none; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .view.active { display: block; animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
     </style>
 </head>
@@ -179,150 +178,142 @@
 
 <div class="container">
     <div class="header">
-        <div class="logo">XENON</div>
+        <div class="brand">XENON</div>
         <div class="user-pill">
-            <div class="u-avatar" id="u-avatar">?</div>
-            <span id="u-name" style="margin-left:8px">Guest</span>
+            <div class="avatar-circle" id="u-avatar">?</div>
+            <span id="u-name">User</span>
         </div>
     </div>
 
-    <div class="tabs">
-        <div class="tab active" onclick="setTab('boost')">Буст</div>
-        <div class="tab" onclick="setTab('profile')">Профиль</div>
+    <div class="segmented-control">
+        <div class="segment-btn active" onclick="switchTab('boost')">Буст</div>
+        <div class="segment-btn" onclick="switchTab('profile')">Профиль</div>
     </div>
 
     <div id="view-boost" class="view active">
         
-        <div id="step-1" class="step-view active">
-            <div class="step-title">Шаг 1 • Выберите режим</div>
+        <div id="step-1" class="view active">
+            <div class="section-title">Выберите режим</div>
             
-            <div class="card" onclick="selectMode('mm', this)">
-                <div class="card-info"><h3>Соревновательный</h3><p>Классика 5x5</p></div>
-                <div class="card-icon">🏆</div>
+            <div class="glass-card" onclick="selectMode('mm', this)">
+                <div class="card-content"><h3>Соревновательный</h3><p>Классический 5x5</p></div>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
             </div>
-            <div class="card" onclick="selectMode('wingman', this)">
-                <div class="card-info"><h3>Напарники</h3><p>Режим 2x2</p></div>
-                <div class="card-icon">👥</div>
-            </div>
-            <div class="card" onclick="selectMode('duels', this)">
-                <div class="card-info"><h3>Дуэли</h3><p>1x1 Снайперы</p></div>
-                <div class="card-icon">🎯</div>
-            </div>
-
-            <div id="btn-next-1" class="next-btn" onclick="gotoStep(2)">ДАЛЕЕ ➔</div>
-        </div>
-
-        <div id="step-2" class="step-view">
-            <div class="back-btn" onclick="gotoStep(1)">‹ Назад</div>
-            <div class="step-title">Шаг 2 • Ваш текущий ранг</div>
-            <div class="ranks-grid" id="grid-from"></div>
-            <div id="btn-next-2" class="next-btn" onclick="gotoStep(3)">ДАЛЕЕ ➔</div>
-        </div>
-
-        <div id="step-3" class="step-view">
-            <div class="back-btn" onclick="gotoStep(2)">‹ Назад</div>
-            <div class="step-title">Шаг 3 • Желаемый ранг</div>
-            <div class="ranks-grid" id="grid-to"></div>
-            <div id="btn-next-3" class="next-btn" onclick="gotoStep(4)">ДАЛЕЕ ➔</div>
-        </div>
-
-        <div id="step-4" class="step-view">
-            <div class="back-btn" onclick="gotoStep(3)">‹ Назад</div>
-            <div class="step-title">Шаг 4 • Метод выполнения</div>
             
-            <div class="card" onclick="selectType('login', this)">
-                <div class="card-info">
+            <div class="glass-card" onclick="selectMode('wingman', this)">
+                <div class="card-content"><h3>Напарники</h3><p>Режим 2x2</p></div>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
+
+            <div class="glass-card" onclick="selectMode('duels', this)">
+                <div class="card-content"><h3>Дуэли</h3><p>1x1 Снайперы</p></div>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 2h10v2H7zm0 4h10v2H7zm0 4h10v2H7z"/></svg>
+            </div>
+
+            <div id="btn-next-1" class="next-btn" style="display:none" onclick="goStep(2)">Далее</div>
+        </div>
+
+        <div id="step-2" class="view">
+            <div class="back-link" onclick="goStep(1)">‹ Назад</div>
+            <div class="section-title">Текущий ранг</div>
+            <div class="grid" id="grid-from"></div>
+            <div id="btn-next-2" class="next-btn" style="display:none" onclick="goStep(3)">Далее</div>
+        </div>
+
+        <div id="step-3" class="view">
+            <div class="back-link" onclick="goStep(2)">‹ Назад</div>
+            <div class="section-title">Желаемый ранг</div>
+            <div class="grid" id="grid-to"></div>
+            <div id="btn-next-3" class="next-btn" style="display:none" onclick="goStep(4)">Далее</div>
+        </div>
+
+        <div id="step-4" class="view">
+            <div class="back-link" onclick="goStep(3)">‹ Назад</div>
+            <div class="section-title">Метод буста</div>
+            
+            <div class="glass-card" onclick="selectType('login', this)">
+                <div class="card-content">
                     <h3>Вход (Передача)</h3>
-                    <p>Бустер играет на вашем аккаунте (Быстро)</p>
+                    <p>Быстро и выгодно</p>
                 </div>
-                <div class="card-icon">🔑</div>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             </div>
-            <div class="card" onclick="selectType('lobby', this)">
-                <div class="card-info">
-                    <h3>Игра в Лобби (Пати)</h3>
-                    <p>Вы играете с нами (+50% к стоимости)</p>
+
+            <div class="glass-card" onclick="selectType('lobby', this)">
+                <div class="card-content">
+                    <h3>Лобби (Пати)</h3>
+                    <p>Играете с нами (x2.5 цена)</p>
                 </div>
-                <div class="card-icon">🎮</div>
+                <svg class="icon" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
             </div>
-            <div id="btn-next-4" class="next-btn" onclick="calcSummary()">РАССЧИТАТЬ ЦЕНУ ➔</div>
+            
+            <div id="btn-next-4" class="next-btn" style="display:none" onclick="calcSummary()">Рассчитать</div>
         </div>
 
-        <div id="step-5" class="step-view">
-            <div class="back-btn" onclick="gotoStep(4)">‹ Изменить</div>
-            <div class="step-title">Подтверждение</div>
+        <div id="step-5" class="view">
+            <div class="back-link" onclick="goStep(4)">‹ Изменить</div>
+            <div class="section-title">Итог</div>
             
-            <div class="summary">
+            <div class="summary-card">
                 <div class="sum-row">
                     <span class="sum-label">Режим</span>
-                    <span class="sum-val" id="res-mode">...</span>
+                    <span class="sum-val" id="out-mode"></span>
                 </div>
                 <div class="sum-row">
                     <span class="sum-label">Буст</span>
-                    <span class="sum-val"><span id="res-from"></span> ➔ <span id="res-to" style="color:#a855f7"></span></span>
+                    <span class="sum-val"><span id="out-from"></span> → <span id="out-to" style="color:var(--accent)"></span></span>
                 </div>
                 <div class="sum-row">
                     <span class="sum-label">Метод</span>
-                    <span class="sum-val" id="res-type">...</span>
+                    <span class="sum-val" id="out-type"></span>
                 </div>
-                <div class="price-display" id="res-price">0₽</div>
             </div>
-            <div style="text-align:center; font-size:12px; color:#555; margin-top:20px;">
-                Бустер начнет выполнение в течение 1 часа.
+
+            <div class="total-container">
+                <div style="font-size:14px; color:var(--text-secondary); margin-bottom:5px;">К оплате</div>
+                <div class="total-price" id="out-price">0₽</div>
             </div>
         </div>
 
     </div>
 
     <div id="view-profile" class="view">
-        <div class="refresh-btn" onclick="refreshProfile()">↻ Обновить статусы</div>
-        <div class="step-title">История заказов</div>
+        <div class="refresh-btn" onclick="closeAndRefresh()">
+            ↻ Обновить статус (Перезапуск)
+        </div>
+        <div class="subtitle">ИСТОРИЯ ЗАКАЗОВ</div>
         <div id="orders-list"></div>
-        <div id="no-orders" style="display:none; text-align:center; color:#555; margin-top:40px; font-size:13px;">У вас пока нет заказов</div>
+        <div id="no-orders" style="display:none; text-align:center; margin-top:40px; color:var(--text-secondary); font-size:14px;">
+            У вас пока нет активных заказов
+        </div>
     </div>
 
 </div>
 
-<div id="main-btn" class="main-btn">Оплатить</div>
+<div id="fab" class="fab">ОПЛАТИТЬ</div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- DATA ---
+    // --- CONFIG ---
     const RANKS = [
-        { name: "Бронза I", img: "bronze1.png", price: 20 },
-        { name: "Бронза II", img: "bronze2.png", price: 20 },
-        { name: "Бронза III", img: "bronze3.png", price: 20 },
-        { name: "Бронза IV", img: "bronze4.png", price: 25 },
-        { name: "Сильвер I", img: "silver1.png", price: 35 },
-        { name: "Сильвер II", img: "silver2.png", price: 35 },
-        { name: "Сильвер III", img: "silver3.png", price: 40 },
-        { name: "Сильвер IV", img: "silver4.png", price: 45 },
-        { name: "Голд I", img: "gold1.png", price: 60 },
-        { name: "Голд II", img: "gold2.png", price: 70 },
-        { name: "Голд III", img: "gold3.png", price: 80 },
-        { name: "Голд IV", img: "gold4.png", price: 90 },
-        { name: "Феникс", img: "phoenix.png", price: 150 },
-        { name: "Рейнджер", img: "ranger.png", price: 250 },
-        { name: "Чемпион", img: "champion.png", price: 400 },
-        { name: "Мастер", img: "master.png", price: 700 },
-        { name: "Элита", img: "elite.png", price: 1200 },
-        { name: "Легенда", img: "legend.png", price: 2000 }
+        { n:"Бронза I", p:10, i:"bronze1.png" }, { n:"Бронза II", p:10, i:"bronze2.png" }, { n:"Бронза III", p:10, i:"bronze3.png" }, { n:"Бронза IV", p:15, i:"bronze4.png" },
+        { n:"Сильвер I", p:25, i:"silver1.png" }, { n:"Сильвер II", p:25, i:"silver2.png" }, { n:"Сильвер III", p:30, i:"silver3.png" }, { n:"Сильвер IV", p:35, i:"silver4.png" },
+        { n:"Голд I", p:50, i:"gold1.png" }, { n:"Голд II", p:60, i:"gold2.png" }, { n:"Голд III", p:70, i:"gold3.png" }, { n:"Голд IV", p:80, i:"gold4.png" },
+        { n:"Феникс", p:150, i:"phoenix.png" }, { n:"Рейнджер", p:250, i:"ranger.png" }, { n:"Чемпион", p:450, i:"champion.png" },
+        { n:"Мастер", p:800, i:"master.png" }, { n:"Элита", p:1300, i:"elite.png" }, { n:"Легенда", p:2200, i:"legend.png" }
     ];
-
-    const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.8}, 'duels':{n:'Дуэли',k:1.2} };
-    const TYPES = { 'login':{n:'Вход',k:1}, 'lobby':{n:'Лобби',k:1.5} };
+    
+    const MODES = { 'mm':{n:'ММ', k:1}, 'wingman':{n:'Напарники', k:0.8}, 'duels':{n:'Дуэли', k:1.2} };
+    const TYPES = { 'login':{n:'Вход', k:1}, 'lobby':{n:'Лобби', k:2.5} };
 
     let s = { m:null, f:null, t:null, ty:null, p:0 };
     let orders = [];
 
     // --- INIT ---
     const p = new URLSearchParams(window.location.search);
-    const uName = p.get('name') || 'User';
-    
-    // Check if we need to open profile immediately
-    const startTab = p.get('tab');
-
+    const uName = p.get('name') || 'Guest';
     try {
         const raw = p.get('orders');
         if(raw) orders = JSON.parse(decodeURIComponent(raw));
@@ -334,145 +325,129 @@
     renderRanks();
     renderOrders();
 
-    // Auto switch if requested
-    if (startTab === 'profile') {
-        setTab('profile');
-    }
+    // --- LOGIC ---
+    function switchTab(t) {
+        document.querySelectorAll('.segment-btn').forEach(e=>e.classList.remove('active'));
+        document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));
+        document.getElementById('fab').style.display='none';
 
-    // --- FUNCTIONS ---
-    function setTab(t) {
-        document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
-        document.querySelectorAll('.view').forEach(e => e.style.display='none');
-        document.getElementById('main-btn').style.display='none';
-
-        if(t === 'boost') {
-            document.querySelectorAll('.tab')[0].classList.add('active');
-            document.getElementById('view-boost').style.display='block';
-            if(document.getElementById('step-5').classList.contains('active')) document.getElementById('main-btn').style.display='block';
+        if(t==='boost') {
+            document.querySelectorAll('.segment-btn')[0].classList.add('active');
+            document.getElementById('view-boost').classList.add('active');
+            if(document.getElementById('step-5').style.display === 'block') document.getElementById('fab').style.display='block';
         } else {
-            document.querySelectorAll('.tab')[1].classList.add('active');
-            document.getElementById('view-profile').style.display='block';
+            document.querySelectorAll('.segment-btn')[1].classList.add('active');
+            document.getElementById('view-profile').classList.add('active');
         }
         tg.HapticFeedback.selectionChanged();
     }
 
-    function gotoStep(n) {
-        document.querySelectorAll('.step-view').forEach(e => e.classList.remove('active'));
-        document.getElementById(`step-${n}`).classList.add('active');
-        document.getElementById('main-btn').style.display='none';
+    function goStep(n) {
+        // Hide all steps in boost view
+        document.querySelectorAll('#view-boost .view').forEach(e => e.classList.remove('active'));
+        document.getElementById('step-'+n).classList.add('active');
+        document.getElementById('fab').style.display='none';
     }
 
-    // STEP 1
     function selectMode(m, el) {
         s.m = m;
-        document.querySelectorAll('#step-1 .card').forEach(c => c.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById('btn-next-1').style.display = 'block';
+        document.querySelectorAll('#step-1 .glass-card').forEach(c=>c.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('btn-next-1').style.display='block';
         tg.HapticFeedback.impactOccurred('light');
     }
 
-    // STEP 2 & 3
     function renderRanks() {
-        const g1 = document.getElementById('grid-from');
-        const g2 = document.getElementById('grid-to');
-        RANKS.forEach((r, i) => {
-            const h1 = `<div class="rank-item" id="f-${i}" onclick="setF(${i})"><img src="${r.img}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
-            const h2 = `<div class="rank-item" id="t-${i}" onclick="setT(${i})"><img src="${r.img}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
-            g1.innerHTML += h1; g2.innerHTML += h2;
+        const gf = document.getElementById('grid-from');
+        const gt = document.getElementById('grid-to');
+        RANKS.forEach((r,i) => {
+            gf.innerHTML += `<div class="grid-item" id="f-${i}" onclick="setF(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="name">${r.n}</div></div>`;
+            gt.innerHTML += `<div class="grid-item" id="t-${i}" onclick="setT(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="name">${r.n}</div></div>`;
         });
     }
 
     function setF(i) {
         s.f = i; s.t = null;
-        document.querySelectorAll('#grid-from .rank-item').forEach(e=>e.classList.remove('active'));
-        document.getElementById(`f-${i}`).classList.add('active');
+        document.querySelectorAll('#grid-from .grid-item').forEach(e=>e.classList.remove('selected'));
+        document.getElementById(`f-${i}`).classList.add('selected');
+        document.getElementById('btn-next-2').style.display='block';
         
-        // Lock targets
-        document.querySelectorAll('#grid-to .rank-item').forEach((e, idx) => {
+        document.querySelectorAll('#grid-to .grid-item').forEach((e,idx) => {
             if(idx <= i) e.classList.add('disabled');
             else e.classList.remove('disabled');
-            e.classList.remove('active');
+            e.classList.remove('selected');
         });
-        
-        document.getElementById('btn-next-2').style.display = 'block';
-        document.getElementById('btn-next-3').style.display = 'none'; // reset next step
+        document.getElementById('btn-next-3').style.display='none';
         tg.HapticFeedback.selectionChanged();
     }
 
     function setT(i) {
         s.t = i;
-        document.querySelectorAll('#grid-to .rank-item').forEach(e=>e.classList.remove('active'));
-        document.getElementById(`t-${i}`).classList.add('active');
-        document.getElementById('btn-next-3').style.display = 'block';
+        document.querySelectorAll('#grid-to .grid-item').forEach(e=>e.classList.remove('selected'));
+        document.getElementById(`t-${i}`).classList.add('selected');
+        document.getElementById('btn-next-3').style.display='block';
         tg.HapticFeedback.selectionChanged();
     }
 
-    // STEP 4
     function selectType(t, el) {
         s.ty = t;
-        document.querySelectorAll('#step-4 .card').forEach(c => c.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById('btn-next-4').style.display = 'block';
+        document.querySelectorAll('#step-4 .glass-card').forEach(c=>c.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('btn-next-4').style.display='block';
         tg.HapticFeedback.impactOccurred('light');
     }
 
-    // CALC
     function calcSummary() {
         let base = 0;
-        for(let i=s.f+1; i<=s.t; i++) base += RANKS[i].price;
+        for(let i=s.f+1; i<=s.t; i++) base += RANKS[i].p;
         s.p = Math.round(base * MODES[s.m].k * TYPES[s.ty].k);
 
-        document.getElementById('res-mode').innerText = MODES[s.m].n;
-        document.getElementById('res-from').innerText = RANKS[s.f].name;
-        document.getElementById('res-to').innerText = RANKS[s.t].name;
-        document.getElementById('res-type').innerText = TYPES[s.ty].n;
-        document.getElementById('res-price').innerText = `${s.p}₽`;
+        document.getElementById('out-mode').innerText = MODES[s.m].n;
+        document.getElementById('out-from').innerText = RANKS[s.f].n;
+        document.getElementById('out-to').innerText = RANKS[s.t].n;
+        document.getElementById('out-type').innerText = TYPES[s.ty].n;
+        document.getElementById('out-price').innerText = s.p + '₽';
 
-        gotoStep(5);
-        
-        const btn = document.getElementById('main-btn');
-        btn.innerText = `ОПЛАТИТЬ ${s.p}₽`;
-        btn.style.display = 'block';
-        btn.onclick = () => {
+        goStep(5);
+        const fab = document.getElementById('fab');
+        fab.innerText = `ОПЛАТИТЬ ${s.p}₽`;
+        fab.style.display='block';
+        fab.onclick = () => {
             tg.HapticFeedback.notificationOccurred('success');
-            const data = {
-                name: `Boost: ${RANKS[s.f].name} -> ${RANKS[s.t].name} (${MODES[s.m].n}, ${TYPES[s.ty].n})`,
+            tg.sendData(JSON.stringify({
+                name: `Буст: ${RANKS[s.f].n} -> ${RANKS[s.t].n} (${MODES[s.m].n}, ${TYPES[s.ty].n})`,
                 price: s.p
-            };
-            tg.sendData(JSON.stringify(data));
+            }));
         };
     }
 
-    // PROFILE
     function renderOrders() {
         const l = document.getElementById('orders-list');
-        if(!orders.length) { document.getElementById('no-orders').style.display = 'block'; return; }
+        if(!orders.length) { document.getElementById('no-orders').style.display='block'; return; }
         
         orders.slice().reverse().forEach(o => {
             let cl='', tx='';
-            if(o.status==='wait'){cl='st-wait';tx='Проверка';}
-            if(o.status==='work'){cl='st-work';tx='В работе';}
-            if(o.status==='done'){cl='st-done';tx='Готово';}
-            if(o.status==='reject'){cl='st-reject';tx='Отмена';}
+            if(o.status==='wait') { cl='st-wait'; tx='Проверка'; }
+            if(o.status==='work') { cl='st-work'; tx='В работе'; }
+            if(o.status==='done') { cl='st-done'; tx='Готово'; }
+            if(o.status==='reject') { cl='st-reject'; tx='Отмена'; }
 
             l.innerHTML += `
-            <div class="order-card">
+            <div class="order-item">
                 <div>
-                    <div style="font-weight:700; font-size:13px; color:#fff; margin-bottom:4px;">${o.desc}</div>
-                    <div style="font-size:11px; color:var(--text-sec);">#${o.id} • ${o.price}₽ • ${o.date}</div>
+                    <div style="font-weight:600; font-size:14px; margin-bottom:4px; color:#fff;">${o.desc}</div>
+                    <div style="font-size:11px; color:var(--text-secondary);">#${o.id} • ${o.price}₽ • ${o.date}</div>
                 </div>
-                <div class="st-badge ${cl}">${tx}</div>
+                <div class="${cl}" style="font-size:11px; font-weight:600; display:flex; align-items:center;">
+                    <span class="status-dot"></span>${tx}
+                </div>
             </div>`;
         });
     }
 
-    function refreshProfile() {
-        // Reload page but keep 'tab=profile' param
-        const url = new URL(window.location.href);
-        url.searchParams.set('tab', 'profile');
-        // Add random to force reload if needed
-        url.searchParams.set('rnd', Math.floor(Math.random() * 10000));
-        window.location.href = url.toString();
+    function closeAndRefresh() {
+        tg.sendData("REFRESH_PROFILE");
+        tg.close();
     }
 
 </script>
