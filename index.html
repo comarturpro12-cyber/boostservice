@@ -8,270 +8,281 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600&display=swap');
+        /* Шрифты */
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Rajdhani:wght@600;700&display=swap');
 
         :root {
-            --bg: #000000;
-            --surface: #0f0f12;
-            --surface-light: #1c1c21;
-            --primary: #6d28d9; /* Фиолетовый Veneku */
-            --accent: #00eaff;  /* Циан */
-            --text: #ffffff;
-            --text-gray: #888888;
-            --nav-height: 65px;
+            --primary: #6366f1; /* Индиго */
+            --accent: #a855f7;  /* Фиолетовый */
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-main: #ffffff;
+            --text-sec: #94a3b8;
+            --nav-height: 75px;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            /* Живой градиентный фон */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.3) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.3) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
             margin: 0; padding: 0;
             min-height: 100vh;
-            /* Очень тонкий фоновый градиент */
-            background-image: linear-gradient(to bottom, #050505, #000000);
-            padding-bottom: 90px;
+            padding-bottom: 100px; /* Место под меню */
             overflow-x: hidden;
         }
 
-        /* --- UI COMPONENTS --- */
-        h1, h2 { margin: 0; text-transform: uppercase; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+        /* АНИМАЦИИ ПОЯВЛЕНИЯ */
+        .fade-in { animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .page { display: none; padding: 16px; animation: fadeEffect 0.2s ease; }
-        .page.active { display: block; }
-        @keyframes fadeEffect { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* HEADER */
-        .app-header {
-            display: flex; justify-content: center; align-items: center;
-            padding: 15px 0 25px 0;
-            position: relative;
-        }
-        .app-logo {
-            font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px;
-            background: linear-gradient(90deg, #fff, var(--primary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(109, 40, 217, 0.5);
+        /* СТЕКЛЯННЫЕ КАРТОЧКИ */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
-        /* CARDS */
-        .card {
-            background: var(--surface);
-            border: 1px solid #222;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
-            transition: 0.2s;
-        }
+        /* ЗАГОЛОВКИ */
+        h1, h2 { margin: 0; font-weight: 800; letter-spacing: -0.5px; }
+        .page-title { font-size: 28px; margin-bottom: 5px; text-align: center; }
+        .page-subtitle { font-size: 14px; color: var(--text-sec); text-align: center; margin-bottom: 25px; }
 
-        /* MODES */
-        .mode-item {
+        /* --- ВКЛАДКА БУСТ --- */
+        .mode-card {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 20px; margin-bottom: 12px;
-            background: var(--surface); border: 1px solid #222; border-radius: 16px;
-            cursor: pointer; position: relative; overflow: hidden;
-        }
-        .mode-item:active { transform: scale(0.98); background: var(--surface-light); }
-        .mode-content h3 { font-family: 'Rajdhani', sans-serif; font-size: 20px; color: #fff; margin-bottom: 2px; }
-        .mode-content p { font-size: 11px; color: var(--text-gray); margin: 0; }
-        .mode-icon { font-size: 22px; color: var(--primary); opacity: 0.8; }
-
-        /* RANKS GRID */
-        .ranks-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px;
-        }
-        .rank-card {
-            background: var(--surface); border: 1px solid #222; border-radius: 12px;
-            padding: 12px 5px; text-align: center; cursor: pointer; transition: 0.2s;
-        }
-        .rank-card img {
-            width: 100%; height: 50px; object-fit: contain; margin-bottom: 8px;
-            filter: grayscale(0.6); transition: 0.2s;
-        }
-        .rank-card span {
-            display: block; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 11px; color: var(--text-gray);
-        }
-
-        /* ACTIVE RANK STATE */
-        .rank-card.active {
-            background: rgba(109, 40, 217, 0.1);
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(109, 40, 217, 0.2);
-        }
-        .rank-card.active img { filter: grayscale(0) drop-shadow(0 0 5px var(--primary)); transform: scale(1.1); }
-        .rank-card.active span { color: #fff; }
-
-        /* NAVIGATION BUTTONS */
-        .action-btn {
-            width: 100%; padding: 16px;
-            background: var(--primary); color: #fff;
-            border: none; border-radius: 12px;
-            font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 1px;
-            cursor: pointer; margin-top: 20px;
-            box-shadow: 0 4px 20px rgba(109, 40, 217, 0.4);
-        }
-        .action-btn:active { transform: scale(0.98); opacity: 0.9; }
-        
-        .back-link {
-            display: inline-flex; align-items: center; gap: 5px;
-            color: var(--text-gray); font-size: 12px; font-weight: 600;
-            margin-bottom: 15px; cursor: pointer;
-        }
-
-        /* PROFILE */
-        .profile-card {
-            background: var(--surface); border: 1px solid #222; border-radius: 20px;
-            padding: 30px 20px; text-align: center; margin-top: 20px;
+            margin-bottom: 15px; cursor: pointer; transition: transform 0.2s;
             position: relative; overflow: hidden;
         }
-        /* Неоновый свет сверху карточки */
-        .profile-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary), transparent);
-        }
-        .avatar {
-            width: 90px; height: 90px; border-radius: 50%;
-            background: #1a1a1a; margin: 0 auto 15px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 32px; font-weight: bold; color: var(--text);
-            border: 2px solid var(--surface-light);
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-        .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .mode-card:active { transform: scale(0.97); background: rgba(255,255,255,0.15); }
         
-        .balance-pill {
-            display: inline-block; background: rgba(0, 234, 255, 0.1);
-            color: var(--accent); border: 1px solid rgba(0, 234, 255, 0.3);
-            padding: 6px 16px; border-radius: 20px;
-            font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px;
-            margin-top: 15px;
+        .mode-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: #fff; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+        .mode-info { flex: 1; margin-left: 15px; }
+        .mode-title { font-size: 18px; font-weight: 600; }
+        .mode-desc { font-size: 12px; color: var(--text-sec); margin-top: 2px; }
+
+        /* СЕТКА ЗВАНИЙ */
+        .ranks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+        .rank-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 15px 5px; cursor: pointer; transition: 0.3s;
+            border-radius: 18px; border: 1px solid transparent; background: rgba(255,255,255,0.03);
+        }
+        .rank-item img { width: 100%; height: 55px; object-fit: contain; margin-bottom: 10px; transition: 0.3s; filter: grayscale(0.4); }
+        .rank-item span { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; color: var(--text-sec); }
+
+        /* Активное звание */
+        .rank-item.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+        .rank-item.active img { filter: grayscale(0) drop-shadow(0 0 10px var(--primary)); transform: scale(1.1); }
+        .rank-item.active span { color: #fff; }
+
+        /* КНОПКА ДАЛЕЕ */
+        .next-btn {
+            width: 100%; padding: 18px; margin-top: 25px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: #fff; border: none; border-radius: 18px;
+            font-size: 16px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .next-btn:active { transform: scale(0.95); opacity: 0.9; }
+
+        /* КНОПКА НАЗАД */
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px; background: rgba(255,255,255,0.05);
+            border-radius: 30px; font-size: 12px; color: var(--text-sec);
+            margin-bottom: 20px; cursor: pointer;
         }
 
-        /* BOTTOM NAV */
+        /* --- ПРОФИЛЬ --- */
+        .profile-container { text-align: center; margin-top: 20px; }
+        .avatar-wrapper {
+            width: 100px; height: 100px; margin: 0 auto 20px;
+            padding: 3px; border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+        .avatar-img {
+            width: 100%; height: 100%; border-radius: 50%;
+            background: #1e1e24; display: flex; align-items: center; justify-content: center;
+            font-size: 36px; font-weight: 700; color: #fff; overflow: hidden;
+        }
+        .avatar-img img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .user-name { font-size: 24px; margin-bottom: 5px; }
+        .user-id { font-family: monospace; color: var(--text-sec); font-size: 13px; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 10px; display: inline-block; }
+
+        .stat-grid { display: flex; gap: 10px; margin-top: 30px; }
+        .stat-card {
+            flex: 1; background: rgba(255,255,255,0.03); border-radius: 20px; padding: 15px;
+            text-align: center; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat-val { font-size: 20px; font-weight: 800; color: var(--accent); margin-bottom: 5px; }
+        .stat-label { font-size: 11px; color: var(--text-sec); text-transform: uppercase; }
+
+        /* ЗАГЛУШКА ИСТОРИИ */
+        .empty-history {
+            text-align: center; padding: 60px 20px;
+            opacity: 0.6;
+        }
+        .empty-icon { font-size: 48px; margin-bottom: 15px; background: linear-gradient(to bottom, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* НИЖНЕЕ МЕНЮ (Floating) */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height);
-            background: rgba(10, 10, 12, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid #222;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            height: 65px;
             display: flex; justify-content: space-around; align-items: center;
-            z-index: 100;
+            z-index: 100; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
-        .nav-btn {
+        .nav-item {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: #555; width: 60px; height: 100%; cursor: pointer; transition: 0.2s;
+            color: var(--text-sec); transition: 0.3s; cursor: pointer; width: 60px;
         }
-        .nav-btn i { font-size: 24px; margin-bottom: 3px; }
-        .nav-btn span { font-size: 10px; font-weight: 600; }
-        .nav-btn.active { color: var(--text); }
-        .nav-btn.active i { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        .nav-item i { font-size: 24px; margin-bottom: 2px; transition: 0.3s; }
+        .nav-item span { font-size: 10px; font-weight: 600; opacity: 0; transform: translateY(10px); transition: 0.3s; }
+        
+        .nav-item.active { color: #fff; }
+        .nav-item.active i { transform: translateY(-5px); color: var(--accent); text-shadow: 0 0 15px var(--accent); }
+        .nav-item.active span { opacity: 1; transform: translateY(0); }
 
         .hidden { display: none !important; }
-        
-        /* Заглушка истории */
-        .empty-state { text-align: center; padding: 40px 0; opacity: 0.5; }
-        .empty-state i { font-size: 40px; margin-bottom: 10px; display: block; }
+        .page { display: none; padding: 20px; }
+        .page.active { display: block; }
+
     </style>
 </head>
 <body>
 
-    <div id="tab-boost" class="page active">
-        <div class="app-header">
-            <div class="app-logo">VENEKU BOOST</div>
-        </div>
+    <div id="page-boost" class="page active fade-in">
+        <h1 class="page-title">VENEKU</h1>
+        <p class="page-subtitle">Premium Boost Service</p>
 
         <div id="step-1">
-            <div style="font-size: 12px; color: #666; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;">Выберите режим</div>
-            
-            <div class="mode-item" onclick="selectMode('Дуэли')">
-                <div class="mode-content"><h3>Дуэли</h3><p>1 vs 1</p></div>
-                <i class="ri-sword-line mode-icon"></i>
+            <div class="glass mode-card" onclick="selectMode('Дуэли')">
+                <div class="mode-icon"><i class="ri-sword-fill"></i></div>
+                <div class="mode-info"><div class="mode-title">Дуэли</div><div class="mode-desc">Классика 1 на 1</div></div>
+                <i class="ri-arrow-right-s-line" style="font-size: 20px; color: #666;"></i>
             </div>
-            <div class="mode-item" onclick="selectMode('Союзники')">
-                <div class="mode-content"><h3>Союзники</h3><p>2 vs 2</p></div>
-                <i class="ri-group-line mode-icon"></i>
+            <div class="glass mode-card" onclick="selectMode('Союзники')">
+                <div class="mode-icon"><i class="ri-team-fill"></i></div>
+                <div class="mode-info"><div class="mode-title">Союзники</div><div class="mode-desc">Напарники 2 на 2</div></div>
+                <i class="ri-arrow-right-s-line" style="font-size: 20px; color: #666;"></i>
             </div>
-            <div class="mode-item" onclick="selectMode('Соревновательный')">
-                <div class="mode-content"><h3>ММ</h3><p>5 vs 5</p></div>
-                <i class="ri-trophy-line mode-icon"></i>
+            <div class="glass mode-card" onclick="selectMode('Соревновательный')">
+                <div class="mode-icon"><i class="ri-trophy-fill"></i></div>
+                <div class="mode-info"><div class="mode-title">ММ</div><div class="mode-desc">Команда 5 на 5</div></div>
+                <i class="ri-arrow-right-s-line" style="font-size: 20px; color: #666;"></i>
             </div>
         </div>
 
-        <div id="step-2" class="hidden">
-            <div class="back-link" onclick="goStep(1)"><i class="ri-arrow-left-line"></i> Назад</div>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <h2 style="font-size: 18px;">Текущий ранг</h2>
-                <p style="font-size: 12px; color: #666;">Что у вас сейчас?</p>
+        <div id="step-2" class="hidden fade-in">
+            <div class="back-btn" onclick="goStep(1)"><i class="ri-arrow-left-s-line"></i> Назад</div>
+            <div style="text-align: center;">
+                <h2>Ваш ранг</h2>
+                <p style="font-size: 13px; color: #888; margin-top: 5px;">Что у вас сейчас?</p>
             </div>
+
+            <div class="ranks-grid" id="ranks-current"></div>
             
-            <div class="ranks-grid" id="current-ranks-container"></div>
-            
-            <button id="btn-next-step-2" class="action-btn hidden" onclick="confirmCurrentRank()">
-                Продолжить <i class="ri-arrow-right-line" style="vertical-align: middle; margin-left: 5px;"></i>
+            <button id="btn-next-2" class="next-btn hidden" onclick="renderRanks('target'); goStep(3);">
+                ПРОДОЛЖИТЬ <i class="ri-arrow-right-line"></i>
             </button>
         </div>
 
-        <div id="step-3" class="hidden">
-            <div class="back-link" onclick="goStep(2)"><i class="ri-arrow-left-line"></i> Назад</div>
-            
-            <div class="card" style="display: flex; justify-content: space-between; align-items: center; border-color: var(--primary);">
-                <div style="text-align: left;">
-                    <div style="font-size: 10px; color: #666;">СЕЙЧАС</div>
-                    <div style="font-family: 'Rajdhani'; font-weight: bold; font-size: 16px;" id="disp-curr">...</div>
+        <div id="step-3" class="hidden fade-in">
+            <div class="back-btn" onclick="goStep(2)"><i class="ri-arrow-left-s-line"></i> Назад</div>
+
+            <div class="glass" style="padding: 15px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <div>
+                    <div style="font-size: 10px; color: #888; text-transform: uppercase;">Сейчас</div>
+                    <div style="font-weight: 700; font-size: 15px;" id="disp-cur">...</div>
                 </div>
-                <i class="ri-arrow-right-double-line" style="color: var(--primary)"></i>
+                <i class="ri-arrow-right-double-line" style="color: var(--accent); font-size: 20px;"></i>
                 <div style="text-align: right;">
-                    <div style="font-size: 10px; color: #666;">ЦЕЛЬ</div>
-                    <div style="font-family: 'Rajdhani'; font-weight: bold; font-size: 16px; color: var(--accent);" id="disp-targ">?</div>
+                    <div style="font-size: 10px; color: #888; text-transform: uppercase;">Цель</div>
+                    <div style="font-weight: 700; font-size: 15px; color: var(--accent);" id="disp-tar">?</div>
                 </div>
             </div>
 
-            <div style="text-align: center; margin: 20px 0 10px;">
-                <h2 style="font-size: 18px;">Желаемый ранг</h2>
+            <div style="text-align: center;">
+                <h2>Желаемый ранг</h2>
             </div>
-            <div class="ranks-grid" id="target-ranks-container"></div>
+
+            <div class="ranks-grid" id="ranks-target"></div>
         </div>
     </div>
 
-    <div id="tab-history" class="page">
-        <div class="app-header"><div class="app-logo">ИСТОРИЯ</div></div>
-        
-        <div class="empty-state">
-            <i class="ri-hammer-line"></i>
-            <h3>В РАЗРАБОТКЕ</h3>
-            <p style="font-size: 12px; color: #666; margin-top: 5px;">
-                История заказов временно недоступна.<br>
-                Статус вашего заказа можно узнать через бота.
+    <div id="page-history" class="page fade-in">
+        <h1 class="page-title">История</h1>
+        <div class="glass empty-history">
+            <div class="empty-icon"><i class="ri-time-line"></i></div>
+            <h3>Пока пусто</h3>
+            <p style="font-size: 13px; color: #888; margin-top: 10px; line-height: 1.5;">
+                Здесь будут отображаться ваши заказы.<br>
+                На данный момент раздел в разработке.
             </p>
         </div>
     </div>
 
-    <div id="tab-profile" class="page">
-        <div class="app-header"><div class="app-logo">ПРОФИЛЬ</div></div>
+    <div id="page-profile" class="page fade-in">
+        <h1 class="page-title">Профиль</h1>
 
-        <div class="profile-card">
-            <div class="avatar" id="profile-avatar">
-                <span>?</span>
+        <div class="glass profile-container">
+            <div class="avatar-wrapper">
+                <div class="avatar-img" id="user-avatar">?</div>
             </div>
-            
-            <h2 id="profile-name" style="font-size: 20px; margin-bottom: 5px;">Guest</h2>
-            <div style="font-size: 12px; color: #666; font-family: monospace;">ID: <span id="profile-id">---</span></div>
-            
-            <div class="balance-pill">0 ₽</div>
+            <div class="user-name" id="user-name">Guest</div>
+            <div class="user-id" id="user-id">ID: Unidentified</div>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-val">0 ₽</div>
+                    <div class="stat-label">Баланс</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">0</div>
+                    <div class="stat-label">Заказов</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-btn active" onclick="switchTab('boost', this)">
-            <i class="ri-flashlight-fill"></i>
+        <div class="nav-item active" onclick="switchTab('boost', this)">
+            <i class="ri-rocket-2-line"></i>
             <span>Буст</span>
         </div>
-        <div class="nav-btn" onclick="switchTab('history', this)">
+        <div class="nav-item" onclick="switchTab('history', this)">
             <i class="ri-history-line"></i>
             <span>История</span>
         </div>
-        <div class="nav-btn" onclick="switchTab('profile', this)">
-            <i class="ri-user-line"></i>
+        <div class="nav-item" onclick="switchTab('profile', this)">
+            <i class="ri-user-smile-line"></i>
             <span>Профиль</span>
         </div>
     </div>
@@ -280,56 +291,59 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
     
-    // Настройки главной кнопки (для оплаты)
-    tg.MainButton.color = "#6d28d9"; 
+    // Настройки главной кнопки (в цвет темы)
+    tg.MainButton.color = "#a855f7"; 
     tg.MainButton.textColor = "#ffffff";
 
-    // --- ИНИЦИАЛИЗАЦИЯ ДАННЫХ ЮЗЕРА ---
-    function initUser() {
+    /* --- ЛОГИКА ПРОФИЛЯ --- */
+    function initProfile() {
         const user = tg.initDataUnsafe.user;
         if (user) {
             // Имя
-            document.getElementById('profile-name').innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
+            document.getElementById('user-name').innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
             // ID
-            document.getElementById('profile-id').innerText = user.id;
+            document.getElementById('user-id').innerText = `ID: ${user.id}`;
             
-            // Аватар (Если есть фото - пробуем показать, иначе инициалы)
-            const avatarEl = document.getElementById('profile-avatar');
+            // Аватар
+            const av = document.getElementById('user-avatar');
             if (user.photo_url) {
-                avatarEl.innerHTML = `<img src="${user.photo_url}" alt="ava">`;
+                av.innerHTML = `<img src="${user.photo_url}" alt="User">`;
             } else {
-                avatarEl.innerHTML = `<span>${user.first_name[0]}</span>`;
+                av.innerText = user.first_name[0].toUpperCase();
             }
-        }
-    }
-    initUser();
-
-    // --- ЛОГИКА ТАБОВ ---
-    function switchTab(tabName, btnEl) {
-        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        
-        // Переключаем контент
-        document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-        document.getElementById('tab-' + tabName).classList.add('active');
-        
-        // Переключаем кнопки
-        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-        btnEl.classList.add('active');
-
-        // Скрываем MainButton если не на вкладке буста
-        if (tabName !== 'boost') {
-            tg.MainButton.hide();
         } else {
-            // Если на вкладке буста и цена подсчитана - показываем
-            if (order.price > 0 && document.getElementById('step-3').classList.contains('active') === false) {
-                 // Тут логика: MainButton показываем ТОЛЬКО на 3 шаге
-            }
-            if (currentStep === 3 && order.price > 0) tg.MainButton.show();
+            // Если открыто не в телеграме
+            document.getElementById('user-id').innerText = "Откройте через Telegram Бота";
+        }
+    }
+    initProfile();
+
+    /* --- НАВИГАЦИЯ (ТАБЫ) --- */
+    function switchTab(pageId, btn) {
+        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+
+        document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+        document.getElementById('page-' + pageId).classList.add('active');
+
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+
+        // MainButton видна только на вкладке буста (если цена > 0 и шаг 3)
+        updateMainButtonVisibility();
+    }
+
+    function updateMainButtonVisibility() {
+        const isBoostPage = document.getElementById('page-boost').classList.contains('active');
+        const isStep3 = !document.getElementById('step-3').classList.contains('hidden');
+        
+        if (isBoostPage && isStep3 && order.price > 0) {
+            tg.MainButton.show();
+        } else {
+            tg.MainButton.hide();
         }
     }
 
-    // --- ЛОГИКА БУСТА ---
-    // Названия файлов картинок должны совпадать
+    /* --- ЛОГИКА БУСТА --- */
     const RANKS = [
         {id: 1, name: "Bronze I", file: "bronze1.png"},
         {id: 2, name: "Bronze II", file: "bronze2.png"},
@@ -350,24 +364,17 @@
         {id: 17, name: "Elite", file: "elite.png"},
         {id: 18, name: "The Legend", file: "legend.png"}
     ];
-
-    const PRICE_PER_STEP = 150; // Цена
+    const PRICE_STEP = 150;
     let order = { mode: null, currentRankId: null, targetRankId: null, price: 0 };
-    let currentStep = 1;
 
     function goStep(step) {
         if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-        
         document.getElementById('step-1').classList.add('hidden');
         document.getElementById('step-2').classList.add('hidden');
         document.getElementById('step-3').classList.add('hidden');
         
         document.getElementById('step-' + step).classList.remove('hidden');
-        currentStep = step;
-        
-        // MainButton только на 3 шаге
-        if (step === 3 && order.price > 0) tg.MainButton.show();
-        else tg.MainButton.hide();
+        updateMainButtonVisibility();
     }
 
     function selectMode(mode) {
@@ -377,65 +384,55 @@
     }
 
     function renderRanks(type) {
-        const container = document.getElementById(type === 'current' ? 'current-ranks-container' : 'target-ranks-container');
+        const container = document.getElementById(type === 'current' ? 'ranks-current' : 'ranks-target');
         container.innerHTML = '';
-
+        
         RANKS.forEach(rank => {
             if (type === 'target' && rank.id <= order.currentRankId) return;
 
             const div = document.createElement('div');
-            div.className = 'rank-card';
+            div.className = 'rank-item';
             div.onclick = () => selectRank(type, rank, div);
-            div.innerHTML = `<img src="${rank.file}" onerror="this.style.opacity='0'"><span>${rank.name}</span>`;
+            div.innerHTML = `
+                <img src="${rank.file}" onerror="this.style.opacity='0'">
+                <span>${rank.name}</span>
+            `;
             container.appendChild(div);
         });
     }
 
-    function selectRank(type, rank, element) {
+    function selectRank(type, rank, el) {
         if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-        const container = document.getElementById(type === 'current' ? 'current-ranks-container' : 'target-ranks-container');
-        container.querySelectorAll('.rank-card').forEach(el => el.classList.remove('active'));
-        element.classList.add('active');
+        const container = document.getElementById(type === 'current' ? 'ranks-current' : 'ranks-target');
+        container.querySelectorAll('.rank-item').forEach(e => e.classList.remove('active'));
+        el.classList.add('active');
 
         if (type === 'current') {
             order.currentRankId = rank.id;
             order.currentRankName = rank.name;
-            // Показываем кнопку "Продолжить" (не переключаем сами)
-            document.getElementById('btn-next-step-2').classList.remove('hidden');
+            document.getElementById('disp-cur').innerText = rank.name;
+            // Показываем кнопку продолжить
+            document.getElementById('btn-next-2').classList.remove('hidden');
         } else {
             order.targetRankId = rank.id;
             order.targetRankName = rank.name;
-            updateSummary();
+            document.getElementById('disp-tar').innerText = rank.name;
             calculatePrice();
         }
-    }
-    
-    // Новая функция для кнопки "Продолжить" на 2 шаге
-    function confirmCurrentRank() {
-        renderRanks('target');
-        updateSummary();
-        goStep(3);
-    }
-
-    function updateSummary() {
-        document.getElementById('disp-curr').innerText = order.currentRankName || "...";
-        document.getElementById('disp-targ').innerText = order.targetRankName || "?";
     }
 
     function calculatePrice() {
         const steps = order.targetRankId - order.currentRankId;
-        order.price = steps * PRICE_PER_STEP;
-        
+        order.price = steps * PRICE_STEP;
         if (order.price > 0) {
-            tg.MainButton.text = `ОПЛАТИТЬ ${order.price}₽`;
-            tg.MainButton.show();
+            tg.MainButton.text = `ЗАКАЗАТЬ ЗА ${order.price}₽`;
+            updateMainButtonVisibility();
         }
     }
 
-    // Отправка
     tg.MainButton.onClick(() => {
-        const data = { type: "order", payload: order };
+        const data = { type: 'order', payload: order };
         tg.sendData(JSON.stringify(data));
     });
 
