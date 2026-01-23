@@ -64,6 +64,7 @@
         .rank-card.selected img { filter: grayscale(0); transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); }
         .rank-name { font-size: 11px; font-weight: 600; color: var(--text-sec); }
         .rank-card.selected .rank-name { color: #fff; }
+        .rank-card.disabled { opacity: 0.2; pointer-events: none; filter: grayscale(1); }
 
         /* BUTTONS */
         .step-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 16px; letter-spacing: -0.3px; }
@@ -145,7 +146,7 @@
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
             </div>
             <div class="card" onclick="selectType('lobby', this)" id="card-lobby">
-                <div class="c-info"><h3>Лобби (Пати)</h3><p>Играете с нами</p></div>
+                <div class="c-info"><h3>Лобби (Пати)</h3><p>Играете с нами (x2.5)</p></div>
                 <svg class="c-icon" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
             </div>
             <div id="btn-next-4" class="next-btn" onclick="calc()">Рассчитать</div>
@@ -180,25 +181,23 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // --- BALANCED PRICES (School Budget) ---
-    // p = цена перехода НА этот ранг
+    // --- SUPER LOW PRICES ---
     const RANKS = [
-        { name: "Бронза I", p: 25, i: "bronze1.png" }, { name: "Бронза II", p: 25, i: "bronze2.png" },
-        { name: "Бронза III", p: 25, i: "bronze3.png" }, { name: "Бронза IV", p: 25, i: "bronze4.png" },
+        { name: "Бронза I", p: 5, i: "bronze1.png" }, { name: "Бронза II", p: 5, i: "bronze2.png" },
+        { name: "Бронза III", p: 5, i: "bronze3.png" }, { name: "Бронза IV", p: 5, i: "bronze4.png" },
         
-        { name: "Сильвер I", p: 35, i: "silver1.png" }, { name: "Сильвер II", p: 35, i: "silver2.png" },
-        { name: "Сильвер III", p: 35, i: "silver3.png" }, { name: "Сильвер IV", p: 40, i: "silver4.png" },
+        { name: "Сильвер I", p: 10, i: "silver1.png" }, { name: "Сильвер II", p: 10, i: "silver2.png" },
+        { name: "Сильвер III", p: 10, i: "silver3.png" }, { name: "Сильвер IV", p: 15, i: "silver4.png" },
         
-        { name: "Голд I", p: 55, i: "gold1.png" }, { name: "Голд II", p: 55, i: "gold2.png" },
-        { name: "Голд III", p: 60, i: "gold3.png" }, { name: "Голд IV", p: 65, i: "gold4.png" },
+        { name: "Голд I", p: 15, i: "gold1.png" }, { name: "Голд II", p: 20, i: "gold2.png" },
+        { name: "Голд III", p: 20, i: "gold3.png" }, { name: "Голд IV", p: 30, i: "gold4.png" },
         
-        // Тут ценник повышается, но не критично
-        { name: "Феникс", p: 100, i: "phoenix.png" }, 
-        { name: "Рейнджер", p: 150, i: "ranger.png" },
-        { name: "Чемпион", p: 220, i: "champion.png" },
-        { name: "Мастер", p: 300, i: "master.png" },
-        { name: "Элита", p: 400, i: "elite.png" }, 
-        { name: "Легенда", p: 500, i: "legend.png" }
+        { name: "Феникс", p: 40, i: "phoenix.png" }, 
+        { name: "Рейнджер", p: 60, i: "ranger.png" },
+        { name: "Чемпион", p: 80, i: "champion.png" },
+        { name: "Мастер", p: 100, i: "master.png" },
+        { name: "Элита", p: 120, i: "elite.png" }, 
+        { name: "Легенда", p: 150, i: "legend.png" }
     ];
 
     const MODES = { 'mm':{n:'ММ',k:1}, 'wingman':{n:'Напарники',k:0.9}, 'duels':{n:'Дуэли',k:0.7} };
@@ -207,6 +206,7 @@
     let s = { m:null, f:null, t:null, ty:null, p:0 };
     let orders = [];
 
+    // INIT
     const url = new URLSearchParams(window.location.search);
     const uName = url.get('name') || 'Guest';
     try { const raw = url.get('orders'); if(raw) orders = JSON.parse(decodeURIComponent(raw)); } catch(e){}
@@ -214,6 +214,7 @@
     document.getElementById('u-avatar').innerText = uName[0].toUpperCase();
     renderRanks(); renderOrders();
 
+    // LOGIC
     function switchTab(t) {
         document.querySelectorAll('.seg-btn').forEach(e => e.classList.remove('active'));
         document.querySelectorAll('.view-tab').forEach(e => e.classList.remove('active'));
@@ -251,7 +252,7 @@
         const t = document.getElementById('grid-to');
         RANKS.forEach((r, i) => {
             f.innerHTML += `<div class="rank-card" id="f-${i}" onclick="setF(${i})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
-            // Внимание: Здесь мы не рендерим 'To' сразу, он рендерится после выбора 'From'
+            // НЕ РЕНДЕРИМ TO СРАЗУ (Only after selection)
         });
     }
 
@@ -259,20 +260,20 @@
         s.f = i; s.t = null;
         document.querySelectorAll('#grid-from .rank-card').forEach(e=>e.classList.remove('selected'));
         document.getElementById(`f-${i}`).classList.add('selected');
+        document.getElementById('btn-next-2').style.display='block';
         
-        // RENDER TARGETS (Logic: Must be > current AND >= Gold 4 (index 11))
+        // RENDER TARGETS (Hide anything < Gold 4 OR < Current)
         const tGrid = document.getElementById('grid-to');
-        tGrid.innerHTML = '';
+        tGrid.innerHTML = ''; // clear previous
+        
         RANKS.forEach((r, idx) => {
-            // Условие: ранг выше текущего И (ранг >= Голд 4 ИЛИ текущий ранг уже выше Голд 4)
-            // Если чел на Бронзе, ему покажет только Голд 4 и выше.
-            // Если чел на Фениксе, ему покажет Рейнджера и выше.
+            // Show only if: Target > Current AND (Target >= Gold 4 OR Current >= Gold 4)
+            // Gold 4 index is 11
             if (idx > i && (idx >= 11 || i >= 11)) {
                 tGrid.innerHTML += `<div class="rank-card" id="t-${idx}" onclick="setT(${idx})"><img src="${r.i}" onerror="this.src='bronze1.png'"><div class="rank-name">${r.name}</div></div>`;
             }
         });
 
-        document.getElementById('btn-next-2').style.display='block';
         document.getElementById('btn-next-3').style.display='none';
         tg.HapticFeedback.selectionChanged();
     }
