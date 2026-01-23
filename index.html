@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Standoff Boost</title>
+    <title>Xenon Boost</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        /* ШРИФТЫ */
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600&display=swap');
 
         :root {
-            --bg-color: #0f0f11;
-            --card-bg: #18181b;
+            --bg-color: #050505;
+            --card-bg: rgba(20, 20, 23, 0.7);
+            --border-color: #27272a;
+            --accent-color: #3b82f6; /* Синий Xenon */
+            --accent-glow: rgba(59, 130, 246, 0.5);
             --text-color: #ffffff;
-            --accent-color: #3b82f6; /* Синий как в стандофф */
-            --secondary-text: #a1a1aa;
+            --secondary-text: #9ca3af;
         }
 
         body {
@@ -21,180 +24,228 @@
             color: var(--text-color);
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 16px;
             min-height: 100vh;
-            overflow-x: hidden;
-            /* Легкий градиент на фоне */
-            background-image: radial-gradient(circle at 50% 0%, #1e3a8a 0%, #0f0f11 60%);
+            /* ФОН */
+            background-image: radial-gradient(circle at 50% 0%, #172554 0%, #000000 70%);
             background-attachment: fixed;
+            padding-bottom: 90px;
         }
 
-        h1, h2, h3 { margin: 0; text-transform: uppercase; letter-spacing: 1px; }
-        
+        /* АНИМАЦИИ */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes rgb-text { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+
         /* ЗАГОЛОВОК */
-        .header {
+        .hero {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             animation: fadeIn 0.5s ease;
         }
-        .header h1 {
-            font-size: 32px;
-            font-weight: 900;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        .hero h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 40px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+            background-size: 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: rgb-text 5s infinite linear;
         }
-        .header p { color: var(--secondary-text); font-size: 14px; margin-top: 5px; }
+        .hero p {
+            color: var(--secondary-text);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
 
-        /* КАРТОЧКИ РЕЖИМОВ */
-        .mode-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .mode-card {
+        /* ОБЩИЙ СТИЛЬ КАРТОЧЕК */
+        .card {
             background: var(--card-bg);
-            border: 1px solid #27272a;
+            border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
         
-        .mode-card:active { transform: scale(0.98); border-color: var(--accent-color); }
-        .mode-card h3 { font-size: 18px; margin-bottom: 5px; }
-        .mode-card p { font-size: 12px; color: var(--secondary-text); }
+        /* КНОПКИ РЕЖИМОВ */
+        .mode-list { display: flex; flex-direction: column; gap: 12px; }
+        .mode-card {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .mode-card:active { transform: scale(0.98); border-color: var(--accent-color); background: rgba(59, 130, 246, 0.1); }
         
+        .mode-info h3 { margin: 0; font-family: 'Rajdhani', sans-serif; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; }
+        .mode-info p { margin: 4px 0 0 0; font-size: 12px; color: var(--secondary-text); }
+        .mode-arrow { font-size: 20px; color: var(--secondary-text); opacity: 0.5; }
+
         /* СЕТКА ЗВАНИЙ */
         .ranks-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            animation: slideUp 0.3s ease;
+            margin-top: 20px;
+            animation: fadeIn 0.4s ease;
         }
 
-        .rank-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid transparent;
-            border-radius: 12px;
-            padding: 10px;
+        .rank-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        
-        .rank-card.selected {
-            border-color: var(--accent-color);
-            background: rgba(59, 130, 246, 0.1);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            padding: 10px 5px;
+            height: 110px;
         }
 
-        .rank-card img {
+        .rank-item img {
             width: 100%;
             height: auto;
-            max-height: 60px;
+            max-height: 65px; /* Размер иконок */
             object-fit: contain;
-            margin-bottom: 5px;
-            filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+            transition: 0.3s;
         }
 
-        .rank-card span {
-            display: block;
-            font-size: 10px;
+        .rank-item span {
+            font-family: 'Rajdhani', sans-serif;
             font-weight: 700;
+            font-size: 13px;
             color: var(--secondary-text);
+            text-transform: uppercase;
         }
 
-        /* ИНФО БЛОК */
-        .info-box {
-            background: #1e1e24;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--accent-color);
+        /* АКТИВНОЕ ЗВАНИЕ */
+        .rank-item.active {
+            border-color: var(--accent-color);
+            background: rgba(59, 130, 246, 0.15);
+            box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+        .rank-item.active span { color: #fff; }
+        .rank-item.active img { transform: scale(1.15); filter: drop-shadow(0 0 15px var(--accent-color)); }
+
+        /* ИНФО ПАНЕЛЬ (СТЕП 3) */
+        .info-panel {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid var(--accent-color);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 25px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
-        .info-box span { font-size: 12px; color: #ccc; }
-        .info-box b { color: #fff; font-size: 14px; }
+        .info-col { display: flex; flex-direction: column; }
+        .info-label { font-size: 10px; color: var(--secondary-text); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;}
+        .info-val { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700; color: #fff; text-shadow: 0 0 10px rgba(59,130,246,0.5); }
 
-        .hidden { display: none; }
-        
-        /* КНОПКА НАЗАД */
-        .back-btn {
-            background: transparent;
-            border: 1px solid #333;
-            color: #777;
-            padding: 8px 16px;
-            border-radius: 20px;
+        /* НАВИГАЦИЯ */
+        .nav-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            color: var(--secondary-text);
+            padding: 10px 18px;
+            border-radius: 10px;
             font-size: 12px;
-            margin-bottom: 15px;
+            font-weight: 600;
+            margin-bottom: 20px;
             cursor: pointer;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .nav-btn:active { background: rgba(255,255,255,0.1); color: #fff; }
+
+        .hidden { display: none !important; }
+        .section-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            opacity: 0.7;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="container">
         
-        <div id="step-mode">
-            <div class="header">
-                <h1>BOOST SERVICE</h1>
-                <p>Выберите режим игры для буста</p>
+        <div id="step-1">
+            <div class="hero">
+                <h1>XENON BOOST</h1>
+                <p>Выберите режим игры</p>
             </div>
-            
-            <div class="mode-grid">
-                <div class="mode-card" onclick="selectMode('Дуэли')">
-                    <h3>⚔️ Дуэли</h3>
-                    <p>Буст ранга 1 на 1</p>
+
+            <div class="mode-list">
+                <div class="card mode-card" onclick="selectMode('Дуэли')">
+                    <div class="mode-info">
+                        <h3>⚔️ Дуэли</h3>
+                        <p>Буст ранга 1 на 1</p>
+                    </div>
+                    <div class="mode-arrow">➔</div>
                 </div>
-                <div class="mode-card" onclick="selectMode('Союзники')">
-                    <h3>🤝 Союзники</h3>
-                    <p>Буст ранга 2 на 2</p>
+                <div class="card mode-card" onclick="selectMode('Союзники')">
+                    <div class="mode-info">
+                        <h3>🤝 Союзники</h3>
+                        <p>Буст ранга 2 на 2</p>
+                    </div>
+                    <div class="mode-arrow">➔</div>
                 </div>
-                <div class="mode-card" onclick="selectMode('Соревновательный')">
-                    <h3>🏆 Соревновательный</h3>
-                    <p>Буст ранга 5 на 5 (ММ)</p>
+                <div class="card mode-card" onclick="selectMode('Соревновательный')">
+                    <div class="mode-info">
+                        <h3>🏆 ММ</h3>
+                        <p>Соревновательный 5x5</p>
+                    </div>
+                    <div class="mode-arrow">➔</div>
                 </div>
             </div>
         </div>
 
-        <div id="step-current" class="hidden">
-            <div onclick="goBack()" class="back-btn">← Назад</div>
-            <div class="header">
-                <h3>ВАШЕ ЗВАНИЕ?</h3>
-                <p>Выберите, какое у вас сейчас звание</p>
+        <div id="step-2" class="hidden">
+            <div class="nav-btn" onclick="goStep(1)">‹ Назад</div>
+            <div class="hero">
+                <h1>ВАШЕ ЗВАНИЕ</h1>
+                <p>Укажите текущий ранг</p>
             </div>
-            <div class="ranks-grid" id="current-ranks-list"></div>
+            <div class="ranks-grid" id="current-ranks"></div>
         </div>
 
-        <div id="step-target" class="hidden">
-            <div onclick="resetToCurrent()" class="back-btn">← Назад</div>
+        <div id="step-3" class="hidden">
+            <div class="nav-btn" onclick="goStep(2)">‹ Назад</div>
             
-            <div class="info-box">
-                <div>
-                    <span>Сейчас:</span> <b id="display-current-rank">...</b>
+            <div class="info-panel">
+                <div class="info-col">
+                    <span class="info-label">Текущий ранг</span>
+                    <span class="info-val" id="summary-current">...</span>
                 </div>
-                <div>
-                    <span>Режим:</span> <b id="display-mode">...</b>
+                <div style="font-size: 20px; color: #555;">➔</div>
+                <div class="info-col" style="text-align: right;">
+                    <span class="info-label">Желаемый ранг</span>
+                    <span class="info-val" id="summary-target">?</span>
                 </div>
             </div>
 
-            <div class="header">
-                <h3>ЖЕЛАЕМОЕ ЗВАНИЕ?</h3>
-                <p>До какого ранга бустим?</p>
+            <div class="hero">
+                <h1>ЦЕЛЬ БУСТА</h1>
+                <p>До какого ранга?</p>
             </div>
-            <div class="ranks-grid" id="target-ranks-list"></div>
+            <div class="ranks-grid" id="target-ranks"></div>
         </div>
 
     </div>
@@ -202,8 +253,12 @@
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
+    
+    // Настройка кнопки
+    tg.MainButton.color = "#3b82f6"; 
+    tg.MainButton.textColor = "#ffffff";
 
-    // КОНФИГ ЗВАНИЙ (Картинки должны лежать в папке img/)
+    // ИСПРАВЛЕНИЕ: ПУТЬ К КАРТИНКАМ ТЕПЕРЬ ПРЯМОЙ (без "img/")
     const RANKS = [
         {id: 1, name: "Bronze I", file: "bronze1.png"},
         {id: 2, name: "Bronze II", file: "bronze2.png"},
@@ -225,115 +280,88 @@
         {id: 18, name: "The Legend", file: "legend.png"}
     ];
 
-    // ЦЕНА ЗА 1 ШАГ (Например, с Сильвер 1 до Сильвер 2 = 50р)
-    const PRICE_PER_STEP = 50; 
-
+    const PRICE_PER_STEP = 100; // Цена за шаг (меняй если надо)
+    
     let order = {
         mode: null,
         currentRankId: null,
-        currentRankName: null,
         targetRankId: null,
-        targetRankName: null,
         price: 0
     };
 
-    // 1. ВЫБОР РЕЖИМА
-    function selectMode(modeName) {
-        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-        order.mode = modeName;
-        
-        document.getElementById('step-mode').classList.add('hidden');
-        document.getElementById('step-current').classList.remove('hidden');
-        
-        renderRanks('current');
+    function goStep(stepNum) {
+        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+        document.querySelectorAll('[id^="step-"]').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`step-${stepNum}`).classList.remove('hidden');
+        tg.MainButton.hide();
+        window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    // 2. РЕНДЕР КАРТОЧЕК ЗВАНИЙ
+    function selectMode(mode) {
+        order.mode = mode;
+        renderRanks('current');
+        goStep(2);
+    }
+
     function renderRanks(type) {
-        const containerId = type === 'current' ? 'current-ranks-list' : 'target-ranks-list';
-        const container = document.getElementById(containerId);
+        const container = document.getElementById(type === 'current' ? 'current-ranks' : 'target-ranks');
         container.innerHTML = '';
 
         RANKS.forEach(rank => {
-            // Если выбираем ЦЕЛЬ, пропускаем звания ниже или равные текущему
+            // Фильтр: нельзя выбрать цель меньше или равную текущему
             if (type === 'target' && rank.id <= order.currentRankId) return;
 
             const div = document.createElement('div');
-            div.className = 'rank-card';
-            div.onclick = () => handleRankClick(type, rank, div);
+            div.className = 'card rank-item';
+            div.onclick = () => selectRank(type, rank, div);
             
+            // ВОТ ТУТ ИЗМЕНЕНИЕ: src="${rank.file}" (без img/)
             div.innerHTML = `
-                <img src="img/${rank.file}" alt="${rank.name}">
+                <img src="${rank.file}" alt="${rank.name}" onerror="this.style.display='none'">
                 <span>${rank.name}</span>
             `;
             container.appendChild(div);
         });
     }
 
-    // 3. ОБРАБОТКА КЛИКА ПО ЗВАНИЮ
-    function handleRankClick(type, rank, element) {
-        if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    function selectRank(type, rank, element) {
+        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
-        // Подсветка выбранного
-        document.querySelectorAll(`#${type}-ranks-list .rank-card`).forEach(el => el.classList.remove('selected'));
-        element.classList.add('selected');
+        const containerId = type === 'current' ? 'current-ranks' : 'target-ranks';
+        document.getElementById(containerId).querySelectorAll('.rank-item').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
 
         if (type === 'current') {
             order.currentRankId = rank.id;
             order.currentRankName = rank.name;
-
-            // Переход к следующему шагу с небольшой задержкой
+            document.getElementById('summary-current').innerText = rank.name;
+            
             setTimeout(() => {
-                document.getElementById('step-current').classList.add('hidden');
-                document.getElementById('step-target').classList.remove('hidden');
-                
-                // Обновляем инфо-плашку
-                document.getElementById('display-current-rank').innerText = rank.name;
-                document.getElementById('display-mode').innerText = order.mode;
-
                 renderRanks('target');
-            }, 200);
-
+                goStep(3);
+            }, 300);
         } else {
             order.targetRankId = rank.id;
             order.targetRankName = rank.name;
+            document.getElementById('summary-target').innerText = rank.name;
+            
             calculatePrice();
         }
     }
 
-    // 4. РАСЧЕТ ЦЕНЫ
     function calculatePrice() {
         const steps = order.targetRankId - order.currentRankId;
         order.price = steps * PRICE_PER_STEP;
 
         if (order.price > 0) {
             tg.MainButton.text = `ЗАКАЗАТЬ ЗА ${order.price}₽`;
-            tg.MainButton.color = "#3b82f6"; // Синий цвет кнопки
-            tg.MainButton.textColor = "#ffffff";
             tg.MainButton.show();
         }
     }
 
-    // 5. ОТПРАВКА ДАННЫХ БОТУ
     tg.MainButton.onClick(() => {
-        const data = JSON.stringify(order);
-        tg.sendData(data);
+        tg.sendData(JSON.stringify(order));
     });
-
-    // НАВИГАЦИЯ (Кнопки "Назад")
-    window.goBack = function() {
-        document.getElementById('step-current').classList.add('hidden');
-        document.getElementById('step-mode').classList.remove('hidden');
-        tg.MainButton.hide();
-    }
-
-    window.resetToCurrent = function() {
-        document.getElementById('step-target').classList.add('hidden');
-        document.getElementById('step-current').classList.remove('hidden');
-        tg.MainButton.hide();
-        // Сброс выбора цели
-        order.targetRankId = null; 
-    }
 
 </script>
 </body>
