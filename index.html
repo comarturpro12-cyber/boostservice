@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standoff Boost</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Настройка буста</h1>
+
+        <div id="step-mode">
+            <h3>Выберите режим:</h3>
+            <div class="mode-selector">
+                <button class="mode-btn" onclick="selectMode('Дуэли')">⚔️ Дуэли</button>
+                <button class="mode-btn" onclick="selectMode('Союзники')">🤝 Союзники</button>
+                <button class="mode-btn" onclick="selectMode('ММ')">🏆 ММ</button>
+            </div>
+        </div>
+
+        <div id="step-current" class="hidden">
+            <h3>Ваше звание сейчас:</h3>
+            <div class="ranks-grid" id="current-ranks-grid"></div>
+        </div>
+
+        <div id="step-target" class="hidden">
+            <h3>Желаемое звание:</h3>
+            <div class="ranks-grid" id="target-ranks-grid"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
