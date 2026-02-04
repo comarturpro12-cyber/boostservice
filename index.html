@@ -24,21 +24,40 @@
             color: var(--text); font-family: 'Inter', sans-serif;
             margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; padding-bottom: 120px;
         }
-        /* --- BACKGROUND ANIMATION --- */
+
+        /* --- BACKGROUND IMAGE (PNG) --- */
         .bg-bull-container {
             position: fixed;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 80vw; height: 80vw; opacity: 0.05; pointer-events: none; z-index: -1;
-            animation: breathe 6s ease-in-out infinite;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85vw; /* Размер картинки */
+            max-width: 600px;
+            height: auto;
+            z-index: -1;
+            pointer-events: none;
+            /* Анимация пульсации */
+            animation: bullPulse 6s ease-in-out infinite;
         }
-        @keyframes breathe { 
-            0%, 100% { opacity: 0.05;
-            transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 20px var(--primary)); }
-            50% { opacity: 0.1;
-            transform: translate(-50%, -50%) scale(1.05); filter: drop-shadow(0 0 40px var(--accent)); }
+
+        .bg-bull-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
         }
-        .bg-bull-svg { width: 100%;
-        height: 100%; fill: none; stroke: url(#bull-grad); stroke-width: 1.5; }
+
+        @keyframes bullPulse { 
+            0%, 100% { 
+                opacity: 0.15; 
+                transform: translate(-50%, -50%) scale(1); 
+                filter: blur(6px) grayscale(0.5); /* Размытый и тусклый */
+            }
+            50% { 
+                opacity: 0.3; 
+                transform: translate(-50%, -50%) scale(1.05); 
+                filter: blur(2px) drop-shadow(0 0 30px var(--primary)); /* Четче и светится */
+            }
+        }
         
         .container { padding: 20px;
         max-width: 500px; margin: 0 auto; position: relative; z-index: 1; }
@@ -222,34 +241,21 @@
 <body>
 
 <div class="bg-bull-container">
-    <svg class="bg-bull-svg" viewBox="0 0 200 200">
-        <defs>
-            <linearGradient id="bull-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#8a2be2;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#d400ff;stop-opacity:1" />
-            </linearGradient>
-        </defs>
-        <g stroke="url(#bull-grad)" stroke-width="1.2" fill="none" stroke-linejoin="round">
-            <path d="M45,55 C30,40 25,20 55,15 C65,25 70,35 75,45" />
-            <path d="M155,55 C170,40 175,20 145,15 C135,25 130,35 125,45" />
-            <path d="M40,75 L20,80 L35,95 Z" />
-            <path d="M160,75 L180,80 L165,95 Z" />
-            <path d="M75,45 L125,45 L135,70 L145,100 L130,140 L100,165 L70,140 L55,100 L65,70 Z" />
-            <path d="M80,135 Q100,150 120,135 L115,155 Q100,165 85,155 Z" />
-            <path d="M95,145 A2,2 0 1,1 95.1,145" stroke-width="2" />
-            <path d="M105,145 A2,2 0 1,1 105.1,145" stroke-width="2" />
-            <path d="M75,85 L90,80 L95,90 Z" fill="url(#bull-grad)" opacity="0.4" />
-            <path d="M125,85 L110,80 L105,90 Z" fill="url(#bull-grad)" opacity="0.4" />
-            <path d="M100,45 L100,70 L85,95" />
-            <path d="M100,70 L115,95" />
-        </g>
-    </svg>
+    <img src="bull.png" class="bg-bull-img" alt="Bull Background">
 </div>
 
 <div class="container">
     <div class="header">
         <div class="logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#bull-grad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#bull-grad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <defs>
+                    <linearGradient id="bull-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#8a2be2;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#d400ff;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
             BULL BOOST
         </div>
         <div class="user-pill"><div class="u-avatar" id="u-avatar">?</div><span id="u-name" style="margin-left:8px">Guest</span></div>
