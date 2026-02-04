@@ -25,43 +25,61 @@
             margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; padding-bottom: 120px;
         }
 
-        /* --- BACKGROUND IMAGE (bull1.png) - BOTTOM GLOW --- */
-        .bg-bull-container {
+        /* --- CSS NORTHERN LIGHTS (AURORA) --- */
+        /* Оптимизированный фон без картинок */
+        .aurora-bg {
             position: fixed;
-            bottom: -20px; /* Прижат к низу */
-            left: 50%;
-            transform: translateX(-50%); /* Центровка */
-            width: 100vw; /* Ширина на весь экран */
-            max-width: 500px; /* Ограничение на ПК */
-            z-index: -1; /* На заднем фоне */
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
             pointer-events: none;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            /* Эстетичный перелив цвета */
-            animation: aestheticGlow 8s ease-in-out infinite;
+            background: var(--bg);
         }
 
-        .bg-bull-img {
-            width: 80%; /* Размер самого быка */
-            height: auto;
-            display: block;
-            object-fit: contain;
-            opacity: 0.5; /* Базовая прозрачность */
+        .aurora-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px); /* Сильное размытие для эффекта света */
+            opacity: 0.4;
         }
 
-        /* АНИМАЦИЯ: Плавный перелив тени и яркости */
-        @keyframes aestheticGlow { 
-            0%, 100% { 
-                /* Фиолетовое свечение */
-                filter: drop-shadow(0 -10px 20px rgba(138, 43, 226, 0.3)) brightness(0.8);
-                opacity: 0.4;
-            }
-            50% { 
-                /* Розовое/Малиновое свечение */
-                filter: drop-shadow(0 -15px 30px rgba(212, 0, 255, 0.5)) brightness(1.1);
-                opacity: 0.6;
-            }
+        /* Первое пятно (Фиолетовое) */
+        .blob-1 {
+            background: var(--primary);
+            width: 90vw; height: 90vw;
+            top: -20%; left: -20%;
+            animation: auroraFloat1 12s infinite ease-in-out alternate;
+        }
+
+        /* Второе пятно (Малиновое) */
+        .blob-2 {
+            background: var(--accent);
+            width: 80vw; height: 80vw;
+            bottom: -10%; right: -20%;
+            animation: auroraFloat2 15s infinite ease-in-out alternate;
+        }
+
+        /* Третье пятно (Центральное, смешивающее) */
+        .blob-3 {
+            background: #4b0082; /* Indigo */
+            width: 60vw; height: 60vw;
+            top: 40%; left: 30%;
+            opacity: 0.3;
+            animation: auroraFloat3 18s infinite ease-in-out alternate;
+        }
+
+        @keyframes auroraFloat1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10%, 10%) scale(1.1); }
+        }
+        @keyframes auroraFloat2 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-15%, -10%) scale(1.05); }
+        }
+        @keyframes auroraFloat3 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10%, -15%) scale(1.2); }
         }
         
         .container { padding: 20px;
@@ -245,8 +263,10 @@
 </head>
 <body>
 
-<div class="bg-bull-container">
-    <img src="bull1.png" class="bg-bull-img" alt="Bull Background">
+<div class="aurora-bg">
+    <div class="aurora-blob blob-1"></div>
+    <div class="aurora-blob blob-2"></div>
+    <div class="aurora-blob blob-3"></div>
 </div>
 
 <div class="container">
