@@ -25,41 +25,42 @@
             margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; padding-bottom: 120px;
         }
 
-        /* --- BACKGROUND IMAGE (bull1.png) --- */
+        /* --- BACKGROUND IMAGE (bull1.png) - BOTTOM GLOW --- */
         .bg-bull-container {
             position: fixed;
-            top: 50%; left: 50%;
-            /* Начальная позиция */
-            transform: translate(-50%, -50%);
-            width: 85vw;
-            max-width: 600px;
-            height: auto;
-            z-index: -1;
+            bottom: -20px; /* Прижат к низу */
+            left: 50%;
+            transform: translateX(-50%); /* Центровка */
+            width: 100vw; /* Ширина на весь экран */
+            max-width: 500px; /* Ограничение на ПК */
+            z-index: -1; /* На заднем фоне */
             pointer-events: none;
-            /* Плавная левитация */
-            animation: deepFloat 6s ease-in-out infinite;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            /* Эстетичный перелив цвета */
+            animation: aestheticGlow 8s ease-in-out infinite;
         }
 
         .bg-bull-img {
-            width: 100%;
+            width: 80%; /* Размер самого быка */
             height: auto;
             display: block;
             object-fit: contain;
+            opacity: 0.5; /* Базовая прозрачность */
         }
 
-        /* АНИМАЦИЯ: Мягкое покачивание и легкое свечение */
-        @keyframes deepFloat { 
+        /* АНИМАЦИЯ: Плавный перелив тени и яркости */
+        @keyframes aestheticGlow { 
             0%, 100% { 
-                /* Внизу, чуть темнее */
-                transform: translate(-50%, -50%); 
-                opacity: 0.15; 
-                filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.2)); 
+                /* Фиолетовое свечение */
+                filter: drop-shadow(0 -10px 20px rgba(138, 43, 226, 0.3)) brightness(0.8);
+                opacity: 0.4;
             }
             50% { 
-                /* Чуть всплывает вверх, чуть ярче */
-                transform: translate(-50%, -53%); 
-                opacity: 0.25; 
-                filter: drop-shadow(0 0 25px rgba(212, 0, 255, 0.4)); 
+                /* Розовое/Малиновое свечение */
+                filter: drop-shadow(0 -15px 30px rgba(212, 0, 255, 0.5)) brightness(1.1);
+                opacity: 0.6;
             }
         }
         
