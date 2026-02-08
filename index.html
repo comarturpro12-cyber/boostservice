@@ -58,16 +58,45 @@
         .c-icon { width: 26px; height: 26px; fill: var(--text-sec); transition: 0.3s; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
         .card.selected .c-icon { fill: var(--accent); filter: drop-shadow(0 0 8px var(--accent)); transform: scale(1.1); }
 
-        /* BLUESTACKS UI */
-        .bs-hero { background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); border-radius: 20px; padding: 25px; margin-bottom: 20px; text-align: center; color: #fff; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .bs-hero::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(2px); }
+        /* MINIMALISTIC BLUESTACKS HERO */
+        .bs-hero {
+            background: var(--glass-bg); /* Просто прозрачное стекло */
+            border-radius: 24px;
+            padding: 30px 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #fff;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Легкое свечение сверху для акцента */
+        .bs-hero::before {
+            content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%);
+            width: 150px; height: 150px; background: var(--primary);
+            filter: blur(80px); opacity: 0.4; pointer-events: none;
+        }
         .bs-content { position: relative; z-index: 2; }
-        .bs-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .bs-desc { font-size: 13px; line-height: 1.5; opacity: 0.9; margin-bottom: 20px; }
-        .promo-box { background: rgba(255,255,255,0.15); border: 1px dashed rgba(255,255,255,0.5); padding: 10px; border-radius: 12px; font-size: 14px; font-weight: 700; margin-bottom: 20px; display: inline-block; }
-        .promo-code { color: #fdbb2d; font-size: 18px; margin-left: 5px; }
-        .link-btn { background: #fff; color: #000; padding: 14px 24px; border-radius: 14px; font-weight: 800; text-decoration: none; display: inline-block; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,255,255,0.3); }
-        .link-btn:active { transform: scale(0.95); }
+        .bs-title { font-size: 26px; font-weight: 900; margin-bottom: 8px; text-transform: uppercase; letter-spacing: -1px; }
+        .bs-desc { font-size: 14px; line-height: 1.6; color: var(--text-sec); margin-bottom: 25px; font-weight: 500; }
+        
+        .promo-box {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; color: #fff;
+            margin-bottom: 25px; cursor: pointer; transition: 0.2s;
+        }
+        .promo-box:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+        .promo-code { color: var(--accent); font-weight: 800; font-size: 15px; letter-spacing: 1px; }
+
+        .link-btn {
+            background: #fff; color: #000; padding: 16px 32px; border-radius: 16px;
+            font-weight: 800; text-decoration: none; display: block; width: 100%;
+            transition: 0.3s; box-shadow: 0 5px 20px rgba(255,255,255,0.15);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .link-btn:active { transform: scale(0.97); box-shadow: 0 2px 10px rgba(255,255,255,0.1); }
 
         /* GRID & OTHER */
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -197,9 +226,11 @@
         <div class="bs-hero">
             <div class="bs-content">
                 <div class="bs-title">CUSTOM BLUESTACKS</div>
-                <div class="bs-desc">Эксклюзивная оптимизированная версия для максимального FPS.<br>Разработано совместно с <b>SpeedyTerror</b>.</div>
-                <div class="promo-box">PROMO: <span class="promo-code" onclick="navigator.clipboard.writeText('VENEKU');alert('Copied!')">VENEKU</span></div>
-                <a href="https://standhelper.pro" class="link-btn">СКАЧАТЬ (standhelper.pro)</a>
+                <div class="bs-desc">Оптимизация для киберспорта.<br>Разработано совместно с <b>SpeedyTerror</b>.</div>
+                <div class="promo-box" onclick="navigator.clipboard.writeText('VENEKU');alert('Скопировано: VENEKU')">
+                    PROMO: <span class="promo-code">VENEKU</span> ❐
+                </div>
+                <a href="https://standhelper.pro" class="link-btn">СКАЧАТЬ</a>
             </div>
         </div>
         <div class="section-title">Преимущества</div>
