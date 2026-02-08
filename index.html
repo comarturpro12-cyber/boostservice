@@ -32,7 +32,15 @@
         
         .container { padding: 20px; max-width: 500px; margin: 0 auto; position: relative; z-index: 1; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-top: 10px; }
-        .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; color: #fff; text-transform: uppercase; display: flex; align-items: center; gap: 12px; }
+        
+        /* LOGO STYLES */
+        @keyframes textShimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        .logo { 
+            font-size: 24px; font-weight: 900; letter-spacing: -1px;
+            background: linear-gradient(90deg, #fff 0%, #b98eff 20%, #fff 40%, #d400ff 60%, #fff 80%);
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: textShimmer 4s linear infinite; text-transform: uppercase; display: flex; align-items: center; gap: 10px;
+        }
         .user-pill { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); padding: 6px 14px; border-radius: 30px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(10px); }
         .u-avatar { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: 800; box-shadow: 0 0 10px var(--primary-glow); }
 
@@ -49,15 +57,30 @@
         .c-icon { width: 26px; height: 26px; fill: var(--text-sec); transition: 0.3s; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
         .card.selected .c-icon { fill: var(--accent); filter: drop-shadow(0 0 8px var(--accent)); transform: scale(1.1); }
 
-        /* HERO STYLES FOR BLUESTACKS (Minimalistic) */
+        /* BLUESTACKS HERO */
         .bs-hero { background: var(--glass-bg); border-radius: 24px; padding: 30px 20px; margin-bottom: 25px; text-align: center; color: #fff; border: 1px solid var(--glass-border); backdrop-filter: blur(20px); position: relative; overflow: hidden; }
         .bs-hero::before { content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 150px; height: 150px; background: var(--primary); filter: blur(80px); opacity: 0.4; pointer-events: none; }
         .bs-title { font-size: 26px; font-weight: 900; margin-bottom: 8px; text-transform: uppercase; letter-spacing: -1px; }
         .bs-desc { font-size: 14px; line-height: 1.6; color: var(--text-sec); margin-bottom: 25px; font-weight: 500; }
-        .promo-box { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 25px; cursor: pointer; transition: 0.2s; }
-        .promo-box:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
-        .promo-code { color: var(--accent); font-weight: 800; font-size: 15px; letter-spacing: 1px; }
-        .link-btn { background: #fff; color: #000; padding: 16px 32px; border-radius: 16px; font-weight: 800; text-decoration: none; display: block; width: 100%; transition: 0.3s; box-shadow: 0 5px 20px rgba(255,255,255,0.15); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .promo-box { 
+            display: inline-flex; align-items: center; gap: 10px; 
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(138, 43, 226, 0.1) 100%); 
+            border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 12px; 
+            font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 25px; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .promo-box:active { transform: scale(0.95); }
+        .promo-code { 
+            background: linear-gradient(90deg, #fff, #d400ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 900; font-size: 16px; letter-spacing: 1px; animation: textShimmer 3s linear infinite; background-size: 200% auto;
+        }
+
+        .link-btn {
+            background: linear-gradient(90deg, #fff 0%, #e0c3fc 100%); color: #000; padding: 16px 32px; border-radius: 16px;
+            font-weight: 800; text-decoration: none; display: block; width: 100%; transition: 0.3s; 
+            box-shadow: 0 5px 20px rgba(255,255,255,0.15); text-transform: uppercase; letter-spacing: 0.5px;
+        }
         .link-btn:active { transform: scale(0.97); box-shadow: 0 2px 10px rgba(255,255,255,0.1); }
 
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -100,19 +123,15 @@
 <div class="container">
     <div class="header">
         <div class="logo">
-            <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
                 <defs>
-                    <linearGradient id="v_grad" x1="0" y1="0" x2="40" y2="40">
-                        <stop offset="0%" stop-color="#8a2be2"/>
+                    <linearGradient id="vb_grad" x1="0" y1="0" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fff"/>
                         <stop offset="100%" stop-color="#d400ff"/>
                     </linearGradient>
-                    <filter id="glow">
-                        <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-                        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                    </filter>
                 </defs>
-                <path d="M10 8 L20 32 L30 8" stroke="url(#v_grad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
-                <path d="M10 8 L20 32 L30 8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+                <path d="M6 10 L16 34 L26 10" stroke="url(#vb_grad)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M26 10 L26 34 L36 22 L26 10" stroke="url(#vb_grad)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
             </svg>
             VENEKU BOOST
         </div>
@@ -199,7 +218,7 @@
         <div class="bs-hero">
             <div class="bs-content">
                 <div class="bs-title">CUSTOM BLUESTACKS</div>
-                <div class="bs-desc">Оптимизация для киберспорта.<br>Разработано совместно с <b>SpeedyTerror</b>.</div>
+                <div class="bs-desc">Оптимизация для киберспорта.<br>Разработано SpeedyTerror.</div>
                 <div class="promo-box" onclick="navigator.clipboard.writeText('VENEKU');alert('Скопировано: VENEKU')">
                     PROMO: <span class="promo-code">VENEKU</span> ❐
                 </div>
@@ -207,9 +226,18 @@
             </div>
         </div>
         <div class="section-title">Преимущества</div>
-        <div class="card"><div class="c-info"><h3>🚀 Максимальный FPS</h3><p>Убраны все лаги и фризы</p></div></div>
-        <div class="card"><div class="c-info"><h3>🎯 Идеальная сенса</h3><p>Настроено для киберспорта</p></div></div>
-        <div class="card"><div class="c-info"><h3>🛡 Без банов</h3><p>100% безопасно для аккаунта</p></div></div>
+        <div class="card">
+            <div class="c-info"><h3>Максимальный FPS</h3><p>Убраны все лаги и фризы</p></div>
+            <svg class="c-icon" viewBox="0 0 24 24"><path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.5 2.54l2.63 2.63c.6-1.54.87-3.21.87-4.93 0-7.18-5.82-13-13-13V0h-2v2.05C6.03 2.55 0 8.62 0 16.51V24h24v-7.49c0-8.25-6.53-14.46-11-14.46zM12 4c4.97 0 9 4.03 9 9 0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9z"/></svg>
+        </div>
+        <div class="card">
+            <div class="c-info"><h3>Идеальная сенса</h3><p>Настроено для киберспорта</p></div>
+            <svg class="c-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+        </div>
+        <div class="card">
+            <div class="c-info"><h3>Без банов</h3><p>100% безопасно</p></div>
+            <svg class="c-icon" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        </div>
     </div>
 
 </div>
@@ -219,9 +247,9 @@
 <script>
     const tg = window.Telegram.WebApp; tg.expand(); tg.MainButton.hide();
 
-    // КОНСТАНТЫ И КУРСЫ (Должны совпадать с Python)
+    // КОНСТАНТЫ И КУРСЫ
     const EXCHANGE_RATE_KZT = 6.6;
-    const GOLD_SELLING_RATE = 0.6; // За сколько продаем голду (чистыми) на фанпее
+    const GOLD_SELLING_RATE = 0.6; // Чистая цена продажи голды на FP
     
     // Ranks, Modes, Types
     const RANKS = [
